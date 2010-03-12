@@ -1,5 +1,20 @@
 Welcome to ActiveDocument!
 
+***************
+* Usage Notes *
+***************
 
+Developers should extend ActiveDocument::Base to create their own domain specific classes.
+eg. class Person < ActiveDocument::Base
+
+Search methods called on a class derived from ActiveDocument::Base will return a SearchResults object and are guaranteed to be of the
+same domain type (as determined by the element type of the root document node). SearchResults are Enumerable and contain information about
+search metrics as well as n number of SearchResult objects. The SearchResult objects contain information about what documents
+matched the search and why as well as a method for loading the document into a domain class.
+
+Search methods called on the Finder class will return a SearchResults object and are NOT guaranteed to be of any particular
+type (as determined by the element type of the root document node) and in many cases will be of varied type. Developers should
+leverage the root_type() method of the SearchResult object for determining what type of domain class to use to
+instantiate the document represented by the SearchResult.
 
 For more information contact clark.richey@marklogic.com
