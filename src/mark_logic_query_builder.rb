@@ -21,17 +21,43 @@ module ActiveDocument
     end
 
     def find_by_word(word, root, namespace)
-xquery = <<GENERATED
+      xquery = <<GENERATED
 import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
 search:search("#{word}",
 <options xmlns="http://marklogic.com/appservices/search">
-<searchable-expression
 GENERATED
-      xquery << "  xmlns:a=\"#{namespace}\"" unless namespace.nil? or namespace.empty?
-      xquery << '>/'
-      xquery << "a:" unless namespace.nil? or namespace.empty?
-      xquery << "#{root}</searchable-expression></options>)"
-    end
-  end
+      unless root.nil?
+        xquery << "<searchable-expression"
 
-end
+        xquery << "  xmlns:a=\"#{namespace}\"" unless namespace.nil? or namespace.empty?
+        xquery << '>/'
+        xquery << "a:" unless namespace.nil? or namespace.empty?
+        xquery << "#{root}</searchable-expression>"
+      end
+      xquery << "</options>)"
+    end
+
+    def find_by_element(element, value, root, namespace)
+      xquery = <<GENERATED
+import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
+search:search("word:#{value}",
+      <options xmlns="http://marklogic.com/appservices/search">
+GENERATED
+      unless root.nil?
+        xquery << "<searchable-expression"
+        xquery << "  xmlns:a=\"#{namespace}\"" unless namespace.nil? or namespace.empty?
+        xquery << '>/'
+        xquery << "a:" unless namespace.nil? or namespace.empty?
+        xquery << "#{root}</searchable-expression>)"
+      end
+      xquery << <<CONSTRAINT
+<constraint name="word">
+    <word>
+      <element ns="#{namespace unless namespace.nil?}" name="#{element}"/>
+    </word>
+</constraint></options>)
+CONSTRAINT
+    end
+
+  end # end class
+end # end module

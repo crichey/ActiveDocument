@@ -13,10 +13,32 @@
 #   limitations under the License.
 
 require 'mark_logic_http'
-require 'rexml/document'
 require 'mark_logic_query_builder'
+require 'rubygems'
+require 'nokogiri'
+require 'search_results'
+
 module ActiveDocument
+
   class Finder
-    #Code here
+
+    @@ml_http = ActiveDocument::MarkLogicHTTP.new
+    @@xquery_builder = ActiveDocument::MarkLogicQueryBuilder.new
+
+    # enables the dynamic finders
+    def self.method_missing(method_id, *arguments, &block)
+      puts "method called is #{method_id} with argumens #{arguments}" # todo change output to logging output
+      method = method_id.to_s
+      if method =~ /find_by_(.*)$/ and arguments.length > 1
+        self.execute_finder($1.to_sym, arguments[0], arguments[1])
+      else
+        puts "missed"
+      end
+    end
+    
+    def self.execute_finder(element, value, namespace = nil)
+      SearchResults.new(@@ml_http.send_xquery(@@xquery_builder.find_by_element(element, value, nil, namespace)))
+    end
   end
+
 end

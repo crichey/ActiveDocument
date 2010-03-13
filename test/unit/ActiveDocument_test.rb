@@ -18,7 +18,6 @@ require 'active_document'
 require 'search_results'
 require 'rubygems'
 require 'test/unit'
-gem 'flexmock'
 
 class BaseTest < Test::Unit::TestCase
 

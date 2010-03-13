@@ -1,3 +1,4 @@
+
 #   Copyright 2010 Mark Logic, Inc.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +15,8 @@
 
 
 require 'mark_logic_http'
-require 'rexml/document'
+require 'rubygems'
+require 'nokogiri'
 require 'mark_logic_query_builder'
 require 'search_results'
 
@@ -27,13 +29,12 @@ module ActiveDocument
   class Base
     attr_reader :document
 
-
     @@ml_http = ActiveDocument::MarkLogicHTTP.new
     @@xquery_builder = ActiveDocument::MarkLogicQueryBuilder.new
 
     # create a new instance with an optional xml string to use for constructing the model
     def initialize(xml_string = nil)
-      @document = REXML::Document.new(xml_string) unless xml_string.nil?
+      @document = Nokogiri::XML(xml_string) unless xml_string.nil?
     end
 
 
