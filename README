@@ -3,6 +3,10 @@ Welcome to ActiveDocument!
 ***************
 * Usage Notes *
 ***************
+install:
+Requires the nokogiri gem.
+ML: Place the dynamic_dispatch.xqy XQuery file somewhere in ML accessible via your http server
+
 
 Developers should extend ActiveDocument::Base to create their own domain specific classes.
 eg. class Person < ActiveDocument::Base
@@ -16,5 +20,8 @@ Search methods called on the Finder class will return a SearchResults object and
 type (as determined by the element type of the root document node) and in many cases will be of varied type. Developers should
 leverage the root_type() method of the SearchResult object for determining what type of domain class to use to
 instantiate the document represented by the SearchResult.
+
+Configuration:
+Please note that for the moment you need to hardcord your connection into the MarkLogicHttp class. Make sure the uri points to the dynamic_dispatch.xqy you installed in ML
 
 For more information contact clark.richey@marklogic.com
