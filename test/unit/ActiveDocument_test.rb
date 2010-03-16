@@ -23,6 +23,7 @@ class BaseTest < Test::Unit::TestCase
 
   class Document < ActiveDocument::Base
     default_namespace "http://docbook.org/ns/docbook"
+    config 'config.yml'
   end
 
   # Called before every test method runs. Can be used

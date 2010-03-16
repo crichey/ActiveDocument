@@ -15,13 +15,15 @@
 require "test/unit"
 $:.unshift File.join(File.dirname(__FILE__), "../..", "src")
 require 'mark_logic_http'
+require 'yaml'
 
 class ConnectionTest < Test::Unit::TestCase
 
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    @ml_http = ActiveDocument::MarkLogicHTTP.new
+    config = YAML.load_file('config.yml')
+    @ml_http = ActiveDocument::MarkLogicHTTP.new(config['uri'], config['user_name'], config['password'])
   end
 
   # Called after every test method runs. Can be used to tear

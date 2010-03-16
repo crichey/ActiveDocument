@@ -17,8 +17,10 @@
 require 'mark_logic_http'
 require 'rubygems'
 require 'nokogiri'
+require 'yaml'
 require 'mark_logic_query_builder'
 require 'search_results'
+require 'finder'
 
 # The ActiveXML module is used as a namespace for all classes relating to the ActiveXML functionality.
 # ActiveXML::Base is the class that should be extended in order to make use of this functionality in your own
@@ -26,11 +28,8 @@ require 'search_results'
 module ActiveDocument
 
   # Developers should extend this class to create their own domain classes
-  class Base
+  class Base < Finder
     attr_reader :document
-
-    @@ml_http = ActiveDocument::MarkLogicHTTP.new
-    @@xquery_builder = ActiveDocument::MarkLogicQueryBuilder.new
 
     # create a new instance with an optional xml string to use for constructing the model
     def initialize(xml_string = nil)
@@ -45,7 +44,6 @@ module ActiveDocument
       def default_namespace(namespace)
         @@default_namespace = namespace
       end
-
 
       # enables the dynamic finders
       def method_missing(method_id, *arguments, &block)

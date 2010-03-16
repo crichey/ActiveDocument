@@ -62,10 +62,10 @@ module ActiveDocument
 
   class MarkLogicHTTP
 
-    def initialize
-      @url = URI.parse('http://localhost:8000/dynamic_dispatch.xqy')
-      @user_name = 'admin'
-      @password = 'admin'
+    def initialize(uri, user_name, password)
+      @url = URI.parse(uri)
+      @user_name = user_name
+      @password = password
     end
 
     def send_xquery(xquery)

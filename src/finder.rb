@@ -22,20 +22,25 @@ module ActiveDocument
 
   class Finder
 
-    @@ml_http = ActiveDocument::MarkLogicHTTP.new
+
     @@xquery_builder = ActiveDocument::MarkLogicQueryBuilder.new
+
+    def self.config(yaml_file)
+      config = YAML.load_file(yaml_file)
+      @@ml_http = ActiveDocument::MarkLogicHTTP.new(config['uri'], config['user_name'], config['password'])
+    end
 
     # enables the dynamic finders
     def self.method_missing(method_id, *arguments, &block)
       puts "method called is #{method_id} with argumens #{arguments}" # todo change output to logging output
       method = method_id.to_s
-      if method =~ /find_by_(.*)$/ and arguments.length > 1
-        self.execute_finder($1.to_sym, arguments[0], arguments[1])
+      if method =~ /find_by_(.*)$/
+        self.execute_finder($1.to_sym, arguments[0], arguments[1]) #todo fix me
       else
         puts "missed"
       end
     end
-    
+
     def self.execute_finder(element, value, namespace = nil)
       SearchResults.new(@@ml_http.send_xquery(@@xquery_builder.find_by_element(element, value, nil, namespace)))
     end

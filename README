@@ -22,6 +22,7 @@ leverage the root_type() method of the SearchResult object for determining what 
 instantiate the document represented by the SearchResult.
 
 Configuration:
-Please note that for the moment you need to hardcord your connection into the MarkLogicHttp class. Make sure the uri points to the dynamic_dispatch.xqy you installed in ML
+Configuration is handled by calling the config() method on either the Finder class or the ActiveDocument::Base class and
+passing in the path to the YAML configuration file. See the unit tests for a sample yaml configuration file.
 
 For more information contact clark.richey@marklogic.com
