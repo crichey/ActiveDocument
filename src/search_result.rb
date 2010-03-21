@@ -18,6 +18,7 @@ require 'nokogiri'
 module ActiveDocument
   class SearchResult
     include Enumerable
+
     def initialize(node)
       @node = node
     end

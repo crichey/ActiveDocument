@@ -28,5 +28,10 @@ class FinderTests < Test::Unit::TestCase
     results = ActiveDocument::Finder.find_by_title("Explorers", "http://docbook.org/ns/docbook")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
+
+    # test for find by PERSONA element with no namespace
+    results = ActiveDocument::Finder.find_by_PERSONA("SCARUS") # note that the find is case sensitive in regards to the element name, e.g. find_by_persona fails
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
   end
 end

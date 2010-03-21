@@ -1,4 +1,3 @@
-
 #   Copyright 2010 Mark Logic, Inc.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,28 +30,42 @@ module ActiveDocument
   class Base < Finder
     attr_reader :document
 
+
     # create a new instance with an optional xml string to use for constructing the model
     def initialize(xml_string = nil)
       @document = Nokogiri::XML(xml_string) unless xml_string.nil?
+      @root = self.class.to_s.downcase
     end
-
 
 
     class << self
 
       attr_reader :default_namespace
+      attr_accessor :root
+      attr_accessor :namespaces
+
       def default_namespace(namespace)
         @@default_namespace = namespace
       end
 
       # enables the dynamic finders
       def method_missing(method_id, *arguments, &block)
-        puts "method called is #{method_id}" # todo change output to logging output
+        @@log.bebud("ActiveDocumet::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
         method = method_id.to_s
-        if method =~ /find_by_(.*)$/
-          puts "Got finder for #{$1}"
-        else
-          puts "missed"
+        # identify finder methods
+        element = $1.to_sym
+        if method =~ /find_by_(.*)$/ and arguments.length > 0
+          if arguments[1]
+            namespace = arguments[1]
+          else
+            namespace = namespace_for_element(element)
+          end
+          if arguments[2]
+            root = arguments[2]
+          else
+            root = @root
+            execute_finder(element, arguments[0], namespace, root)
+          end
         end
       end
 
@@ -62,11 +75,22 @@ module ActiveDocument
       end
 
       # Finds all documents of this type that contain the word anywhere in their structure
-      def find_by_word(word, root=self.class.to_s.downcase, namespace=@@default_namespace)
+      def find_by_word(word, root=@root, namespace=@@default_namespace)
         SearchResults.new(@@ml_http.send_xquery(@@xquery_builder.find_by_word(word, root, namespace)))
       end
-    end
 
-  end
+      def namespace_for_element(element)
+        namespace = nill
+        if namespaces[element]:
+          namespace = namespaces[element]
+        else
+          namespace = @@default_namespace unless @@default_namespace.nil?
+        end
+        namespace
+      end
+    end # end inner class
 
-end
+  end # end class
+
+
+end # end module

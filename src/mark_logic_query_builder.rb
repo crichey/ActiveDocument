@@ -20,6 +20,7 @@ module ActiveDocument
       "fn:doc('#{uri}')"
     end
 
+    # This method does a full text search
     def find_by_word(word, root, namespace)
       xquery = <<GENERATED
 import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
@@ -41,7 +42,7 @@ GENERATED
       xquery = <<GENERATED
 import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
 search:search("word:#{value}",
-      <options xmlns="http://marklogic.com/appservices/search">
+<options xmlns="http://marklogic.com/appservices/search">
 GENERATED
       unless root.nil?
         xquery << "<searchable-expression"
@@ -52,9 +53,9 @@ GENERATED
       end
       xquery << <<CONSTRAINT
 <constraint name="word">
-    <word>
-      <element ns="#{namespace unless namespace.nil?}" name="#{element}"/>
-    </word>
+<word>
+<element ns="#{namespace unless namespace.nil?}" name="#{element}"/>
+</word>
 </constraint></options>)
 CONSTRAINT
     end

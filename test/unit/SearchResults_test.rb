@@ -22,6 +22,7 @@ require 'active_document'
 class SearchResultsTest < Test::Unit::TestCase
   class Book < ActiveDocument::Base
     default_namespace "http://docbook.org/ns/docbook"
+    config 'config.yml'
   end
 
   # Create a SearchResults object with the configured simulated XML result from the server

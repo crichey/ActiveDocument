@@ -17,6 +17,7 @@ require 'mark_logic_query_builder'
 require 'rubygems'
 require 'nokogiri'
 require 'search_results'
+require 'logger'
 
 module ActiveDocument
 
@@ -28,21 +29,65 @@ module ActiveDocument
     def self.config(yaml_file)
       config = YAML.load_file(yaml_file)
       @@ml_http = ActiveDocument::MarkLogicHTTP.new(config['uri'], config['user_name'], config['password'])
+      configure_logger(config)
     end
 
     # enables the dynamic finders
     def self.method_missing(method_id, *arguments, &block)
-      puts "method called is #{method_id} with argumens #{arguments}" # todo change output to logging output
+      puts "method called is #{method_id} with arguments #{arguments}" # todo change output to logging output
       method = method_id.to_s
-      if method =~ /find_by_(.*)$/
-        self.execute_finder($1.to_sym, arguments[0], arguments[1]) #todo fix me
+      # identify finder methods
+      if method =~ /find_by_(.*)$/ and arguments.length > 0
+        namespace = arguments[1] if arguments.length == 2
+        execute_finder($1.to_sym, arguments[0], namespace)
       else
         puts "missed"
       end
     end
 
-    def self.execute_finder(element, value, namespace = nil)
-      SearchResults.new(@@ml_http.send_xquery(@@xquery_builder.find_by_element(element, value, nil, namespace)))
+    def self.execute_finder(element, value, namespace = nil, root = nil)
+      xquery = @@xquery_builder.find_by_element(element, value, nil, namespace)
+      @@log.info("Finder.execute_finder at line #{__LINE__}: #{xquery}")
+      SearchResults.new(@@ml_http.send_xquery(xquery))
+    end
+
+    private
+
+    def self.configure_logger(config)
+
+      begin
+        log_location = if config['logger']['file']
+          config['logger']['file']
+        else
+          STDERR
+        end
+        log_level = case config['logger']['level']
+          when "debug" then
+            Logger::DEBUG
+          when "info" then
+            Logger::INFO
+          when "warn" then
+            Logger::WARN
+          when "error" then
+            Logger::ERROR
+          when "fatal" then
+            Logger::FATAL
+          else
+            Logger::WARN
+        end
+
+        rotation  = if config['logger']['rotation']
+          config['logger']['rotation']
+        else
+          "daily"
+        end
+        file = open(log_location, File::WRONLY | File::APPEND | File::CREAT)
+        @@log = Logger.new(file, rotation)
+        @@log.level = log_level
+      rescue StandardError => oops
+        @@log = Logger.new(STDERR)
+        @@log.level = Logger::WARN
+      end
     end
   end
 

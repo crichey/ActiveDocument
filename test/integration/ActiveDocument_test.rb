@@ -21,7 +21,7 @@ require 'test/unit'
 
 class BaseTest < Test::Unit::TestCase
 
-  class Document < ActiveDocument::Base
+  class Book < ActiveDocument::Base
     default_namespace "http://docbook.org/ns/docbook"
     config 'config.yml'
   end
@@ -46,10 +46,14 @@ class BaseTest < Test::Unit::TestCase
     assert_instance_of(Document, book, "Book should be an instance of document not #{book.class}")
   end
 
-  def test_finder
+  def test_find_by_work
     results = Document.find_by_word("beliefs", "book")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
+  end
+
+  def test_element_word_searches
+    results = Book.find_by_pubdate("1900")
   end
 
 
