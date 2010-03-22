@@ -29,7 +29,7 @@ module ActiveDocument
   # Developers should extend this class to create their own domain classes
   class Base < Finder
     attr_reader :document
-
+    @@namespaces = Hash.new
 
     # create a new instance with an optional xml string to use for constructing the model
     def initialize(xml_string = nil)
@@ -37,24 +37,34 @@ module ActiveDocument
       @root = self.class.to_s.downcase
     end
 
-
     class << self
-
       attr_reader :default_namespace
       attr_accessor :root
-      attr_accessor :namespaces
+      attr_reader :namespaces
+
+      def namespaces(namespace_hash)
+        @@namespaces = namespace_hash
+      end
+
+      def add_namespace(element, uri)
+        @@namespaces[element.to_s] == uri
+      end
+
+      def remove_namespace(element)
+        @@namespaces.delete element
+      end
 
       def default_namespace(namespace)
-        @@default_namespace = namespace
+        @@default_namespace = namespace # todo should this just be an entry in namespaces?
       end
 
       # enables the dynamic finders
       def method_missing(method_id, *arguments, &block)
-        @@log.bebud("ActiveDocumet::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
+        @@log.debug("ActiveDocumet::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
         method = method_id.to_s
         # identify finder methods
-        element = $1.to_sym
         if method =~ /find_by_(.*)$/ and arguments.length > 0
+          element = $1.to_sym
           if arguments[1]
             namespace = arguments[1]
           else
@@ -81,8 +91,8 @@ module ActiveDocument
 
       def namespace_for_element(element)
         namespace = nill
-        if namespaces[element]:
-          namespace = namespaces[element]
+        if @@namespaces[element]
+          namespace = @@namespaces[element]
         else
           namespace = @@default_namespace unless @@default_namespace.nil?
         end

@@ -26,6 +26,11 @@ class BaseTest < Test::Unit::TestCase
     config 'config.yml'
   end
 
+  class Book2 < ActiveDocument::Base
+    config 'config.yml'
+    namespaces 'pubdate' => 'http://docbook.org/ns/docbook'
+  end
+
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
@@ -41,19 +46,36 @@ class BaseTest < Test::Unit::TestCase
 
   # test ability to load by uri
   def test_find_by_uri
-    book = Document.load("test.xml")
+    book = Book.load("test.xml")
     assert_not_nil(book, "Should have been able to load the document by uri")
-    assert_instance_of(Document, book, "Book should be an instance of document not #{book.class}")
+    assert_instance_of(Book, book, "Book should be an instance of document not #{book.class}")
   end
 
-  def test_find_by_work
-    results = Document.find_by_word("beliefs", "book")
+  def test_find_by_word
+    # test wtih explicit root
+    results = Book.find_by_word("beliefs", "book")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
+    # test wtih defualt root
+    results = Book.find_by_word("beliefs")
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(2, results.total)
   end
 
   def test_element_word_searches
+    # test with default namespace
     results = Book.find_by_pubdate("1900")
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
+    # now verify that same result is achieved when there is no default namespace and one is explicitly set for the element
+    results = Book2.find_by_pubdate("1900")
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
+    # now verify that same result is achieved when there is no default namespace and one is explicitly set in the call
+    Book2.remove_namespace("pubdate")
+    results = Book2.find_by_pubdate("1900",'http://docbook.org/ns/docbook')
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
   end
 
 
