@@ -23,10 +23,27 @@ require 'finder'
 
 # The ActiveXML module is used as a namespace for all classes relating to the ActiveXML functionality.
 # ActiveXML::Base is the class that should be extended in order to make use of this functionality in your own
-# domain objects
+# domain objects.
+#
 module ActiveDocument
 
   # Developers should extend this class to create their own domain classes
+  # = Usage
+  #
+  # == Dynamic Finders
+  # ActiveDocument::Base provides extensive methods for finding matching documents based on a variety of criteria.
+  # === Find By Element
+  # Accessed via find_by_ELEMENT method where Element = the name of your element. Executes a search for all documents
+  # with an element ELEMENT that contains the value passed in to the method call.
+  # Parameters are as follows:
+  # Value: the text to be found within the given element. This is a mandatory parameter
+  # Namespace: The namespace in which the element being searched occurs. This is an optional element. If provided,
+  # it will be used in the search and will override any default values. If no namespace if provided then the code will
+  # attempt to dynamically determine the namespace. First, if the element name is contained in the namespaces hash
+  # then that namespace is used. If the element name is not found then the _default_namespace_
+  # is used. If there is no default namespace, then no namespace is used.
+  #
+
   class Base < Finder
     attr_reader :document
     @@namespaces = Hash.new
