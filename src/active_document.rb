@@ -28,8 +28,9 @@ require 'finder'
 module ActiveDocument
 
   # Developers should extend this class to create their own domain classes
-  # = Usage
-  #
+  # -------------------
+  #  = Usage
+  # -------------------
   # == Dynamic Finders
   # ActiveDocument::Base provides extensive methods for finding matching documents based on a variety of criteria.
   # === Find By Element
@@ -45,7 +46,18 @@ module ActiveDocument
   # attempt to dynamically determine the namespace. First, if the element name is contained in the namespaces hash
   # then that namespace is used. If the element name is not found then the _default_namespace_
   # is used. If there is no default namespace, then no namespace is used.
-  #
+  # -------------------
+  #  == Dynamic Accessors
+  # In addition to the ability to access the underlying XML document (as a Nokogiri XML Document) you have the ability
+  # to access the XML as attributes of your domain object via dynamic attribute accessors (eg. domain_object.element_name) The rules for using accessors
+  # are as follows:
+  #  1. If the element_name is a simple type (i.e. text node with no children <tt><example>text</exmample></tt>)
+  #     1. If there is only one occurence of the element, return its text value
+  #     2. If there are multiple occurences of the element, return a list of each text value
+  #  2. If the element_name is a complex type (e.g. <tt><example><text>hi</text></example></tt>)
+  #     1. If there is only one ocurence of the element then return it as a Nokoguri Element
+  #     2. If there are multiple occurences of the element, return a list of Nokoguri Elements
+  # -------------------
   class Base < Finder
     attr_reader :document
     @@namespaces = Hash.new
@@ -55,6 +67,30 @@ module ActiveDocument
       @document = Nokogiri::XML(xml_string) unless xml_string.nil?
       @root = self.class.to_s.downcase
     end
+
+    # enables the dynamic finders
+    def method_missing(method_id, *arguments, &block)
+      @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
+      method = method_id.to_s
+      if method =~ /^(\w*)$/ # methods with no '.' in them and not ending in '='
+        if arguments.length > 0
+          super
+        end
+        access_element $1
+      end
+    end
+
+    def access_element(element)
+      nodeset = @document.xpath("//#{element}")
+      if nodeset.length == 1 # found one match
+        if nodeset[0].children.length == 1 and nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
+          nodeset[0].text
+        elsif nodeset[0].children.length >1 # we are now dealing with complex nodes
+          nodeset[0] # return the complex element
+        end
+      end
+    end
+
 
     class << self
       attr_reader :default_namespace
@@ -79,9 +115,9 @@ module ActiveDocument
 
       # enables the dynamic finders
       def method_missing(method_id, *arguments, &block)
-        @@log.debug("ActiveDocumet::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
+        @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
         method = method_id.to_s
-        # identify finder methods
+        # identify element search methods
         if method =~ /find_by_(.*)$/ and arguments.length > 0
           value = arguments[0]
           element = $1.to_sym
@@ -102,6 +138,7 @@ module ActiveDocument
           end
           execute_finder(element, value, root, element_namespace, root_namespace)
         end
+
       end
 
       # Returns an ActiveXML object representing the requested information
