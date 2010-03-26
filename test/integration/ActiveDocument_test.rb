@@ -28,7 +28,7 @@ class BaseTest < Test::Unit::TestCase
 
   class Book2 < ActiveDocument::Base
     config 'config.yml'
-    namespaces 'pubdate' => 'http://docbook.org/ns/docbook'
+    namespaces 'pubdate' => 'http://docbook.org/ns/docbook', book => 'http://docbook.org/ns/docbook'
   end
 
   # Called before every test method runs. Can be used
@@ -67,13 +67,40 @@ class BaseTest < Test::Unit::TestCase
     results = Book.find_by_pubdate("1900")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
-    # now verify that same result is achieved when there is no default namespace and one is explicitly set for the element
+
+    # now verify that same result is achieved when there is no default namespace and an element namespace is explicitly set for the element
     results = Book2.find_by_pubdate("1900")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
-    # now verify that same result is achieved when there is no default namespace and one is explicitly set in the call
+
+    # now verify that same result is achieved when there is no default namespace and an element namespace is explicitly set in the call
     Book2.remove_namespace("pubdate")
-    results = Book2.find_by_pubdate("1900",'http://docbook.org/ns/docbook')
+    results = Book2.find_by_pubdate("1900",nil, 'http://docbook.org/ns/docbook')
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
+
+    # test with nil passed in for element namespace, should use default namespace
+    results = Book.find_by_pubdate("1900", nil, nil, nil)
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
+
+    # test with invalid explicit element namespace to act as baseline
+    results = Book.find_by_pubdate("1900", nil, "bad")
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(0, results.total)
+
+     # test with explicit root of book with default namespace
+    results = Book.find_by_pubdate("1900", "book")
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
+
+    # test with explicit root of book with default element namespace and explicit root namespace
+    results = Book.find_by_pubdate("1900", "book", nil, 'http://docbook.org/ns/docbook')
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
+
+    # now verify that same result is achieved when there is no default namespace and an element namespace is explicitly set for the element and root
+    results = Book2.find_by_pubdate("1900")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
   end

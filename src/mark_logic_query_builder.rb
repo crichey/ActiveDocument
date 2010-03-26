@@ -38,7 +38,7 @@ GENERATED
       xquery << "</options>)"
     end
 
-    def find_by_element(element, value, root, namespace)
+    def find_by_element(element, value, root = nil, element_namespace = nil, root_namespace = nil)
       xquery = <<GENERATED
 import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
 search:search("word:#{value}",
@@ -46,15 +46,15 @@ search:search("word:#{value}",
 GENERATED
       unless root.nil?
         xquery << "<searchable-expression"
-        xquery << "  xmlns:a=\"#{namespace}\"" unless namespace.nil? or namespace.empty?
+        xquery << "  xmlns:a=\"#{root_namespace}\"" unless root_namespace.nil?
         xquery << '>/'
-        xquery << "a:" unless namespace.nil? or namespace.empty?
+        xquery << "a:" unless root_namespace.nil?
         xquery << "#{root}</searchable-expression>)"
       end
       xquery << <<CONSTRAINT
 <constraint name="word">
 <word>
-<element ns="#{namespace unless namespace.nil?}" name="#{element}"/>
+<element ns="#{element_namespace unless element_namespace.nil?}" name="#{element}"/>
 </word>
 </constraint></options>)
 CONSTRAINT

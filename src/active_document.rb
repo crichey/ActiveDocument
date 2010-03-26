@@ -35,15 +35,17 @@ module ActiveDocument
   # === Find By Element
   # Accessed via find_by_ELEMENT method where Element = the name of your element. Executes a search for all documents
   # with an element ELEMENT that contains the value passed in to the method call.
-  # Parameters are as follows:
-  # Value: the text to be found within the given element. This is a mandatory parameter
-  # Namespace: The namespace in which the element being searched occurs. This is an optional element. If provided,
+  # The signature of this dynamic finder is:
+  # <tt>find_by_ELEMENT(value, root [optional], element_namespace [optional], root_namespace [optional])</tt>
+  #
+  # Parameters details are as follows:
+  # <b>Value:</b> the text to be found within the given element. This is a mandatory parameter
+  # <b>Namespace:</b> The namespace in which the element being searched occurs. This is an optional element. If provided,
   # it will be used in the search and will override any default values. If no namespace if provided then the code will
   # attempt to dynamically determine the namespace. First, if the element name is contained in the namespaces hash
   # then that namespace is used. If the element name is not found then the _default_namespace_
   # is used. If there is no default namespace, then no namespace is used.
   #
-
   class Base < Finder
     attr_reader :document
     @@namespaces = Hash.new
@@ -81,18 +83,24 @@ module ActiveDocument
         method = method_id.to_s
         # identify finder methods
         if method =~ /find_by_(.*)$/ and arguments.length > 0
+          value = arguments[0]
           element = $1.to_sym
           if arguments[1]
-            namespace = arguments[1]
-          else
-            namespace = namespace_for_element(element)
-          end
-          if arguments[2]
-            root = arguments[2]
+            root = arguments[1]
           else
             root = @root
-            execute_finder(element, arguments[0], namespace, root)
           end
+          if arguments[2]
+            element_namespace = arguments[2]
+          else
+            element_namespace = namespace_for_element(element)
+          end
+          if arguments[3]
+            root_namespace = arguments[3]
+          else
+            root_namespace = namespace_for_element(root)
+          end
+          execute_finder(element, value, root, element_namespace, root_namespace)
         end
       end
 

@@ -39,14 +39,14 @@ module ActiveDocument
       # identify finder methods
       if method =~ /find_by_(.*)$/ and arguments.length > 0
         namespace = arguments[1] if arguments.length == 2
-        execute_finder($1.to_sym, arguments[0], namespace)
+        execute_finder($1.to_sym, arguments[0], nil, namespace)
       else
         puts "missed"
       end
     end
 
-    def self.execute_finder(element, value, namespace = nil, root = nil)
-      xquery = @@xquery_builder.find_by_element(element, value, nil, namespace)
+    def self.execute_finder(element, value, root = nil, element_namespace = nil, root_namespace = nil)
+      xquery = @@xquery_builder.find_by_element(element, value, root, element_namespace, root_namespace)
       @@log.info("Finder.execute_finder at line #{__LINE__}: #{xquery}")
       SearchResults.new(@@ml_http.send_xquery(xquery))
     end
