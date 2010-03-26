@@ -50,11 +50,14 @@ class BaseTest < Test::Unit::TestCase
     assert_equal "Savannah", my_book.author
     # test for single complex element
     element = my_book.book
-    assert_instance_of (Nokogiri::XML::Element, element)
+    assert_instance_of Nokogiri::XML::Element, element
     assert_equal "book", element.name
     assert_equal 2, element.children.length
     # test for multiple simple elements
-    
+    titles = @book.TITLE
+    assert_equal 49, titles.length
+    assert_equal "The Tragedy of Antony and Cleopatra", titles[0]
+    assert_equal "Dramatis Personae", titles[1]
   end
 
 end

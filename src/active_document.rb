@@ -88,6 +88,11 @@ module ActiveDocument
         elsif nodeset[0].children.length >1 # we are now dealing with complex nodes
           nodeset[0] # return the complex element
         end
+      elsif nodeset.length >1 # multiple matches
+        if nodeset.all? {|node| node.children.length == 1} and nodeset.all? {|node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE}
+          # we have multiple simple text nodes
+          nodeset.collect {|node| node.text}
+        end
       end
     end
 
