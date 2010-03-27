@@ -58,6 +58,11 @@ class BaseTest < Test::Unit::TestCase
     assert_equal 49, titles.length
     assert_equal "The Tragedy of Antony and Cleopatra", titles[0]
     assert_equal "Dramatis Personae", titles[1]
+    # test for multiple complex elements
+    groups = @book.PGROUP
+    assert_equal 6, groups.length
+    assert_instance_of Nokogiri::XML::Element, groups[0]
+    assert_equal 4, groups[0].children.length
   end
 
 end

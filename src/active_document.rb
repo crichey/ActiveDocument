@@ -64,7 +64,11 @@ module ActiveDocument
 
     # create a new instance with an optional xml string to use for constructing the model
     def initialize(xml_string = nil)
-      @document = Nokogiri::XML(xml_string) unless xml_string.nil?
+      unless xml_string.nil?
+        @document = Nokogiri::XML(xml_string) do |config|
+          config.noblanks
+        end
+      end
       @root = self.class.to_s.downcase
     end
 
@@ -92,6 +96,9 @@ module ActiveDocument
         if nodeset.all? {|node| node.children.length == 1} and nodeset.all? {|node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE}
           # we have multiple simple text nodes
           nodeset.collect {|node| node.text}
+        else
+          # we have multiple complex elements
+          nodeset.to_a
         end
       end
     end
