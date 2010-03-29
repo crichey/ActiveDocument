@@ -57,9 +57,14 @@ module ActiveDocument
   #  2. If the element_name is a complex type (e.g. <tt><example><text>hi</text></example></tt>)
   #     1. If there is only one ocurence of the element then return it as a Nokoguri Element
   #     2. If there are multiple occurences of the element, return a list of Nokoguri Elements
+  #
+  # More complex dynamic accessors are also supported. They still adhere to the rules above, but instead of just looking
+  # for an element anywhere in the document, you can be more specific. For example, domain_object.chapter.paragraph
+  # will find all paragraph elements that are children of chapter elements.
   # -------------------
   class Base < Finder
     attr_reader :document
+    attr_reader :root
     @@namespaces = Hash.new
 
     # create a new instance with an optional xml string to use for constructing the model
@@ -85,24 +90,44 @@ module ActiveDocument
     end
 
     def access_element(element)
-      nodeset = @document.xpath("//#{element}")
-      if nodeset.length == 1 # found one match
-        if nodeset[0].children.length == 1 and nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
-          nodeset[0].text
-        elsif nodeset[0].children.length >1 # we are now dealing with complex nodes
-          nodeset[0] # return the complex element
+      xpath = ""
+      xpath = "//" unless self.instance_of? PartialResult
+      xpath << element
+      evaluate_nodeset @document.xpath(xpath)
+    end
+
+    private
+
+    def evaluate_nodeset(result_nodeset)
+      if result_nodeset.length == 1 # found one match
+        if result_nodeset[0].children.length == 1 and result_nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
+          result_nodeset[0].text
+        elsif result_nodeset[0].children.length >1 # we are now dealing with complex nodes
+          PartialResult.new(result_nodeset)
         end
-      elsif nodeset.length >1 # multiple matches
-        if nodeset.all? {|node| node.children.length == 1} and nodeset.all? {|node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE}
+      elsif result_nodeset.length >1 # multiple matches
+        if result_nodeset.all? {|node| node.children.length == 1} and result_nodeset.all? {|node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE}
           # we have multiple simple text nodes
-          nodeset.collect {|node| node.text}
+          result_nodeset.collect {|node| node.text}
         else
           # we have multiple complex elements
-          nodeset.to_a
+          PartialResult.new(result_nodeset)
         end
       end
     end
 
+    class PartialResult < self
+      def initialize(nodeset)
+        @document = nodeset
+        @root = nodeset[0].name
+      end
+
+      def to_s
+        nodeset.to_s
+      end
+
+
+    end
 
     class << self
       attr_reader :default_namespace

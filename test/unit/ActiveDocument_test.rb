@@ -29,7 +29,7 @@ class BaseTest < Test::Unit::TestCase
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-   @book = Book.new(IO.read("../data/a_and_c.xml"))
+    @book = Book.new(IO.read("../data/a_and_c.xml"))
 
   end
 
@@ -42,27 +42,32 @@ class BaseTest < Test::Unit::TestCase
 
   def test_dynamic_attributes
     my_book = Book.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>")
-   assert_raise NoMethodError do
+    assert_raise NoMethodError do
       my_book.title 1900 # dynamic attributes don't allow for paramters
-   end
+    end
     # test simple case for single text nodes
     assert_equal "Tale of Two Penguins", my_book.title
     assert_equal "Savannah", my_book.author
     # test for single complex element
     element = my_book.book
-    assert_instance_of Nokogiri::XML::Element, element
-    assert_equal "book", element.name
-    assert_equal 2, element.children.length
+    assert_instance_of ActiveDocument::Base::PartialResult, element
+    assert_equal "book", element.root
+    #assert_equal 2, element.children.length
     # test for multiple simple elements
     titles = @book.TITLE
     assert_equal 49, titles.length
     assert_equal "The Tragedy of Antony and Cleopatra", titles[0]
     assert_equal "Dramatis Personae", titles[1]
-    # test for multiple complex elements
-    groups = @book.PGROUP
-    assert_equal 6, groups.length
-    assert_instance_of Nokogiri::XML::Element, groups[0]
-    assert_equal 4, groups[0].children.length
+#    # test for multiple complex elements
+#    groups = @book.PGROUP
+#    assert_equal 6, groups.length
+#    assert_instance_of ActiveDocument::PartialResult, groups
+    #assert_equal 4, groups[0].children.length
+  end
+
+  def test_nested_dynamic_attributes
+    title = @book.PERSONAE.TITLE
+    assert_equal "Dramatis Personae", title
   end
 
 end

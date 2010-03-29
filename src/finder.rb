@@ -34,7 +34,7 @@ module ActiveDocument
 
     # enables the dynamic finders
     def self.method_missing(method_id, *arguments, &block)
-      puts "method called is #{method_id} with arguments #{arguments}" # todo change output to logging output
+      @@log.debug("ActiveDocument::Finder at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
       method = method_id.to_s
       # identify finder methods
       if method =~ /find_by_(.*)$/ and arguments.length > 0
@@ -51,6 +51,10 @@ module ActiveDocument
       SearchResults.new(@@ml_http.send_xquery(xquery))
     end
 
+    def self.search(search_string)
+      search_text = @@xquery_builder.search(search_string)
+      SearchResults.new(@@ml_http.send_xquery(search_text)) # todo support options node
+    end
     private
 
     def self.configure_logger(config)
