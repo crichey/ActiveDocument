@@ -1,5 +1,5 @@
 require "test/unit"
-$:.unshift File.join(File.dirname(__FILE__), "../..", "src")
+$:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require 'active_document'
 require 'search_results'
 require 'rubygems'

@@ -13,7 +13,7 @@
 #   limitations under the License.
 
 require "test/unit"
-$:.unshift File.join(File.dirname(__FILE__), "../..", "src")
+$:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require 'mark_logic_http'
 require 'yaml'
 
