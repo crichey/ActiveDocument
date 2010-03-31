@@ -20,6 +20,7 @@ require 'yaml'
 require 'mark_logic_query_builder'
 require 'search_results'
 require 'finder'
+require "inheritable"
 
 # The ActiveXML module is used as a namespace for all classes relating to the ActiveXML functionality.
 # ActiveXML::Base is the class that should be extended in order to make use of this functionality in your own
@@ -63,18 +64,22 @@ module ActiveDocument
   # will find all paragraph elements that are children of chapter elements.
   # -------------------
   class Base < Finder
-    attr_reader :document
-    attr_reader :root
-    @@namespaces = Hash.new
+    include ClassLevelInheritableAttributes
+    inheritable_attributes_list :namespaces, :default_namespace
+    @namespaces = Hash.new
+    @default_namespace = String.new
+    attr_reader :document, :uri, :root
+
 
     # create a new instance with an optional xml string to use for constructing the model
-    def initialize(xml_string = nil)
+    def initialize(xml_string = nil, uri = nil)
       unless xml_string.nil?
         @document = Nokogiri::XML(xml_string) do |config|
           config.noblanks
         end
       end
-      @root = self.class.to_s.downcase
+      @root = self.class.to_s
+      @uri = uri
     end
 
     # enables the dynamic finders
@@ -92,11 +97,18 @@ module ActiveDocument
     def access_element(element)
       xpath = ""
       xpath = "//" unless self.instance_of? PartialResult
+      namespace = self.class.namespace_for_element(element)
+      element = "ns:#{element}" unless namespace.nil? || namespace.empty?
       xpath << element
-      evaluate_nodeset @document.xpath(xpath)
+      if namespace.nil?
+        nodes = @document.xpath(xpath)
+      else
+        nodes = @document.xpath(xpath, {'ns' => namespace})
+      end
+      evaluate_nodeset(nodes)
+
     end
 
-    private
 
     def evaluate_nodeset(result_nodeset)
       if result_nodeset.length == 1 # found one match
@@ -123,31 +135,29 @@ module ActiveDocument
       end
 
       def to_s
-        nodeset.to_s
+        @document.to_s
       end
 
 
     end
 
     class << self
-      attr_reader :default_namespace
-      attr_accessor :root
-      attr_reader :namespaces
+      attr_reader :namespaces, :default_namespace, :root
 
       def namespaces(namespace_hash)
-        @@namespaces = namespace_hash
+        @namespaces = namespace_hash
       end
 
       def add_namespace(element, uri)
-        @@namespaces[element.to_s] == uri
+        @namespaces[element.to_s] == uri
       end
 
       def remove_namespace(element)
-        @@namespaces.delete element
+        @namespaces.delete element
       end
 
       def default_namespace(namespace)
-        @@default_namespace = namespace # todo should this just be an entry in namespaces?
+        @default_namespace = namespace # todo should this just be an entry in namespaces?
       end
 
       # enables the dynamic finders
@@ -180,20 +190,20 @@ module ActiveDocument
 
       # Returns an ActiveXML object representing the requested information
       def load(uri)
-        self.new(@@ml_http.send_xquery(@@xquery_builder.load(uri)))
+        self.new(@@ml_http.send_xquery(@@xquery_builder.load(uri)), uri)
       end
 
       # Finds all documents of this type that contain the word anywhere in their structure
-      def find_by_word(word, root=@root, namespace=@@default_namespace)
+      def find_by_word(word, root=@root, namespace=@default_namespace)
         SearchResults.new(@@ml_http.send_xquery(@@xquery_builder.find_by_word(word, root, namespace)))
       end
 
       def namespace_for_element(element)
-        namespace = nill
-        if @@namespaces[element]
-          namespace = @@namespaces[element]
+        namespace = nil
+        if @namespaces[element]
+          namespace = @namespaces[element]
         else
-          namespace = @@default_namespace unless @@default_namespace.nil?
+          namespace = @default_namespace unless @default_namespace.nil?
         end
         namespace
       end

@@ -49,7 +49,31 @@ class SearchResultsTest < Test::Unit::TestCase
   </search:metrics>
 </search:response>
 BEGIN
-    @search_results = ActiveDocument::SearchResults.new(xml_results)
+
+    xml_results_noh = <<BEGIN
+      <search:response total="2" start="1" page-length="10" xmlns:search="http://marklogic.com/appservices/search">
+  <search:result index="1" uri="/documents/discoverBook.xml" path="fn:doc('/documents/discoverBook.xml')" score="243" confidence="0.97047" fitness="1">
+    <search:snippet>
+      <search:match path="fn:doc('/documents/discoverBook.xml')/*:book/*:bookinfo/*:title">Discoverers and Explorers</search:match>
+      <search:match path="fn:doc('/documents/discoverBook.xml')/*:book/*:chapter[1]/*:chapterinfo/*:biblioentry/*:title">Discoverers and Explorers</search:match>
+    </search:snippet>
+  </search:result>
+  <search:result index="2" uri="/documents/a_and_c.xml" path="fn:doc('/documents/a_and_c.xml')" score="234" confidence="0.952329" fitness="1">
+    <search:snippet>
+      <search:match path="fn:doc('/documents/a_and_c.xml')/PLAY/PERSONAE/PERSONA[10]">Officers, Soldiers, Messengers, and other Attendants.</search:match>
+    </search:snippet>
+  </search:result>
+  <search:qtext>and</search:qtext>
+  <search:metrics>
+    <search:query-resolution-time>PT0.009197S</search:query-resolution-time>
+    <search:facet-resolution-time>PT0.000083S</search:facet-resolution-time>
+    <search:snippet-resolution-time>PT0.019534S</search:snippet-resolution-time>
+    <search:total-time>PT0.029033S</search:total-time>
+  </search:metrics>
+</search:response>
+BEGIN
+        @search_results = ActiveDocument::SearchResults.new(xml_results)
+    @search_results_noh = ActiveDocument::SearchResults.new(xml_results_noh)
 
   end
 
@@ -158,6 +182,13 @@ BEGIN
     assert_equal("Officers, Soldiers, Messengers, <search:highlight>and</search:highlight> other Attendants.", match[0].highlighted_match)
     # check match with custom highlighting
     assert_equal("Officers, Soldiers, Messengers, <b>and</b> other Attendants.", match[0].highlighted_match("b"))
+
+    #check highlighting function when no highlighting present in results
+    results = @search_results_noh.to_a
+    match = results[0].to_a
+    # check match text
+    assert_equal("Discoverers and Explorers", match[0].to_s)
+    assert_equal("Discoverers and Explorers", match[0].highlighted_match("b"))
   end
 
   def test_root_type

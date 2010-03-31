@@ -20,7 +20,7 @@ require 'rubygems'
 require 'test/unit'
 
 
-class Book < ActiveDocument::Base
+class BookUnit < ActiveDocument::Base
   config 'config.yml'
 end
 
@@ -29,7 +29,7 @@ class BaseTest < Test::Unit::TestCase
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    @book = Book.new(IO.read("../data/a_and_c.xml"))
+    @book = BookUnit.new(IO.read("../data/a_and_c.xml"))
 
   end
 
@@ -41,7 +41,7 @@ class BaseTest < Test::Unit::TestCase
   end
 
   def test_dynamic_attributes
-    my_book = Book.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>")
+    my_book = BookUnit.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>")
     assert_raise NoMethodError do
       my_book.title 1900 # dynamic attributes don't allow for paramters
     end
@@ -53,6 +53,7 @@ class BaseTest < Test::Unit::TestCase
     assert_instance_of ActiveDocument::Base::PartialResult, element
     assert_equal "book", element.root
     #assert_equal 2, element.children.length
+
     # test for multiple simple elements
     titles = @book.TITLE
     assert_equal 49, titles.length

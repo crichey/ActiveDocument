@@ -14,6 +14,7 @@
 
 require 'rubygems'
 require 'nokogiri'
+require 'search_result'
 
 module ActiveDocument
   class SearchResults

@@ -29,16 +29,24 @@ module ActiveDocument
 
     def to_s
       value = @node.xpath("./node()").to_s
-      value[/<search:highlight>/] = ""
-      value[/<\/search:highlight>/] = ""
+      begin
+        value[/<search:highlight>/] = ""
+        value[/<\/search:highlight>/] = ""
+      rescue IndexError
+      end
       return value
     end
 
     def highlighted_match(highlight_tag = nil)
       value = @node.xpath("./node()").to_s
       unless highlight_tag.nil?
-        value[/<search:highlight>/] = "<#{highlight_tag}>"
-        value[/<\/search:highlight>/] = "</#{highlight_tag}>"
+        begin
+          value[/<search:highlight>/] = "<#{highlight_tag}>"
+          value[/<\/search:highlight>/] = "</#{highlight_tag}>"
+        rescue IndexError
+          value
+        end
+
       end
       return value
     end

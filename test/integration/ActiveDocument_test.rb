@@ -28,7 +28,7 @@ class BaseTest < Test::Unit::TestCase
 
   class Book2 < ActiveDocument::Base
     config 'config.yml'
-    namespaces 'pubdate' => 'http://docbook.org/ns/docbook', book => 'http://docbook.org/ns/docbook'
+    namespaces :pubdate => 'http://docbook.org/ns/docbook', :book => 'http://docbook.org/ns/docbook'
   end
 
   # Called before every test method runs. Can be used
@@ -49,6 +49,7 @@ class BaseTest < Test::Unit::TestCase
     book = Book.load("test.xml")
     assert_not_nil(book, "Should have been able to load the document by uri")
     assert_instance_of(Book, book, "Book should be an instance of document not #{book.class}")
+    assert_equal "test.xml", book.uri
   end
 
   def test_find_by_word
