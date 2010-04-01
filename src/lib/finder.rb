@@ -51,8 +51,8 @@ module ActiveDocument
       SearchResults.new(@@ml_http.send_xquery(xquery))
     end
 
-    def self.search(search_string)
-      search_text = @@xquery_builder.search(search_string)
+    def self.search(search_string, start = 1, page_length = 10)
+      search_text = @@xquery_builder.search(search_string, start, page_length)
       SearchResults.new(@@ml_http.send_xquery(search_text)) # todo support options node
     end
     private

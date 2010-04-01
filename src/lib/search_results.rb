@@ -20,7 +20,6 @@ module ActiveDocument
   class SearchResults
     include Enumerable
 
-
     def initialize(results)
       @results_document = Nokogiri::XML(results)
     end

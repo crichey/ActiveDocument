@@ -60,10 +60,10 @@ GENERATED
 CONSTRAINT
     end
 
-    def search(search_text)
+    def search(search_text, start, page_length)
       <<-GENERATED
       import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
-      search:search("#{search_text}")
+      search:search("#{search_text}",(),#{start}, #{page_length})
       GENERATED
     end
 
