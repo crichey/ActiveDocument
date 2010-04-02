@@ -13,11 +13,11 @@
 #   limitations under the License.
 
 require "test/unit"
-$:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
-require 'search_results'
-require 'search_result'
-require 'search_match'
-require 'active_document'
+$:.unshift File.join(File.dirname(__FILE__), "../../src/lib", "ActiveDocument8")
+require 'ActiveDocument/search_results'
+require 'ActiveDocument/search_result'
+require 'ActiveDocument/search_match'
+require 'ActiveDocument/active_document'
 
 class SearchResultsTest < Test::Unit::TestCase
   class Book < ActiveDocument::Base

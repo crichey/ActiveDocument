@@ -12,11 +12,11 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-require 'mark_logic_http'
-require 'mark_logic_query_builder'
+require 'ActiveDocument/mark_logic_http'
+require 'ActiveDocument/mark_logic_query_builder'
 require 'rubygems'
 require 'nokogiri'
-require 'search_results'
+require 'ActiveDocument/search_results'
 require 'logger'
 
 module ActiveDocument
@@ -51,8 +51,10 @@ module ActiveDocument
       SearchResults.new(@@ml_http.send_xquery(xquery))
     end
 
-    def self.search(search_string, start = 1, page_length = 10)
-      search_text = @@xquery_builder.search(search_string, start, page_length)
+    def self.search(search_string, start = 1, page_length = 10, options = nil)
+      if start.nil? : start = 1 end
+      if page_length.nil? : page_length = 10 end
+      search_text = @@xquery_builder.search(search_string, start, page_length, options)
       SearchResults.new(@@ml_http.send_xquery(search_text)) # todo support options node
     end
     private

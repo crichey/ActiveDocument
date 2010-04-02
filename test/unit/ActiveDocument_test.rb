@@ -13,9 +13,9 @@
 #   limitations under the License.
 
 require "test/unit"
-$:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
-require 'active_document'
-require 'search_results'
+$:.unshift File.join(File.dirname(__FILE__), "../../src/", "lib")
+require 'ActiveDocument/active_document'
+require 'ActiveDocument/search_results'
 require 'rubygems'
 require 'test/unit'
 
