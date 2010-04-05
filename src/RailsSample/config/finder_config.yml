@@ -1,0 +1,8 @@
+uri: http://localhost:8010/dynamic_dispatch.xqy
+user_name: admin
+password: admin
+
+logger:
+  #file: ActiveDocument.log
+  level: debug
+  rotation: daily

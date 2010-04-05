@@ -1,0 +1,41 @@
+<xhtml>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+  <meta name="keywords" content=""/>
+  <meta name="description" content=""/>
+  <title>WITS Search</title>
+  <%= stylesheet_link_tag "reset-fonts-grids", :media => "all" %>
+  <%= stylesheet_link_tag "base", :media => "all" %>
+</head>
+<body>
+<div id="doc3" class="yui-t2">
+  <br/>
+	<div id="hd">
+      <div style="text-align:center; vertical-align:top;">
+        <span style="float:left"><%= image_tag  "/images/seal_color_medium.gif", :size => "77x77" %></span>
+        <h1>WITS Search</h1>
+        <br/>
+        <% form_tag({:controller => 'search', :action => 'index'}, :method => "get") do -%>
+        <%= text_field_tag :query, @query%>
+        <%= submit_tag 'Search' %>
+    <% end %>
+        </div>
+      <hr/>
+	</div>
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+				 <%= yield :layout %>
+			</div>
+		</div>
+		<div class="yui-b">
+			<%= yield :sidebar %>
+		</div>
+	</div>
+	<div id="ft">
+		<div style="text-align:center">Copyright MarkLogic 2010</div>
+	</div>
+</div>
+</body>
+</xhtml>
+

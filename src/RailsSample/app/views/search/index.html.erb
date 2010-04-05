@@ -1,0 +1,29 @@
+<% content_for(:sidebar) do %>
+    <% if @facets -%>
+        <% @facets.keys.each do |key| -%>
+            <h2><%= key %> </h2>
+            <% @facets[key].each do |key, value| -%>
+                <p><%= key -%> (<%= value -%>)</p>
+            <% end -%>
+        <% end -%>
+
+    <% end -%>
+<% end %>
+
+<div style="text-align:left">
+  Showing <%= @results.start %> - <%= @results.start + @results.page_length-1 %> of <%= @results.total %> results
+  in <%= @results.total_time %>
+</div>
+<table frame="below" width="100%">
+  <% @results.each do |result| -%>
+      <tr class="<%= cycle("odd", "even") %>">
+        <td>
+          <%= link_to(result.entries[0].highlighted_match("font color='red'"), { :action => "show_results", :uri => result.uri, :query => @query}) %>
+        </td>
+      </tr>
+  <% end -%>
+</table>
+<div style="text-align:left">
+  <%= link_to("Previous", {:action => "index", :query => @query, :start => @results.start - @results.page_length}) unless @results.start - @results.page_length <1 -%>
+  <%= link_to("Next", {:action => "index", :query => @query, :start => @results.start + @results.page_length}) unless @results.start + @results.page_length > @results.total -%>
+</div>
