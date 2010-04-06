@@ -13,7 +13,7 @@
 #   limitations under the License.
 
 require "test/unit"
-$:.unshift File.join(File.dirname(__FILE__), "../../src/lib", "ActiveDocument8")
+$:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require 'ActiveDocument/search_results'
 require 'ActiveDocument/search_result'
 require 'ActiveDocument/search_match'
@@ -72,9 +72,53 @@ BEGIN
   </search:metrics>
 </search:response>
 BEGIN
-        @search_results = ActiveDocument::SearchResults.new(xml_results)
-    @search_results_noh = ActiveDocument::SearchResults.new(xml_results_noh)
 
+    results_with_facets = <<-BEGIN
+<search:response total="21973" start="1" page-length="10" xmlns:search="http://marklogic.com/appservices/search">
+  <search:result index="9" uri="/Users/clarkrichey/Downloads/wits/wits21402.xml" path="fn:doc(&quot;/Users/clarkrichey/Downloads/wits/wits21402.xml&quot;)" score="196" confidence="0.338805" fitness="0.890659">
+    <search:snippet>
+      <search:match path="fn:doc(&quot;/Users/clarkrichey/Downloads/wits/wits21402.xml&quot;)/*:Incident/*:Subject">1 newspaper editor injured in letter <search:highlight>bomb</search:highlight> attack by Informal Anarchist Federation in Turin, Piemonte, Italy</search:match>
+      <search:match path="fn:doc(&quot;/Users/clarkrichey/Downloads/wits/wits21402.xml&quot;)/*:Incident/*:EventTypeList">
+<search:highlight>Bombing</search:highlight>
+</search:match>
+      <search:match path="fn:doc(&quot;/Users/clarkrichey/Downloads/wits/wits21402.xml&quot;)/*:Incident/*:WeaponTypeList/*:WeaponType">Letter <search:highlight>Bomb</search:highlight></search:match>
+    </search:snippet>
+  </search:result>
+  <search:result index="10" uri="/Users/clarkrichey/Downloads/wits/wits23118.xml" path="fn:doc(&quot;/Users/clarkrichey/Downloads/wits/wits23118.xml&quot;)" score="196" confidence="0.338805" fitness="0.890659">
+    <search:snippet>
+      <search:match path="fn:doc(&quot;/Users/clarkrichey/Downloads/wits/wits23118.xml&quot;)/*:Incident/*:Subject">1 government employee killed in <search:highlight>bombing</search:highlight> in Ghazni, Afghanistan</search:match>
+      <search:match path="fn:doc(&quot;/Users/clarkrichey/Downloads/wits/wits23118.xml&quot;)/*:Incident/*:EventTypeList">
+<search:highlight>Bombing</search:highlight>
+</search:match>
+    </search:snippet>
+  </search:result>
+  <search:facet name="Region">
+    <search:facet-value name="Africa" count="622">Africa</search:facet-value>
+    <search:facet-value name="Central and South America" count="1012">Central and South America</search:facet-value>
+    <search:facet-value name="East Asia-Pacific" count="1198">East Asia-Pacific</search:facet-value>
+    <search:facet-value name="Eurasia" count="761">Eurasia</search:facet-value>
+    <search:facet-value name="Europe" count="1057">Europe</search:facet-value>
+    <search:facet-value name="Middle East and Persian Gulf" count="10374">Middle East and Persian Gulf</search:facet-value>
+    <search:facet-value name="North America and Caribbean" count="16">North America and Caribbean</search:facet-value>
+    <search:facet-value name="South Asia" count="6933">South Asia</search:facet-value>
+  </search:facet>
+  <search:facet name="Country">
+    <search:facet-value name="England" count="200">England</search:facet-value>
+    <search:facet-value name="Ireland" count="422">Ireland</search:facet-value>
+    <search:facet-value name="Brazil" count="10">Brazil</search:facet-value>
+  </search:facet>
+  <search:qtext>bomb</search:qtext>
+  <search:metrics>
+    <search:query-resolution-time>PT0.420016S</search:query-resolution-time>
+    <search:facet-resolution-time>PT0.002873S</search:facet-resolution-time>
+    <search:snippet-resolution-time>PT0.039998S</search:snippet-resolution-time>
+    <search:total-time>PT0.463759S</search:total-time>
+  </search:metrics>
+</search:response>
+    BEGIN
+    @search_results = ActiveDocument::SearchResults.new(xml_results)
+    @search_results_noh = ActiveDocument::SearchResults.new(xml_results_noh)
+    @faceted_results = ActiveDocument::SearchResults.new(results_with_facets)
   end
 
   # Called after every test method runs. Can be used to tear
@@ -189,6 +233,16 @@ BEGIN
     # check match text
     assert_equal("Discoverers and Explorers", match[0].to_s)
     assert_equal("Discoverers and Explorers", match[0].highlighted_match("b"))
+  end
+
+  def test_facets
+    facets = @faceted_results.facets
+    assert_equal 2, facets.size
+    assert_block do
+      facets.keys.include? "Region"
+      facets.keys.include? "Country"
+    end
+    assert_equal 8, facets["Region"].size
   end
 
   def test_root_type

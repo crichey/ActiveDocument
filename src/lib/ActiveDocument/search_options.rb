@@ -20,23 +20,45 @@
 # * value_constraints - this is a #Hash of value constraint names to their options. e.g. search_options_object.value_constraints["Region"] = {"namespace" => "http://wits.nctc.gov", "element" => "Region"}
 module ActiveDocument
   class SearchOptions
-    attr_accessor :return_facets, :value_constraints
+    attr_accessor :return_facets, :value_constraints, :word_constraints, :range_constraints
 
     def initialize
       @return_facets = true;
       @value_constraints = Hash.new
+      @word_constraints = Hash.new
+      @range_constraints = Hash.new
     end
 
 
     # outputs the object in correctly formatted XML suitable for use in a search
     def to_s
-      value_constraints = String.new
+      constraints = String.new
       @value_constraints.each do |key, value|
-        value_constraints << <<-XML
+        constraints << <<-XML
         <constraint name="#{key}">
           <value>
             <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
           </value>
+        </constraint>
+        XML
+      end
+
+      @word_constraints.each do |key, value|
+        constraints << <<-XML
+        <constraint name="#{key}">
+          <word>
+            <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
+          </word>
+        </constraint>
+        XML
+      end
+
+      @range_constraints.each do |key, value|
+        constraints << <<-XML
+        <constraint name="#{key}">
+          <range>
+            <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
+          </range>
         </constraint>
         XML
       end
@@ -47,10 +69,9 @@ module ActiveDocument
       XML
 
       # add in constraints
-      unless value_constraints.empty?
-        value << value_constraints
+      unless constraints.empty?
+        value << constraints
       end
-
       # close the options node
       value << "</options>"
 

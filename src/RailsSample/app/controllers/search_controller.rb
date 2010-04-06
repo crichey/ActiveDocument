@@ -3,6 +3,7 @@ class SearchController < ApplicationController
   def initialize
     @search_options = ActiveDocument::SearchOptions.new
     @search_options.range_constraints["Region"] = {"namespace" => "http://wits.nctc.gov", "element" => "Region"}
+    @search_options.range_constraints["Facility Type"] = {"namespace" => "http://wits.nctc.gov", "element" => "FacilityType"}
   end
 
   def index

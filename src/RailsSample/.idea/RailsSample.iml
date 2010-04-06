@@ -63,7 +63,7 @@
     <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord (v2.3.2, /Users/clarkrichey/.gem/ruby/1.8/gems/activerecord-2.3.2)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v1.4.2, /Users/clarkrichey/.gem/ruby/1.8/gems/activesupport-1.4.2)" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord (v1.15.3, /Users/clarkrichey/.gem/ruby/1.8/gems/activerecord-1.15.3)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activedocument (v0.1, /opt/local/lib/ruby/gems/1.8/gems/activedocument-0.1)" level="application" />
+    <orderEntry type="library" name="[gem] activedocument (v0.1, null)" level="application" />
   </component>
 </module>
 

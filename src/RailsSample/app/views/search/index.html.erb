@@ -2,11 +2,10 @@
     <% if @facets -%>
         <% @facets.keys.each do |key| -%>
             <h2><%= key %> </h2>
-            <% @facets[key].each do |key, value| -%>
-                <p><%= key -%> (<%= value -%>)</p>
+            <% @facets[key].sort {|a, b| Integer(a[1])<=>Integer(b[1])}.reverse.each do |entry| -%>
+                <p><%= entry[0] -%> (<%= entry[1] -%>)</p>
             <% end -%>
         <% end -%>
-
     <% end -%>
 <% end %>
 
