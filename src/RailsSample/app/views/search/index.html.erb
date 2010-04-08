@@ -3,8 +3,7 @@
         <% @facets.keys.each do |key| -%>
             <h2><%= key.gsub('_', ' ') %> </h2>
             <% @facets[key].sort {|a, b| Integer(a[1])<=>Integer(b[1])}.reverse.each do |entry| -%>
-                <p><%= link_to("#{entry[0]} (#{entry[1]})", {:action => "index", :query => @query + " #{key}:\"#{entry[0]}\""}) %>
-                  </p>
+                <p><%= link_to("#{entry[0]} (#{entry[1]})", {:action => "index", :query => @query + " #{key}:\"#{entry[0]}\""}) %></p>
             <% end -%>
         <% end -%>
     <% end -%>

@@ -12,8 +12,7 @@
   <br/>
 	<div id="hd">
       <div style="text-align:center; vertical-align:top;">
-        <span style="float:left"><%= image_tag  "/images/seal_color_medium.gif", :size => "77x77" %></span>
-        <h1>WITS Search</h1>
+        <h1>WITS Search Powered by <a href="http://github.com/crichey/ActiveDocument" target="_blank">ActiveDocument</a></h1>
         <br/>
         <% form_tag({:controller => 'search', :action => 'index'}, :method => "get") do -%>
         <%= text_field_tag :query, @query%>
