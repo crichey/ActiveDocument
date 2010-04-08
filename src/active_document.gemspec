@@ -5,6 +5,7 @@ SPEC = Gem::Specification.new do |s|
   s.summary = "Object Mapper for XML Database"
   s.description = %{Object Mapper for XML Database. Initially setup for connection to MarkLogic}
   s.files = Dir['lib/**/*.rb']
+  s.files << Dir['test/**/*.rb']
   s.require_path = '.'
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = true

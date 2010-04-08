@@ -56,7 +56,14 @@ module ActiveDocument
       @range_constraints.each do |key, value|
         constraints << <<-XML
         <constraint name="#{key}">
-          <range>
+          <range type="#{value["type"]}"
+        XML
+        if value.has_key?("collation")
+          constraints << "collation=\"#{value["collation"]}\""
+        end
+
+        constraints << <<-XML
+            >
             <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
           </range>
         </constraint>

@@ -68,7 +68,7 @@ CONSTRAINT
       end
       <<-GENERATED
       import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
-      search:search("#{search_text}",#{option},#{start}, #{page_length})
+      search:search('#{search_text}',#{option},#{start}, #{page_length})
       GENERATED
     end
 
