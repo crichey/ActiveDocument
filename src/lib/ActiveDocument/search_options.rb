@@ -35,7 +35,7 @@ module ActiveDocument
       constraints = String.new
       @value_constraints.each do |key, value|
         constraints << <<-XML
-        <constraint name="#{key}">
+        <constraint name="#{key.gsub(/\s/, '_')}">
           <value>
             <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
           </value>
@@ -45,7 +45,7 @@ module ActiveDocument
 
       @word_constraints.each do |key, value|
         constraints << <<-XML
-        <constraint name="#{key}">
+        <constraint name="#{key.gsub(/\s/, '_')}">
           <word>
             <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
           </word>
@@ -55,7 +55,7 @@ module ActiveDocument
 
       @range_constraints.each do |key, value|
         constraints << <<-XML
-        <constraint name="#{key}">
+        <constraint name="#{key.gsub(/\s/, '_')}">
           <range type="#{value["type"]}"
         XML
         if value.has_key?("collation")

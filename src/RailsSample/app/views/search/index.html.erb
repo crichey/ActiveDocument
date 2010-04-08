@@ -1,9 +1,10 @@
 <% content_for(:sidebar) do %>
     <% if @facets -%>
         <% @facets.keys.each do |key| -%>
-            <h2><%= key %> </h2>
+            <h2><%= key.gsub('_', ' ') %> </h2>
             <% @facets[key].sort {|a, b| Integer(a[1])<=>Integer(b[1])}.reverse.each do |entry| -%>
-                <p><%= entry[0] -%> (<%= entry[1] -%>)</p>
+                <p><%= link_to("#{entry[0]} (#{entry[1]})", {:action => "index", :query => @query + " #{key}:\"#{entry[0]}\""}) %>
+                  </p>
             <% end -%>
         <% end -%>
     <% end -%>
@@ -13,7 +14,7 @@
   Showing <%= @results.start %> - <%= @results.start + @results.page_length-1 %> of <%= @results.total %> results
   in <%= @results.total_time %>
 </div>
-<table frame="below" width="100%">
+<table frame="below" width="90%">
   <% @results.each do |result| -%>
       <tr class="<%= cycle("odd", "even") %>">
         <td>

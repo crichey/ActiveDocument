@@ -12,6 +12,7 @@ class SearchController < ApplicationController
       start = 1
     end
     @query = params[:query]
+    if @query.nil? : @query = "" end
     @results = ActiveDocument::Finder.search(@query, start, 10, @search_options)
     @facets = @results.facets
   end
