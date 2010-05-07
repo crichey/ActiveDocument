@@ -73,13 +73,28 @@ module ActiveDocument
 
     # create a new instance with an optional xml string to use for constructing the model
     def initialize(xml_string = nil, uri = nil)
-      unless xml_string.nil?
-        @document = Nokogiri::XML(xml_string) do |config|
-          config.noblanks
-        end
+      @document = Nokogiri::XML(xml_string) do |config|
+        config.noblanks
       end
-      @root = self.class.to_s
+      @root = @document.root.name unless xml_string == (nil || "")
       @uri = uri
+    end
+
+    def to_s
+      @document.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
+    end
+
+    # saves this document to the repository. If _uri_ is provided then that will be the value used for the uri.
+    # If no uri was passed in then the existing value or the uri is used, unless uri is nil in which case an exception
+    # will be thrown
+    def save(uri = nil)
+      doc_uri = (uri || @uri)
+      if doc_uri then
+        @@ml_http.send_xquery(@@xquery_builder.save(self, doc_uri))
+      else
+        raise ArgumentError, "uri must not be nil", caller
+      end
+
     end
 
     # Returns the root element for this object
@@ -87,13 +102,8 @@ module ActiveDocument
       @root
     end
 
-    # Sets the root element for this object
-    def root=(value)
-      @root = value
-    end
-
     # enables the dynamic finders
-    def method_missing(method_id, *arguments, &block)
+    def method_missing(method_id, * arguments, & block)
       @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
       method = method_id.to_s
       if method =~ /^(\w*)$/ # methods with no '.' in them and not ending in '='
@@ -105,7 +115,7 @@ module ActiveDocument
     end
 
     def access_element(element)
-      xpath = ""
+      xpath = String.new
       xpath = "//" unless self.instance_of? PartialResult
       namespace = self.class.namespace_for_element(element)
       element = "ns:#{element}" unless namespace.nil? || namespace.empty?
@@ -128,9 +138,9 @@ module ActiveDocument
           PartialResult.new(result_nodeset)
         end
       elsif result_nodeset.length >1 # multiple matches
-        if result_nodeset.all? {|node| node.children.length == 1} and result_nodeset.all? {|node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE}
+        if result_nodeset.all? { |node| node.children.length == 1 } and result_nodeset.all? { |node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE }
           # we have multiple simple text nodes
-          result_nodeset.collect {|node| node.text}
+          result_nodeset.collect { |node| node.text }
         else
           # we have multiple complex elements
           PartialResult.new(result_nodeset)
@@ -139,16 +149,26 @@ module ActiveDocument
     end
 
     class PartialResult < self
+      # todo should this contain a reference to its parent?
       def initialize(nodeset)
         @document = nodeset
         @root = nodeset[0].name
       end
 
-      def to_s
-        @document.to_s
+      # returns the number of Nodes in the underlying _NodeSet_
+      def length
+        @document.length
       end
 
+      # provides access to the child nodes
+      def children
+        @document.children
+      end
 
+      # provides access to an indexed node
+      def [](index)
+        @document[index]
+      end
     end
 
     class << self
@@ -170,8 +190,12 @@ module ActiveDocument
         @default_namespace = namespace # todo should this just be an entry in namespaces?
       end
 
+      def delete(uri)
+        @@ml_http.send_xquery(@@xquery_builder.delete(uri))
+      end
+
       # enables the dynamic finders
-      def method_missing(method_id, *arguments, &block)
+      def method_missing(method_id, * arguments, & block)
         @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
         method = method_id.to_s
         # identify element search methods
@@ -198,7 +222,8 @@ module ActiveDocument
 
       end
 
-      # Returns an ActiveXML object representing the requested information
+      # Returns an ActiveXML object representing the requested information. If no document exists at that uri then an
+      # empty domain object is created and returned
       def load(uri)
         self.new(@@ml_http.send_xquery(@@xquery_builder.load(uri)), uri)
       end
@@ -220,6 +245,14 @@ module ActiveDocument
     end # end inner class
 
   end # end class
+
+  class ActiveDocumentException < Exception
+
+  end
+
+  class PersistenceException < ActiveDocumentException
+
+  end
 
 
 end # end module

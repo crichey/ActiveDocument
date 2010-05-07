@@ -20,6 +20,21 @@ module ActiveDocument
       "fn:doc('#{uri}')"
     end
 
+    def delete(uri)
+      "xdmp:document-delete('#{uri}')"
+    end
+
+    def save(document, uri)
+      xquery = <<-GENERATED
+            xdmp:document-insert(
+         "#{uri}",
+	 #{document.to_s},
+         xdmp:default-permissions(),
+         xdmp:default-collections())
+GENERATED
+      
+    end
+
     # This method does a full text search
     def find_by_word(word, root, namespace)
       xquery = <<GENERATED

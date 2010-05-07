@@ -24,6 +24,11 @@ class BookUnit < ActiveDocument::Base
   config 'config.yml'
 end
 
+class DocBook < ActiveDocument::Base
+  config 'config.yml'
+  default_namespace "http://docbook.org/ns/docbook"
+end
+
 class BaseTest < Test::Unit::TestCase
 
   # Called before every test method runs. Can be used
@@ -45,6 +50,9 @@ class BaseTest < Test::Unit::TestCase
     assert_raise NoMethodError do
       my_book.title 1900 # dynamic attributes don't allow for paramters
     end
+
+    assert_equal "book", my_book.root
+
     # test simple case for single text nodes
     assert_equal "Tale of Two Penguins", my_book.title
     assert_equal "Savannah", my_book.author
@@ -52,23 +60,46 @@ class BaseTest < Test::Unit::TestCase
     element = my_book.book
     assert_instance_of ActiveDocument::Base::PartialResult, element
     assert_equal "book", element.root
-    #assert_equal 2, element.children.length
+    assert_equal 2, element.children.length
 
     # test for multiple simple elements
     titles = @book.TITLE
     assert_equal 49, titles.length
     assert_equal "The Tragedy of Antony and Cleopatra", titles[0]
     assert_equal "Dramatis Personae", titles[1]
-#    # test for multiple complex elements
-#    groups = @book.PGROUP
-#    assert_equal 6, groups.length
-#    assert_instance_of ActiveDocument::PartialResult, groups
-    #assert_equal 4, groups[0].children.length
+
+    # test for multiple complex elements
+    groups = @book.PGROUP
+    assert_equal 6, groups.length
+    assert_instance_of ActiveDocument::Base::PartialResult, groups
+    assert_equal 4, groups[0].children.length
   end
 
   def test_nested_dynamic_attributes
     title = @book.PERSONAE.TITLE
     assert_equal "Dramatis Personae", title
   end
+
+  def test_save_and_delete
+    book = BookUnit.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>", "test.xml")
+    book.save
+    loaded_book = BookUnit.load("test.xml")
+    assert_not_nil loaded_book
+    assert_equal "book", loaded_book.root
+    assert_equal "Tale of Two Penguins", loaded_book.title
+
+    # delete the loaded book
+    BookUnit.delete(loaded_book.uri)
+
+    # confirm that it is deleted
+    begin
+      BookUnit.delete(loaded_book.uri)
+    rescue Net::HTTPFatalError => e then
+      assert_match(/Document not found/, e.message)
+    else
+      fail "No exception raised"
+    end
+  end
+
 
 end
