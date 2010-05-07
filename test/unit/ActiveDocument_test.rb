@@ -101,5 +101,11 @@ class BaseTest < Test::Unit::TestCase
     end
   end
 
+  def test_modify_simple_attribute
+    my_book = BookUnit.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>")
+    assert_equal "Tale of Two Penguins", my_book.title
+    my_book.title = "changed"
+    assert_equal "changed", my_book.title
+  end
 
 end

@@ -111,42 +111,11 @@ module ActiveDocument
           super
         end
         access_element $1
+      elsif method =~ /^(\w*)=$/ && arguments.length == 1 # methods with no '.' in them and ending in '='
+        set_element($1, arguments)
       end
     end
 
-    def access_element(element)
-      xpath = String.new
-      xpath = "//" unless self.instance_of? PartialResult
-      namespace = self.class.namespace_for_element(element)
-      element = "ns:#{element}" unless namespace.nil? || namespace.empty?
-      xpath << element
-      if namespace.nil?
-        nodes = @document.xpath(xpath)
-      else
-        nodes = @document.xpath(xpath, {'ns' => namespace})
-      end
-      evaluate_nodeset(nodes)
-
-    end
-
-
-    def evaluate_nodeset(result_nodeset)
-      if result_nodeset.length == 1 # found one match
-        if result_nodeset[0].children.length == 1 and result_nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
-          result_nodeset[0].text
-        elsif result_nodeset[0].children.length >1 # we are now dealing with complex nodes
-          PartialResult.new(result_nodeset)
-        end
-      elsif result_nodeset.length >1 # multiple matches
-        if result_nodeset.all? { |node| node.children.length == 1 } and result_nodeset.all? { |node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE }
-          # we have multiple simple text nodes
-          result_nodeset.collect { |node| node.text }
-        else
-          # we have multiple complex elements
-          PartialResult.new(result_nodeset)
-        end
-      end
-    end
 
     class PartialResult < self
       # todo should this contain a reference to its parent?
@@ -244,7 +213,64 @@ module ActiveDocument
       end
     end # end inner class
 
-  end # end class
+    private
+    def xpath_for_element(element)
+      xpath = String.new
+      xpath = "//" unless self.instance_of? PartialResult
+      namespace = self.class.namespace_for_element(element)
+      element = "ns:#{element}" unless namespace.nil? || namespace.empty?
+      xpath << element
+      return xpath, namespace
+    end
+
+    def evaluate_nodeset(result_nodeset)
+      if result_nodeset.length == 1 # found one match
+        if result_nodeset[0].children.length == 1 and result_nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
+          result_nodeset[0].text
+        elsif result_nodeset[0].children.length >1 # we are now dealing with complex nodes
+          PartialResult.new(result_nodeset)
+        end
+      elsif result_nodeset.length >1 # multiple matches
+        if result_nodeset.all? { |node| node.children.length == 1 } and result_nodeset.all? { |node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE }
+          # we have multiple simple text nodes
+          result_nodeset.collect { |node| node.text }
+        else
+          # we have multiple complex elements
+          PartialResult.new(result_nodeset)
+        end
+      end
+    end
+
+    def set_element(element, value)
+     # element.chop!
+      xpath, namespace = xpath_for_element(element)
+      if namespace.nil?
+        node = @document.xpath(xpath)
+      else
+        node = @document.xpath(xpath, {'ns' => namespace})
+      end
+      if node[0].child.type == Nokogiri::XML::Node::TEXT_NODE
+        node[0].child.content = value
+      else
+        raise ArgumentError, "You can't modify a complex node", caller
+      end
+    end
+
+    def access_element(element)
+      xpath, namespace = xpath_for_element(element)
+      if namespace.nil?
+        nodes = @document.xpath(xpath)
+      else
+        nodes = @document.xpath(xpath, {'ns' => namespace})
+      end
+      evaluate_nodeset(nodes)
+
+    end
+
+
+  end
+
+  # end class
 
   class ActiveDocumentException < Exception
 
