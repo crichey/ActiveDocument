@@ -17,7 +17,7 @@
   <% @results.each do |result| -%>
       <tr class="<%= cycle("odd", "even") %>">
         <td>
-          <%= link_to(result.entries[0].highlighted_match("font color='red'"), { :action => "show_results", :uri => result.uri, :query => @query}) %>
+          <%= link_to(result[0].highlighted_match("font color='red'"), { :action => "show_results", :uri => result.uri, :query => @query}) %>
         </td>
       </tr>
   <% end -%>

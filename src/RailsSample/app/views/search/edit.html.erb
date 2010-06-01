@@ -1,5 +1,5 @@
 
-
+<% form_for(@incident, :url => { :action => "update" }) do |f| %>
 <table width="100%">
   <tr>
     <td valign="top"><b><span style="color:blue;">File:</span></b></td>
@@ -15,17 +15,14 @@
   </tr>
   <tr>
     <td><b><span style="color:blue;">Subject:</span></b></td>
-    <td><%= @incident.Subject %></td>
+    <td><%= f.text_field :Subject %></td>
   </tr>
   <tr>
     <td valign="top"><b><span style="color:blue;">Summary:</span></b></td>
     <td valign="top"><%= @incident.Summary %></td>
   </tr>
-    <tr>
-    <td valign="top"><b><span style="color:blue;">Weapon Type:</span></b></td>
-    <td valign="top"><%= @incident.WeaponTypeList.WeaponType %></td>
-  </tr>
   <hr/>
 </table>
-<%= link_to("Edit...",{:action => "edit", :uri => @incident.uri}) %><br/>
-<%= link_to("See original XML", { :action => "show_raw", :uri => @incident.uri, :query => @query}, :popup => true) %>
+    <%= f.hidden_field :uri, :value => @incident.uri %>
+    <%= f.submit 'Submit' %>
+<% end %>

@@ -29,4 +29,15 @@ class SearchController < ApplicationController
     render :layout => false
   end
 
+  def edit
+    @incident = Incident.load(params[:uri])
+  end
+
+  def update
+    @incident = Incident.load(params[:incident][:uri])
+    @incident.Subject = params[:incident][:Subject]
+    @incident.save
+    redirect_to :action => "index"
+  end
+
 end
