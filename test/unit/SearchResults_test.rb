@@ -168,6 +168,8 @@ BEGIN
     # check length
     assert_equal(2, results.length)
 
+    a = results[0]
+    assert_not_nil a[0]
     # check index
     assert_equal(1, results[0].index)
     assert_equal(2, results[1].index)

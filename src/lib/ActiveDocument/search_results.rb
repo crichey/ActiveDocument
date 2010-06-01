@@ -70,6 +70,10 @@ module ActiveDocument
       @results_document.xpath("/search:response/search:result").each {|node| yield SearchResult.new(node)}
     end
 
+    def [](index)
+      @results_document[index]
+    end
+
   end
 
 end

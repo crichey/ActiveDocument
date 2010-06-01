@@ -34,18 +34,24 @@ class BaseTest < Test::Unit::TestCase
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    # @doc = Document.new
+    @a_and_c = Book.new(IO.read("../data/a_and_c.xml"), "/books/a_and_c.xml")
+    @a_and_c.save
+
+    @discover_book = Book.new(IO.read("../data/discoverBook.xml"), "/books/discoverBook.xml")
+    @discover_book.save
   end
 
   # Called after every test method runs. Can be used to tear
   # down fixture information.
 
   def teardown
-    # Do nothing
+    Book.delete @a_and_c.uri
+    Book.delete @discover_book.uri
   end
 
   # test ability to load by uri
   def test_find_by_uri
+    # todo fix
     book = Book.load("test.xml")
     assert_not_nil(book, "Should have been able to load the document by uri")
     assert_instance_of(Book, book, "Book should be an instance of document not #{book.class}")

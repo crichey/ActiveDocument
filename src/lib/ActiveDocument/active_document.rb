@@ -65,18 +65,20 @@ module ActiveDocument
   # -------------------
   class Base < Finder
     include ClassLevelInheritableAttributes
-    inheritable_attributes_list :namespaces, :default_namespace, :root
-    @namespaces = Hash.new
-    @default_namespace = String.new
-    attr_reader :document, :uri
+    inheritable_attributes_list :my_namespaces, :my_default_namespace, :root
+    @my_namespaces = Hash.new
+    @my_default_namespace = String.new
+    attr_reader :document, :uri, :my_namespaces, :my_default_namespace, :root
 
 
     # create a new instance with an optional xml string to use for constructing the model
-    def initialize(xml_string = nil, uri = nil)
+    def initialize(xml_string = "", uri = "nil")
       @document = Nokogiri::XML(xml_string) do |config|
         config.noblanks
       end
-      @root = @document.root.name unless xml_string == (nil || "")
+      if !xml_string.empty? then
+        @root = @document.root.name
+      end
       @uri = uri
     end
 
@@ -117,46 +119,33 @@ module ActiveDocument
     end
 
 
-    class PartialResult < self
-      # todo should this contain a reference to its parent?
-      def initialize(nodeset)
-        @document = nodeset
-        @root = nodeset[0].name
-      end
-
-      # returns the number of Nodes in the underlying _NodeSet_
-      def length
-        @document.length
-      end
-
-      # provides access to the child nodes
-      def children
-        @document.children
-      end
-
-      # provides access to an indexed node
-      def [](index)
-        @document[index]
-      end
-    end
-
     class << self
       attr_reader :namespaces, :default_namespace, :root
 
+      def namespace_for_element(element)
+        namespace = nil
+        if !@my_namespaces.nil? && @my_namespaces[element]
+          namespace = @my_namespaces[element]
+        else
+          namespace = @my_default_namespace unless @my_default_namespace.nil?
+        end
+        namespace
+      end
+
       def namespaces(namespace_hash)
-        @namespaces = namespace_hash
+        @my_namespaces = namespace_hash
       end
 
       def add_namespace(element, uri)
-        @namespaces[element.to_s] == uri
+        @my_namespaces[element.to_s] == uri
       end
 
       def remove_namespace(element)
-        @namespaces.delete element
+        @my_namespaces.delete element
       end
 
       def default_namespace(namespace)
-        @default_namespace = namespace # todo should this just be an entry in namespaces?
+        @my_default_namespace = namespace # todo should this just be an entry in namespaces?
       end
 
       def delete(uri)
@@ -198,26 +187,57 @@ module ActiveDocument
       end
 
       # Finds all documents of this type that contain the word anywhere in their structure
-      def find_by_word(word, root=@root, namespace=@default_namespace)
+      def find_by_word(word, root=@root, namespace=@my_default_namespace)
         SearchResults.new(@@ml_http.send_xquery(@@xquery_builder.find_by_word(word, root, namespace)))
       end
 
-      def namespace_for_element(element)
-        namespace = nil
-        if @namespaces[element]
-          namespace = @namespaces[element]
-        else
-          namespace = @default_namespace unless @default_namespace.nil?
-        end
-        namespace
-      end
+
     end # end inner class
 
+
+    class PartialResult < self
+      # todo should this contain a reference to its parent?
+      def initialize(nodeset, parent)
+        @document = nodeset
+        @root = nodeset[0].name
+        @my_namespaces = parent.class.my_namespaces
+        @my_default_namespace = parent.class.my_default_namespace
+      end
+
+      # returns the number of Nodes in the underlying _NodeSet_
+      def length
+        @document.length
+      end
+
+      # provides access to the child nodes
+      def children
+        @document.children
+      end
+
+      # provides access to an indexed node
+      def [](index)
+        @document[index]
+      end
+
+    end
+
     private
+    def namespace_for_element(element)
+      namespace = nil
+      ns = @my_namespaces || self.class.my_namespaces
+      default_ns = @my_default_namespace || self.class.my_default_namespace
+      if !ns.nil? && ns[element]
+        namespace = ns[element]
+      else
+        namespace = default_ns unless default_ns.nil?
+      end
+      namespace
+    end
+
     def xpath_for_element(element)
       xpath = String.new
       xpath = "//" unless self.instance_of? PartialResult
-      namespace = self.class.namespace_for_element(element)
+      namespace = namespace_for_element(element)
       element = "ns:#{element}" unless namespace.nil? || namespace.empty?
       xpath << element
       return xpath, namespace
@@ -227,8 +247,9 @@ module ActiveDocument
       if result_nodeset.length == 1 # found one match
         if result_nodeset[0].children.length == 1 and result_nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
           result_nodeset[0].text
-        elsif result_nodeset[0].children.length >1 # we are now dealing with complex nodes
-          PartialResult.new(result_nodeset)
+          #elsif result_nodeset[0].children.length >1 # we are now dealing with complex nodes
+        else
+          PartialResult.new(result_nodeset, self)
         end
       elsif result_nodeset.length >1 # multiple matches
         if result_nodeset.all? { |node| node.children.length == 1 } and result_nodeset.all? { |node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE }
@@ -236,13 +257,13 @@ module ActiveDocument
           result_nodeset.collect { |node| node.text }
         else
           # we have multiple complex elements
-          PartialResult.new(result_nodeset)
+          PartialResult.new(result_nodeset, self)
         end
       end
     end
 
     def set_element(element, value)
-     # element.chop!
+      # element.chop!
       xpath, namespace = xpath_for_element(element)
       if namespace.nil?
         node = @document.xpath(xpath)

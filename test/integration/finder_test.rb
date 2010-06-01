@@ -6,17 +6,27 @@ require 'ActiveDocument/Finder'
 
 class FinderTests < Test::Unit::TestCase
 
+
+  class Book < ActiveDocument::Base
+    config 'config.yml'
+  end
+
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    ActiveDocument::Finder.config('config.yml')
+    @a_and_c = Book.new(IO.read("../data/a_and_c.xml"), "/books/a_and_c.xml")
+    @a_and_c.save
+
+    @discover_book = Book.new(IO.read("../data/discoverBook.xml"), "/books/discoverBook.xml")
+    @discover_book.save
   end
 
   # Called after every test method runs. Can be used to tear
   # down fixture information.
 
   def teardown
-    # Do nothing
+    Book.delete @a_and_c.uri
+    Book.delete @discover_book.uri
   end
 
   # Tests dynamic finders for element word searches

@@ -58,6 +58,10 @@ module ActiveDocument
       root.to_s.delete(":/") # remove the : and / to get the root element name
     end
 
+    def [](index)
+      SearchMatch.new(@node.xpath("./search:snippet/search:match")[index])
+    end
+
     def realize(klass)
       klass.load(uri)
     end

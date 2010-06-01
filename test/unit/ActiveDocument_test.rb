@@ -35,7 +35,7 @@ class BaseTest < Test::Unit::TestCase
   # to set up fixture information.
   def setup
     @book = BookUnit.new(IO.read("../data/a_and_c.xml"))
-
+    @book_namespaces = DocBook.new(IO.read("../data/discoverBook.xml"))
   end
 
   # Called after every test method runs. Can be used to tear
@@ -78,6 +78,10 @@ class BaseTest < Test::Unit::TestCase
   def test_nested_dynamic_attributes
     title = @book.PERSONAE.TITLE
     assert_equal "Dramatis Personae", title
+
+    # test with namespace
+    date = @book_namespaces.bookinfo.pubdate
+    assert_equal("1900", date)
   end
 
   def test_save_and_delete
