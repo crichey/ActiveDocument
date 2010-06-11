@@ -104,6 +104,15 @@ module ActiveDocument
       @root
     end
 
+    def [](key)
+      namespace = namespace_for_element(key)
+      if namespace.empty?
+        @document.root.xpath("@#{key}").to_s
+      else
+        @document.root.xpath("@ns:#{key}", {'ns' => namespace}).to_s
+      end
+    end
+
     # enables the dynamic finders
     def method_missing(method_id, * arguments, & block)
       @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")

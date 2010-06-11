@@ -105,11 +105,21 @@ class BaseTest < Test::Unit::TestCase
     end
   end
 
-  def test_modify_simple_attribute
+  def test_modify_simple_element
     my_book = BookUnit.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>")
     assert_equal "Tale of Two Penguins", my_book.title
     my_book.title = "changed"
     assert_equal "changed", my_book.title
+  end
+
+  def test_element_attributes
+    # test with no namespaces first
+    my_book = BookUnit.new("<book author='Savannah'><title section='foo'>Tale of Two Penguins</title></book>")
+    assert_equal "Savannah", my_book["author"]
+
+    # test with no namespaces and attribute in nested element
+    temp = my_book.title
+    assert_equal "foo", temp["section"]
   end
 
 end
