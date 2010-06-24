@@ -13,13 +13,13 @@
 #   limitations under the License.
 
 
-# SearchOptions allow you to control exactly how the ActiveDocument::Finder#search method behaves and what additional
+# MarkLogicSearchOptions allow you to control exactly how the ActiveDocument::Finder#search method behaves and what additional
 # information may be returned in the ActiveDocument::SearchResults object
 # == Attributes
 # * return_facets - if true then facet information is returned in the resultant ActiveDocument::SearchResults object. Default is true
 # * value_constraints - this is a #Hash of value constraint names to their options. e.g. search_options_object.value_constraints["Region"] = {"namespace" => "http://wits.nctc.gov", "element" => "Region"}
 module ActiveDocument
-  class SearchOptions
+  class MarkLogicSearchOptions
     attr_accessor :return_facets, :value_constraints, :word_constraints, :range_constraints
 
     def initialize
@@ -65,9 +65,14 @@ module ActiveDocument
         constraints << <<-XML
             >
             <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
-          </range>
-        </constraint>
         XML
+
+        if value.has_key?("computed_buckets")
+          value["computed_buckets"].each do |computed_bucket|
+            constraints << computed_bucket.to_s if computed_bucket.instance_of?(ActiveDocument::MarkLogicSearchOptions::ComputedBucket)
+          end
+        end
+        constraints << "</range></constraint>"
       end
 
       value = <<-XML
@@ -83,5 +88,26 @@ module ActiveDocument
       value << "</options>"
 
     end
+
+    #end to_s
+
+    class ComputedBucket
+      attr_accessor :name, :ge, :lt, :anchor, :title
+
+      def initialize (name, ge, lt, anchor, title)
+        @name = name
+        @ge = ge
+        @lt = lt
+        @anchor = anchor
+        @title = title
+      end
+
+      def to_s
+        <<-XML
+          <computed-bucket name="#{@name}" ge="#{@ge}" lt="#{@lt}" anchor="#{@anchor}">#{@title}</computed-bucket>
+        XML
+      end
+    end
   end
+
 end

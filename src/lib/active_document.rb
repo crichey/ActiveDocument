@@ -4,7 +4,7 @@ require 'ActiveDocument/inheritable'
 require 'ActiveDocument/mark_logic_http'
 require 'ActiveDocument/mark_logic_query_builder'
 require 'ActiveDocument/search_match'
-require 'ActiveDocument/search_options'
+require 'ActiveDocument/mark_logic_search_options'
 require 'ActiveDocument/search_result'
 require 'ActiveDocument/search_results'
 

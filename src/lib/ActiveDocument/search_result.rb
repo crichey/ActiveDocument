@@ -45,7 +45,7 @@ module ActiveDocument
     end
 
     def fitness
-      Integer(@node.xpath("./@fitness").to_s)
+      Float(@node.xpath("./@fitness").to_s)
     end
 
     def each(&block)
@@ -53,7 +53,7 @@ module ActiveDocument
     end
 
     def root_type
-      full_path = @node.xpath("./search:snippet/search:match")[1].xpath("./@path").to_s
+      full_path = @node.xpath("./search:snippet/search:match")[0].xpath("./@path").to_s
       root = full_path.match(/:[[:alpha:]]+\//) # find the first :something/ which should indicate the root
       root.to_s.delete(":/") # remove the : and / to get the root element name
     end

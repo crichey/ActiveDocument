@@ -255,7 +255,7 @@ module ActiveDocument
     def evaluate_nodeset(result_nodeset)
       if result_nodeset.length == 1 # found one match
         if result_nodeset[0].children.length == 1 and result_nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
-          result_nodeset[0].text
+          result_nodeset[0]
           #elsif result_nodeset[0].children.length >1 # we are now dealing with complex nodes
         else
           PartialResult.new(result_nodeset, self)

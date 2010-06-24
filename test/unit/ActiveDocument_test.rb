@@ -29,6 +29,11 @@ class DocBook < ActiveDocument::Base
   default_namespace "http://docbook.org/ns/docbook"
 end
 
+class TestBook < ActiveDocument::Base
+  config 'config.yml'
+  default_namespace "test"
+end
+
 class BaseTest < Test::Unit::TestCase
 
   # Called before every test method runs. Can be used
@@ -54,8 +59,8 @@ class BaseTest < Test::Unit::TestCase
     assert_equal "book", my_book.root
 
     # test simple case for single text nodes
-    assert_equal "Tale of Two Penguins", my_book.title
-    assert_equal "Savannah", my_book.author
+    assert_equal "Tale of Two Penguins", my_book.title.text
+    assert_equal "Savannah", my_book.author.text
     # test for single complex element
     element = my_book.book
     assert_instance_of ActiveDocument::Base::PartialResult, element
@@ -77,10 +82,10 @@ class BaseTest < Test::Unit::TestCase
 
   def test_nested_dynamic_attributes
     title = @book.PERSONAE.TITLE
-    assert_equal "Dramatis Personae", title
+    assert_equal "Dramatis Personae", title.text
 
     # test with namespace
-    date = @book_namespaces.bookinfo.pubdate
+    date = @book_namespaces.bookinfo.pubdate.text
     assert_equal("1900", date)
   end
 
@@ -90,7 +95,7 @@ class BaseTest < Test::Unit::TestCase
     loaded_book = BookUnit.load("test.xml")
     assert_not_nil loaded_book
     assert_equal "book", loaded_book.root
-    assert_equal "Tale of Two Penguins", loaded_book.title
+    assert_equal "Tale of Two Penguins", loaded_book.title.text
 
     # delete the loaded book
     BookUnit.delete(loaded_book.uri)
@@ -107,9 +112,9 @@ class BaseTest < Test::Unit::TestCase
 
   def test_modify_simple_element
     my_book = BookUnit.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>")
-    assert_equal "Tale of Two Penguins", my_book.title
+    assert_equal "Tale of Two Penguins", my_book.title.text
     my_book.title = "changed"
-    assert_equal "changed", my_book.title
+    assert_equal "changed", my_book.title.text
   end
 
   def test_element_attributes
@@ -118,8 +123,14 @@ class BaseTest < Test::Unit::TestCase
     assert_equal "Savannah", my_book["author"]
 
     # test with no namespaces and attribute in nested element
-    temp = my_book.title
-    assert_equal "foo", temp["section"]
+    assert_equal "foo", my_book.title["section"]
+
+    # test with namespaces
+    my_book = TestBook.new("<test:book xmlns:test='test' test:author='Savannah'><test:title test:section='foo'>Tale of Two Penguins</title></book>")
+    assert_equal "Savannah", my_book["author"]
+
+    # test with no namespaces and attribute in nested element
+    assert_equal "foo", my_book.title["section"]
   end
 
 end

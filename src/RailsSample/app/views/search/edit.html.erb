@@ -7,19 +7,19 @@
   </tr>
   <tr>
     <td valign="top"><b><span style="color:blue;">ICN:</span></b></td>
-    <td valign="top"><%= @incident.ICN %></td>
+    <td valign="top"><%= @incident.ICN.text %></td>
   </tr>
   <tr>
     <td valign="top"><b><span style="color:blue;">Date:</span></b></td>
-    <td valign="top"><%= @incident.IncidentDate %></td>
+    <td valign="top"><%= @incident.IncidentDate.text %></td>
   </tr>
   <tr>
     <td><b><span style="color:blue;">Subject:</span></b></td>
-    <td><%= f.text_field :Subject %></td>
+    <td><input id="incident_Subject" name="incident[Subject]" size="30" type="text" value='<%= @incident.Subject.text -%>' /></td>
   </tr>
   <tr>
     <td valign="top"><b><span style="color:blue;">Summary:</span></b></td>
-    <td valign="top"><%= @incident.Summary %></td>
+    <td valign="top"><%= @incident.Summary.text %></td>
   </tr>
   <hr/>
 </table>
