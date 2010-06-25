@@ -49,12 +49,20 @@ module ActiveDocument
     end
 
     def each(&block)
-      @node.xpath("./search:snippet/search:match").each {|node| yield SearchMatch.new(node)}
+      nodeset = @node.xpath("./search:snippet/search:match")
+      if nodeset.length == 1
+        yield SearchMatch.new(nodeset[0])
+      else
+        @node.xpath("./search:snippet/search:match").each {|node| yield SearchMatch.new(node)}
+      end
+
+
+#      @node.xpath("./search:snippet/search:match").each {|node| yield SearchMatch.new(node)}
     end
 
     def root_type
       full_path = @node.xpath("./search:snippet/search:match")[0].xpath("./@path").to_s
-      root = full_path.match(/:[[:alpha:]]+\//) # find the first :something/ which should indicate the root
+      root = full_path.match(/:[[:alpha:]]+\/|:[[:alpha:]]+$/) # find the first :something/ which should indicate the root
       root.to_s.delete(":/") # remove the : and / to get the root element name
     end
 
@@ -62,6 +70,9 @@ module ActiveDocument
       SearchMatch.new(@node.xpath("./search:snippet/search:match")[index])
     end
 
+    def length
+      @node.xpath("./search:snippet/search:match").length
+    end
     def realize(klass)
       klass.load(uri)
     end

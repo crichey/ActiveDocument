@@ -67,11 +67,20 @@ module ActiveDocument
     end
 
     def each(&block)
-      @results_document.xpath("/search:response/search:result").each {|node| yield SearchResult.new(node)}
+      nodeset = @results_document.xpath("/search:response/search:result")
+      if nodeset.length == 1
+        yield SearchResult.new(nodeset[0])
+      else
+        @results_document.xpath("/search:response/search:result").each {|node| yield SearchResult.new(node)}
+      end
     end
 
     def [](index)
-      @results_document[index]
+      SearchResult.new(@results_document.xpath("/search:response/search:result")[index])
+    end
+
+    def length
+      @results_document.xpath("/search:response/search:result").length
     end
 
   end

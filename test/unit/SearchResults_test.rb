@@ -196,45 +196,44 @@ BEGIN
   end
 
   def test_results_match
-    results = @search_results.to_a
+    results = @search_results
     match = results[0].to_a
 
     # test first set of matches
     # check length
-    assert_equal(2, match.length)
+    assert_equal(2, results[0].length)
 
     # check path
-    assert_equal("fn:doc('/documents/discoverBook.xml')/*:book/*:bookinfo/*:title", match[0].path)
-    assert_equal("fn:doc('/documents/discoverBook.xml')/*:book/*:chapter[1]/*:chapterinfo/*:biblioentry/*:title", match[1].path)
+    assert_equal("fn:doc('/documents/discoverBook.xml')/*:book/*:bookinfo/*:title", results[0][0].path)
+    assert_equal("fn:doc('/documents/discoverBook.xml')/*:book/*:chapter[1]/*:chapterinfo/*:biblioentry/*:title", results[0][1].path)
     # check match text
-    assert_equal("Discoverers and Explorers", match[0].to_s)
-    assert_equal("Discoverers and Explorers", match[1].to_s)
+    assert_equal("Discoverers and Explorers", results[0][0].to_s)
+    assert_equal("Discoverers and Explorers", results[0][1].to_s)
     # check  match with default highlighting
-    assert_equal("Discoverers <search:highlight>and</search:highlight> Explorers", match[0].highlighted_match)
-    assert_equal("Discoverers <search:highlight>and</search:highlight> Explorers", match[1].highlighted_match)
+    assert_equal("Discoverers <search:highlight>and</search:highlight> Explorers", results[0][0].highlighted_match)
+    assert_equal("Discoverers <search:highlight>and</search:highlight> Explorers", results[0][1].highlighted_match)
     # check  match with custom highlighting
-    assert_equal("Discoverers <b>and</b> Explorers", match[0].highlighted_match("b"))
-    assert_equal("Discoverers <b>and</b> Explorers", match[1].highlighted_match("b"))
+    assert_equal("Discoverers <b>and</b> Explorers", results[0][0].highlighted_match("b"))
+    assert_equal("Discoverers <b>and</b> Explorers", results[0][1].highlighted_match("b"))
     # test second set of matches
-    match = results[1].to_a
     # check length
-    assert_equal(1, match.length)
+    assert_equal(1, results[1].length)
 
     # check path
-    assert_equal("fn:doc('/documents/a_and_c.xml')/PLAY/PERSONAE/PERSONA[10]", match[0].path)
+    assert_equal("fn:doc('/documents/a_and_c.xml')/PLAY/PERSONAE/PERSONA[10]", results[1][0].path)
     # check match text
-    assert_equal("Officers, Soldiers, Messengers, and other Attendants.", match[0].to_s)
+    assert_equal("Officers, Soldiers, Messengers, and other Attendants.", results[1][0].to_s)
     # check match with default highlighting
-    assert_equal("Officers, Soldiers, Messengers, <search:highlight>and</search:highlight> other Attendants.", match[0].highlighted_match)
+    assert_equal("Officers, Soldiers, Messengers, <search:highlight>and</search:highlight> other Attendants.", results[1][0].highlighted_match)
     # check match with custom highlighting
-    assert_equal("Officers, Soldiers, Messengers, <b>and</b> other Attendants.", match[0].highlighted_match("b"))
+    assert_equal("Officers, Soldiers, Messengers, <b>and</b> other Attendants.", results[1][0].highlighted_match("b"))
 
     #check highlighting function when no highlighting present in results
     results = @search_results_noh.to_a
     match = results[0].to_a
     # check match text
-    assert_equal("Discoverers and Explorers", match[0].to_s)
-    assert_equal("Discoverers and Explorers", match[0].highlighted_match("b"))
+    assert_equal("Discoverers and Explorers", results[0][0].to_s)
+    assert_equal("Discoverers and Explorers", results[0][0].highlighted_match("b"))
   end
 
   def test_facets

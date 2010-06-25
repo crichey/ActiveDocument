@@ -64,7 +64,7 @@ GENERATED
         xquery << "  xmlns:a=\"#{root_namespace}\"" unless root_namespace.nil?
         xquery << '>/'
         xquery << "a:" unless root_namespace.nil?
-        xquery << "#{root}</searchable-expression>)"
+        xquery << "#{root}</searchable-expression>"
       end
       xquery << <<CONSTRAINT
 <constraint name="word">
