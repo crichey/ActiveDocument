@@ -124,6 +124,8 @@ module ActiveDocument
         access_element $1
       elsif method =~ /^(\w*)=$/ && arguments.length == 1 # methods with no '.' in them and ending in '='
         set_element($1, arguments)
+			else
+				super
       end
     end
 

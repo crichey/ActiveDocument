@@ -41,7 +41,7 @@ module ActiveDocument
         namespace = arguments[1] if arguments.length == 2
         execute_finder($1.to_sym, arguments[0], nil, namespace)
       else
-        puts "missed"
+        super
       end
     end
 
