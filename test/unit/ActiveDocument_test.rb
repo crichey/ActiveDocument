@@ -70,8 +70,8 @@ class BaseTest < Test::Unit::TestCase
     # test for multiple simple elements
     titles = @book.TITLE
     assert_equal 49, titles.length
-    assert_equal "The Tragedy of Antony and Cleopatra", titles[0]
-    assert_equal "Dramatis Personae", titles[1]
+    assert_equal "The Tragedy of Antony and Cleopatra", titles[0].text
+    assert_equal "Dramatis Personae", titles[1].text
 
     # test for multiple complex elements
     groups = @book.PGROUP

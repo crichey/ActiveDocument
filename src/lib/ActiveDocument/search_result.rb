@@ -55,9 +55,6 @@ module ActiveDocument
       else
         @node.xpath("./search:snippet/search:match").each {|node| yield SearchMatch.new(node)}
       end
-
-
-#      @node.xpath("./search:snippet/search:match").each {|node| yield SearchMatch.new(node)}
     end
 
     def root_type
