@@ -52,11 +52,12 @@ module ActiveDocument
     end
 
     def self.search(search_string, start = 1, page_length = 10, options = nil)
-      if start.nil? : start = 1 end
-      if page_length.nil? : page_length = 10 end
+      start ||= 1
+      page_length ||= 10
       search_text = @@xquery_builder.search(search_string, start, page_length, options)
       SearchResults.new(@@ml_http.send_xquery(search_text)) # todo support options node
     end
+
     private
 
     def self.configure_logger(config)
