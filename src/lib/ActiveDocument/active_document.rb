@@ -210,7 +210,12 @@ module ActiveDocument
       # todo should this contain a reference to its parent?
       def initialize(nodeset, parent)
         @document = nodeset
-        @root = nodeset[0].name
+        @root =
+                if nodeset.instance_of? Nokogiri::XML::Element then
+                  nodeset.name
+                else
+                  nodeset[0].name
+                end
         @my_namespaces = parent.class.my_namespaces
         @my_default_namespace = parent.class.my_default_namespace
       end
@@ -228,6 +233,10 @@ module ActiveDocument
       # provides access to an indexed node
       def [](index)
         @document[index]
+      end
+
+      def text
+        @document.text
       end
 
     end
@@ -256,7 +265,7 @@ module ActiveDocument
 
     def evaluate_nodeset(result_nodeset)
       if result_nodeset.length == 1 and result_nodeset[0].children.length == 1 and result_nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
-        result_nodeset[0]
+        PartialResult.new(result_nodeset[0], self)
       else
         PartialResult.new(result_nodeset, self)
       end

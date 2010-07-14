@@ -59,7 +59,8 @@ class BaseTest < Test::Unit::TestCase
     assert_equal "book", my_book.root
 
     # test simple case for single text nodes
-    assert_equal "Tale of Two Penguins", my_book.title.text
+    title = my_book.title
+    assert_equal "Tale of Two Penguins", title.text
     assert_equal "Savannah", my_book.author.text
     # test for single complex element
     element = my_book.book
