@@ -124,8 +124,8 @@ module ActiveDocument
         access_element $1
       elsif method =~ /^(\w*)=$/ && arguments.length == 1 # methods with no '.' in them and ending in '='
         set_element($1, arguments)
-			else
-				super
+      else
+        super
       end
     end
 
@@ -210,7 +210,12 @@ module ActiveDocument
       # todo should this contain a reference to its parent?
       def initialize(nodeset, parent)
         @document = nodeset
-        @root = nodeset[0].name
+        @root =
+                if nodeset.instance_of? Nokogiri::XML::Element then
+                  nodeset.name
+                else
+                  nodeset[0].name
+                end
         @my_namespaces = parent.class.my_namespaces
         @my_default_namespace = parent.class.my_default_namespace
       end
@@ -228,6 +233,10 @@ module ActiveDocument
       # provides access to an indexed node
       def [](index)
         @document[index]
+      end
+
+      def text
+        @document.text
       end
 
     end
@@ -255,21 +264,10 @@ module ActiveDocument
     end
 
     def evaluate_nodeset(result_nodeset)
-      if result_nodeset.length == 1 # found one match
-        if result_nodeset[0].children.length == 1 and result_nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
-          result_nodeset[0]
-          #elsif result_nodeset[0].children.length >1 # we are now dealing with complex nodes
-        else
-          PartialResult.new(result_nodeset, self)
-        end
-      elsif result_nodeset.length >1 # multiple matches
-        if result_nodeset.all? { |node| node.children.length == 1 } and result_nodeset.all? { |node| node.children[0].type == Nokogiri::XML::Node::TEXT_NODE }
-          # we have multiple simple text nodes
-          result_nodeset.collect { |node| node.text }
-        else
-          # we have multiple complex elements
-          PartialResult.new(result_nodeset, self)
-        end
+      if result_nodeset.length == 1 and result_nodeset[0].children.length == 1 and result_nodeset[0].children[0].type == Nokogiri::XML::Node::TEXT_NODE
+        PartialResult.new(result_nodeset[0], self)
+      else
+        PartialResult.new(result_nodeset, self)
       end
     end
 
@@ -295,6 +293,7 @@ module ActiveDocument
       else
         nodes = @document.xpath(xpath, {'ns' => namespace})
       end
+#      PartialResult.new(nodes, self)
       evaluate_nodeset(nodes)
 
     end

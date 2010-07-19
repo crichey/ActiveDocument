@@ -6446,3 +6446,444 @@ Processing SearchController#show_results (for 127.0.0.1 at 2010-06-01 16:07:32) 
 Rendering template within layouts/application
 Rendering search/show_results
 Completed in 13ms (View: 2, DB: 0) | 200 OK [http://localhost/search/show_results?query=bomb&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-06-10 20:21:01) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 4452ms (View: 198, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-06-10 20:21:11) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 367ms (View: 14, DB: 0) | 200 OK [http://localhost/search?query=bomb&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-06-10 20:21:13) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 194ms (View: 15, DB: 0) | 200 OK [http://localhost/search/show_results?query=bomb&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:21:35) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 399ms (View: 373, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#update (for 127.0.0.1 at 2010-06-10 20:22:17) [PUT]
+  Parameters: {"commit"=>"Submit", "authenticity_token"=>"cwI+WN4AfFy64h5gjx8nT58PW2TVWoD2iKwIMeDo0Zk=", "incident"=>{"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml", "Subject"=>"new subject"}}
+Redirected to http://localhost:3000/search
+Completed in 414ms (DB: 0) | 302 Found [http://localhost/search/update]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-06-10 20:22:18) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 134ms (View: 26, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-06-10 20:22:23) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 200ms (View: 34, DB: 0) | 200 OK [http://localhost/search?query=bomb&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-06-10 20:22:25) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits6588.xml", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 54ms (View: 2, DB: 0) | 200 OK [http://localhost/search/show_results?query=bomb&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits6588.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:22:33) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 10ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:22:36) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 68ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:22:37) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 9ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:22:37) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 14ms (View: 5, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:22:39) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 9ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-06-10 20:22:48) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"200808157"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 95ms (View: 4, DB: 0) | 200 OK [http://localhost/search?query=200808157&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-06-10 20:22:49) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml", "query"=>"200808157"}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 65ms (View: 2, DB: 0) | 200 OK [http://localhost/search/show_results?query=200808157&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:22:54) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits49944.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 10ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits49944.xml]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-06-10 20:30:22) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 157ms (View: 13, DB: 0) | 200 OK [http://localhost/search?query=bomb&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-06-10 20:30:23) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits6588.xml", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/show_results
+
+ActionView::TemplateError (undefined method `text' for #<String:0x10434b318>) on line #6 of app/views/search/show_results.html.erb:
+3: <table width="100%">
+4:   <tr>
+5:     <td valign="top"><b><span style="color:blue;">File:</span></b></td>
+6:     <td valign="top"><%= @incident.uri.text %></td>
+7:   </tr>
+8:   <tr>
+9:     <td valign="top"><b><span style="color:blue;">ICN:</span></b></td>
+
+    app/views/search/show_results.html.erb:6
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    -e:1:in `load'
+    -e:1
+
+Rendered rescues/_trace (35.0ms)
+Rendered rescues/_request_and_response (1.1ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-06-10 20:30:51) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits6588.xml", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 35ms (View: 6, DB: 0) | 200 OK [http://localhost/search/show_results?query=bomb&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits6588.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:30:54) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits6588.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 12ms (View: 5, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits6588.xml]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-06-10 20:30:59) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 181ms (View: 14, DB: 0) | 200 OK [http://localhost/search?query=bomb&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-06-10 20:31:00) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 28ms (View: 2, DB: 0) | 200 OK [http://localhost/search/show_results?query=bomb&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:31:02) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 9ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:32:43) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+
+ActionView::TemplateError (undefined local variable or method `subject' for #<ActionView::Base:0x104341728>) on line #18 of app/views/search/edit.html.erb:
+15:   </tr>
+16:   <tr>
+17:     <td><b><span style="color:blue;">Subject:</span></b></td>
+18:     <td><%= text_field @incident, subject.text %></td>
+19:   </tr>
+20:   <tr>
+21:     <td valign="top"><b><span style="color:blue;">Summary:</span></b></td>
+
+    app/views/search/edit.html.erb:18
+    app/views/search/edit.html.erb:2
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    -e:1:in `load'
+    -e:1
+
+Rendered rescues/_trace (38.0ms)
+Rendered rescues/_request_and_response (0.3ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:33:13) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+
+ActionView::TemplateError (You have a nil object when you didn't expect it!
+The error occurred while evaluating nil.text) on line #18 of app/views/search/edit.html.erb:
+15:   </tr>
+16:   <tr>
+17:     <td><b><span style="color:blue;">Subject:</span></b></td>
+18:     <td><%= text_field "subject", @incident.subject.text %></td>
+19:   </tr>
+20:   <tr>
+21:     <td valign="top"><b><span style="color:blue;">Summary:</span></b></td>
+
+    app/views/search/edit.html.erb:18
+    app/views/search/edit.html.erb:2
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    -e:1:in `load'
+    -e:1
+
+Rendered rescues/_trace (35.5ms)
+Rendered rescues/_request_and_response (0.3ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:33:15) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+
+ActionView::TemplateError (You have a nil object when you didn't expect it!
+The error occurred while evaluating nil.text) on line #18 of app/views/search/edit.html.erb:
+15:   </tr>
+16:   <tr>
+17:     <td><b><span style="color:blue;">Subject:</span></b></td>
+18:     <td><%= text_field "subject", @incident.subject.text %></td>
+19:   </tr>
+20:   <tr>
+21:     <td valign="top"><b><span style="color:blue;">Summary:</span></b></td>
+
+    app/views/search/edit.html.erb:18
+    app/views/search/edit.html.erb:2
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    -e:1:in `load'
+    -e:1
+
+Rendered rescues/_trace (97.9ms)
+Rendered rescues/_request_and_response (0.3ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:34:52) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 22ms (View: 5, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:35:09) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 21ms (View: 5, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:36:21) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 42ms (View: 7, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:36:31) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 21ms (View: 10, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:37:00) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 33ms (View: 12, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:38:10) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 21ms (View: 5, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:38:12) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 9ms (View: 2, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:38:12) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 10ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:38:13) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 13ms (View: 4, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits2863.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:39:00) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits2863.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+
+ActionView::TemplateError (You have a nil object when you didn't expect it!
+The error occurred while evaluating nil.text) on line #18 of app/views/search/edit.html.erb:
+15:   </tr>
+16:   <tr>
+17:     <td><b><span style="color:blue;">Subject:</span></b></td>
+18:     <td><input id="incident_Subject" name="incident[Subject]" size="30" type="text" value='<%= @incident.subject.text -%>' /></td>
+19:   </tr>
+20:   <tr>
+21:     <td valign="top"><b><span style="color:blue;">Summary:</span></b></td>
+
+    app/views/search/edit.html.erb:18
+    app/views/search/edit.html.erb:2
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    -e:1:in `load'
+    -e:1
+
+Rendered rescues/_trace (51.7ms)
+Rendered rescues/_request_and_response (0.3ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-06-10 20:39:12) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 172ms (View: 14, DB: 0) | 200 OK [http://localhost/search/]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-06-10 20:39:14) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits63923.xml", "query"=>""}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 57ms (View: 2, DB: 0) | 200 OK [http://localhost/search/show_results?query=&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits63923.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:39:16) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits63923.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+
+ActionView::TemplateError (You have a nil object when you didn't expect it!
+The error occurred while evaluating nil.text) on line #18 of app/views/search/edit.html.erb:
+15:   </tr>
+16:   <tr>
+17:     <td><b><span style="color:blue;">Subject:</span></b></td>
+18:     <td><input id="incident_Subject" name="incident[Subject]" size="30" type="text" value='<%= @incident.subject.text -%>' /></td>
+19:   </tr>
+20:   <tr>
+21:     <td valign="top"><b><span style="color:blue;">Summary:</span></b></td>
+
+    app/views/search/edit.html.erb:18
+    app/views/search/edit.html.erb:2
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    -e:1:in `load'
+    -e:1
+
+Rendered rescues/_trace (36.2ms)
+Rendered rescues/_request_and_response (0.3ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:39:34) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits63923.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 49ms (View: 31, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits63923.xml]
