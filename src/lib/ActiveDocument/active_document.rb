@@ -13,10 +13,10 @@
 #   limitations under the License.
 
 
-require 'ActiveDocument/mark_logic_http'
 require 'rubygems'
 require 'nokogiri'
 require 'yaml'
+require 'ActiveDocument/mark_logic_http'
 require 'ActiveDocument/mark_logic_query_builder'
 require 'ActiveDocument/search_results'
 require 'ActiveDocument/finder'
@@ -113,6 +113,10 @@ module ActiveDocument
       end
     end
 
+    def []=(key, value)
+      set_attribute(key, value)
+    end
+
     # enables the dynamic finders
     def method_missing(method_id, * arguments, & block)
       @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
@@ -207,6 +211,7 @@ module ActiveDocument
 
 
     class PartialResult < self
+      include Enumerable
       # todo should this contain a reference to its parent?
       def initialize(nodeset, parent)
         @document = nodeset
@@ -237,6 +242,10 @@ module ActiveDocument
 
       def text
         @document.text
+      end
+
+      def each(&block)
+        @document.each(&block)
       end
 
     end
@@ -272,7 +281,6 @@ module ActiveDocument
     end
 
     def set_element(element, value)
-      # element.chop!
       xpath, namespace = xpath_for_element(element)
       if namespace.nil?
         node = @document.xpath(xpath)
@@ -284,6 +292,17 @@ module ActiveDocument
       else
         raise ArgumentError, "You can't modify a complex node", caller
       end
+    end
+
+    def set_attribute(attribute, value)
+      namespace = namespace_for_element(attribute)
+      node = if namespace.empty?
+        @document.xpath("@#{attribute}")
+      else
+        @document.xpath("@ns:#{attribute}", {'ns' => namespace})
+      end
+      node[0].child.content = value
+
     end
 
     def access_element(element)

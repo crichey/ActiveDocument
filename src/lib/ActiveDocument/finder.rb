@@ -12,10 +12,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-require 'ActiveDocument/mark_logic_http'
-require 'ActiveDocument/mark_logic_query_builder'
 require 'rubygems'
 require 'nokogiri'
+require 'ActiveDocument/mark_logic_query_builder'
+require 'ActiveDocument/mark_logic_http'
 require 'ActiveDocument/search_results'
 require 'logger'
 

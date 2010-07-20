@@ -84,6 +84,9 @@ class BaseTest < Test::Unit::TestCase
   def test_nested_dynamic_attributes
     title = @book.PERSONAE.TITLE
     assert_equal "Dramatis Personae", title.text
+    @book.TITLE.each do |title|
+      puts title.text
+    end
 
     # test with namespace
     date = @book_namespaces.bookinfo.pubdate.text
@@ -112,10 +115,13 @@ class BaseTest < Test::Unit::TestCase
   end
 
   def test_modify_simple_element
-    my_book = BookUnit.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>")
+    my_book = BookUnit.new("<book><title type='test'>Tale of Two Penguins</title><author>Savannah</author></book>")
     assert_equal "Tale of Two Penguins", my_book.title.text
     my_book.title = "changed"
     assert_equal "changed", my_book.title.text
+    assert_equal 'test', my_book.title["type"]
+    my_book.title["type"] = "works"
+    assert_equal 'works', my_book.title["type"]
   end
 
   def test_element_attributes
