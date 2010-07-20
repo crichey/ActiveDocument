@@ -27,7 +27,7 @@ module ActiveDocument
     @@xquery_builder = ActiveDocument::MarkLogicQueryBuilder.new
 
     def self.config(yaml_file)
-      config = YAML.load_file(yaml_file)
+      config = YAML.load_file(yaml_file)[Rails.env]
       @@ml_http = ActiveDocument::MarkLogicHTTP.new(config['uri'], config['user_name'], config['password'])
       configure_logger(config)
     end
