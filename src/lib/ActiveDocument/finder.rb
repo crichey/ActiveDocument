@@ -58,6 +58,17 @@ module ActiveDocument
       SearchResults.new(@@ml_http.send_xquery(search_text)) # todo support options node
     end
 
+    # returns a hash where the key is the terms of the co-occurrence separated by a | and the value is the frequency count
+    def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
+      pairs = @@ml_http.send_xquery(@@xquery_builder.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)).split("*")
+      pair_hash = Hash.new
+      pairs.each do |p|
+        temp = p.split("|")
+        pair_hash[temp[0] + '|' + temp[1]] = temp[2]
+      end
+      return pair_hash
+    end
+
     private
 
     def self.configure_logger(config)

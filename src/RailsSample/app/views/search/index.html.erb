@@ -7,6 +7,12 @@
             <% end -%>
         <% end -%>
     <% end -%>
+    <% if @pairs -%>
+        <h2>Region | Facility</h2>
+        <% @pairs.sort {|a, b| Integer(a[1])<=>Integer(b[1])}.reverse.first(10).each do |key, value| -%>
+            <p><%= key.gsub('|', ' | ')%> (<%=value%>)</p>
+        <% end %>
+    <% end %>
 <% end %>
 
 <div style="text-align:left">
