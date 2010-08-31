@@ -23,6 +23,7 @@ class BaseTest < Test::Unit::TestCase
 
   class Book < ActiveDocument::Base
     default_namespace "http://docbook.org/ns/docbook"
+    root "book"
     config 'config.yml'
   end
 
@@ -51,11 +52,16 @@ class BaseTest < Test::Unit::TestCase
 
   # test ability to load by uri
   def test_find_by_uri
-    # todo fix
-    book = Book.load("test.xml")
+    # test exception raised when document doesn't exist
+    assert_raise ActiveDocument::LoadException do
+      Book.load("notFound.xml")
+    end
+
+    # test correct loading of a document
+    book = Book.load("/books/a_and_c.xml")
     assert_not_nil(book, "Should have been able to load the document by uri")
     assert_instance_of(Book, book, "Book should be an instance of document not #{book.class}")
-    assert_equal "test.xml", book.uri
+    assert_equal "/books/a_and_c.xml", book.uri
   end
 
   def test_find_by_word
@@ -63,10 +69,10 @@ class BaseTest < Test::Unit::TestCase
     results = Book.find_by_word("beliefs", "book")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
-    # test wtih defualt root
+    # test wtih default root
     results = Book.find_by_word("beliefs")
     assert_instance_of(ActiveDocument::SearchResults, results)
-    assert_equal(2, results.total)
+    assert_equal(1, results.total)
   end
 
   def test_element_word_searches
@@ -112,5 +118,25 @@ class BaseTest < Test::Unit::TestCase
     assert_equal(1, results.total)
   end
 
+  def test_find_by_attribute
+    # test with no attribute namespace
+    results = Book.find_by_attribute_Role("bibliomisc", "src-chapnum")
+    assert_not_nil results
+    assert_equal(1, results.total)
+    # test incorrect search with no attribute namespace
+    results = Book.find_by_attribute_Role("bibliomisc", "garbagefdsfsdfds")
+    assert_not_nil results
+    assert_equal(0, results.total)
+  end
+
+  def test_find_by_element
+    fail "not yet implemented"
+  end
+
+  def test_realize
+    result = Book.find_by_word("beliefs", "book")[0]
+    my_book = result.realize(Book)
+    assert_instance_of(Book, my_book)
+  end
 
 end

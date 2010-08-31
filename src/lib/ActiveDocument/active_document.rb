@@ -50,25 +50,20 @@ module ActiveDocument
   # -------------------
   #  == Dynamic Accessors
   # In addition to the ability to access the underlying XML document (as a Nokogiri XML Document) you have the ability
-  # to access the XML as attributes of your domain object via dynamic attribute accessors (eg. domain_object.element_name) The rules for using accessors
-  # are as follows:
-  #  1. If the element_name is a simple type (i.e. text node with no children <tt><example>text</exmample></tt>)
-  #     1. If there is only one occurence of the element, return its text value
-  #     2. If there are multiple occurences of the element, return a list of each text value
-  #  2. If the element_name is a complex type (e.g. <tt><example><text>hi</text></example></tt>)
-  #     1. If there is only one ocurence of the element then return it as a Nokoguri Element
-  #     2. If there are multiple occurences of the element, return a list of Nokoguri Elements
+  # to access the XML as attributes of your domain object via dynamic attribute accessors (eg. domain_object.element_name).
+  # Attribute accessors always return instances of ActiveDocument::ActiveDocument::PartialResult. This class works just
+  # like a regular ActiveDocument::ActiveDocument::Base object in that you access its members like regular properties.
   #
-  # More complex dynamic accessors are also supported. They still adhere to the rules above, but instead of just looking
+  # More complex dynamic accessors are also supported. Instead of just looking
   # for an element anywhere in the document, you can be more specific. For example, domain_object.chapter.paragraph
   # will find all paragraph elements that are children of chapter elements.
   # -------------------
   class Base < Finder
     include ClassLevelInheritableAttributes
-    inheritable_attributes_list :my_namespaces, :my_default_namespace, :root
+    inheritable_attributes_list :my_namespaces, :my_default_namespace, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
     @my_namespaces = Hash.new
     @my_default_namespace = String.new
-    attr_reader :document, :uri, :my_namespaces, :my_default_namespace, :root
+    attr_reader :document, :uri, :my_namespaces, :my_default_namespace, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
 
 
     # create a new instance with an optional xml string to use for constructing the model
@@ -117,7 +112,7 @@ module ActiveDocument
       set_attribute(key, value)
     end
 
-    # enables the dynamic finders
+    # enables the dynamic property accessors
     def method_missing(method_id, * arguments, & block)
       @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
       method = method_id.to_s
@@ -147,20 +142,50 @@ module ActiveDocument
         namespace
       end
 
+      def namespace_for_attribute(attribute)
+        namespace = nil
+        if !@my_attribute_namespaces.nil? && @my_attribute_namespaces[attribute]
+          namespace = @my_attribute_namespaces[attribute]
+        else
+          namespace = @my_default_attribute_namespace unless @my_default_attribute_namespace.nil?
+        end
+        namespace
+      end
+
       def namespaces(namespace_hash)
         @my_namespaces = namespace_hash
+      end
+
+      def attribute_namespaces(namespace_hash)
+        @my_attribute_namespaces = namespace_hash
       end
 
       def add_namespace(element, uri)
         @my_namespaces[element.to_s] == uri
       end
 
+      def add_attribute_namespace(attribute, uri)
+        @my_attribute_namespaces[attribute.to_s] == uri
+      end
+
       def remove_namespace(element)
         @my_namespaces.delete element
       end
 
+      def remove_attribute_namespace(attribute)
+        @my_attribute_namespaces.delete attribute
+      end
+
       def default_namespace(namespace)
         @my_default_namespace = namespace # todo should this just be an entry in namespaces?
+      end
+
+      def root(root)
+        @root = root
+      end
+
+      def default_attribute_namespace(namespace)
+        @my_default_attribute_namespace = namespace # todo should this just be an entry in namespaces?
       end
 
       def delete(uri)
@@ -171,8 +196,33 @@ module ActiveDocument
       def method_missing(method_id, * arguments, & block)
         @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
         method = method_id.to_s
-        # identify element search methods
-        if method =~ /find_by_(.*)$/ and arguments.length > 0
+        # identify attribute search methods
+        if method =~ /find_by_attribute_(.*)$/ and arguments.length >= 2
+          attribute = $1.to_sym
+          element = arguments[0]
+          value = arguments[1]
+          if arguments[2]
+            root = arguments[2]
+          else
+            root = @root || self.class.name
+          end
+          if arguments[3]
+            element_namespace = arguments[3]
+          else
+            element_namespace = namespace_for_element(element)
+          end
+          if arguments[4]
+            attribute_namespace = arguments[4]
+          else
+            attribute_namespace = namespace_for_attribute(attribute)
+          end
+          if arguments[5]
+            root_namespace = arguments[5]
+          else
+            root_namespace = namespace_for_element(root)
+          end
+          execute_attribute_finder(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace)
+        elsif method =~ /find_by_(.*)$/ and arguments.length > 0 # identify element search methods
           value = arguments[0]
           element = $1.to_sym
           if arguments[1]
@@ -195,20 +245,24 @@ module ActiveDocument
 
       end
 
-      # Returns an ActiveXML object representing the requested information. If no document exists at that uri then an
-      # empty domain object is created and returned
+      # Returns an ActiveXML object representing the requested information. If no document exists at that uri then
+      # a LoadException is thrown
       def load(uri)
-        self.new(@@ml_http.send_xquery(@@xquery_builder.load(uri)), uri)
+        document = @@ml_http.send_xquery(@@xquery_builder.load(uri))
+        if document.empty?
+          raise LoadException, "File #{uri} not found", caller
+        end
+        self.new(document, uri)
       end
 
       # Finds all documents of this type that contain the word anywhere in their structure
       def find_by_word(word, root=@root, namespace=@my_default_namespace)
-        SearchResults.new(@@ml_http.send_xquery(@@xquery_builder.find_by_word(word, root, namespace)))
+        xquery = @@xquery_builder.find_by_word(word, root, namespace)
+        @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{xquery}")
+        SearchResults.new(@@ml_http.send_xquery(xquery))
       end
 
-
     end # end inner class
-
 
     class PartialResult < self
       include Enumerable
@@ -244,8 +298,8 @@ module ActiveDocument
         @document.text
       end
 
-      def each(&block)
-        @document.each(&block)
+      def each(& block)
+        @document.each(& block)
       end
 
     end
@@ -327,6 +381,10 @@ module ActiveDocument
   end
 
   class PersistenceException < ActiveDocumentException
+
+  end
+
+  class LoadException < PersistenceException
 
   end
 

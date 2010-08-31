@@ -53,7 +53,7 @@ GENERATED
       xquery << "</options>)"
     end
 
-    def find_by_element(element, value, root = nil, element_namespace = nil, root_namespace = nil)
+    def find_by_element(element, value, root, element_namespace, root_namespace)
       xquery = <<GENERATED
 import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
 search:search("word:#{value}",
@@ -73,6 +73,30 @@ GENERATED
 </word>
 </constraint></options>)
 CONSTRAINT
+    end
+
+    def find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace)
+      # todo should the searchable expression portion be refactored?
+      xquery = <<-GENERATED
+      import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
+      search:search("word:#{value}",
+      <options xmlns="http://marklogic.com/appservices/search">
+      GENERATED
+      unless root.nil?
+        xquery << "<searchable-expression"
+        xquery << "  xmlns:a=\"#{root_namespace}\"" unless root_namespace.nil?
+        xquery << '>/'
+        xquery << "a:" unless root_namespace.nil?
+        xquery << "#{root}</searchable-expression>"
+      end
+      xquery << <<-CONSTRAINT
+      <constraint name="word">
+      <word>
+        <attribute ns="#{attribute_namespace unless attribute_namespace.nil?}" name="#{attribute}"/>
+        <element ns="#{element_namespace unless element_namespace.nil?}" name="#{element}"/>
+      </word>
+      </constraint></options>)
+      CONSTRAINT
     end
 
     def search(search_text, start, page_length, options)

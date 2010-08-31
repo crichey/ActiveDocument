@@ -37,7 +37,11 @@ module ActiveDocument
       @@log.debug("ActiveDocument::Finder at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
       method = method_id.to_s
       # identify finder methods
-      if method =~ /find_by_(.*)$/ and arguments.length > 0
+      # todo verify these parameters
+      if method =~ /find_by_attribute_(.*)$/ and arguments.length > 0
+        namespace = arguments[1] if arguments.length == 2
+        execute_attribute_finder($1.to_sym, arguments[0], nil, namespace)
+      elsif method =~ /find_by_(.*)$/ and arguments.length > 0
         namespace = arguments[1] if arguments.length == 2
         execute_finder($1.to_sym, arguments[0], nil, namespace)
       else
@@ -48,6 +52,12 @@ module ActiveDocument
     def self.execute_finder(element, value, root = nil, element_namespace = nil, root_namespace = nil)
       xquery = @@xquery_builder.find_by_element(element, value, root, element_namespace, root_namespace)
       @@log.info("Finder.execute_finder at line #{__LINE__}: #{xquery}")
+      SearchResults.new(@@ml_http.send_xquery(xquery))
+    end
+
+      def self.execute_attribute_finder(element, attribute, value, root = nil, element_namespace = nil, attribute_namespace = nil, root_namespace = nil)
+      xquery = @@xquery_builder.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace)
+      @@log.info("Finder.execute_attribute_finder at line #{__LINE__}: #{xquery}")
       SearchResults.new(@@ml_http.send_xquery(xquery))
     end
 

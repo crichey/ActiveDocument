@@ -250,11 +250,6 @@ BEGIN
     puts @search_results.to_a[0].root_type
   end
 
-  def test_realize
 
-    result = @search_results.to_a[0]
-    my_book = result.realize(Book)
-    assert_instance_of(Book, my_book)
-  end
 
 end
