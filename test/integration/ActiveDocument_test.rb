@@ -127,6 +127,10 @@ class BaseTest < Test::Unit::TestCase
     results = Book.find_by_attribute_Role("bibliomisc", "garbagefdsfsdfds")
     assert_not_nil results
     assert_equal(0, results.total)
+    # test with default attribute namespace
+    results = Book.find_by_attribute_sort("title", "Discoverers and Explorers", nil, nil, "http://docbook.org/ns/docbook")
+    assert_not_nil results
+    assert_equal(1, results.total)
   end
 
   def test_find_by_element
