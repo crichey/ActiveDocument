@@ -65,7 +65,7 @@ module ActiveDocument
       start ||= 1
       page_length ||= 10
       search_text = @@xquery_builder.search(search_string, start, page_length, options)
-      SearchResults.new(@@ml_http.send_xquery(search_text)) # todo support options node
+      SearchResults.new(@@ml_http.send_xquery(search_text))
     end
 
     # returns a hash where the key is the terms of the co-occurrence separated by a | and the value is the frequency count
