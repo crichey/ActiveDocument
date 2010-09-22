@@ -32,6 +32,11 @@ class BaseTest < Test::Unit::TestCase
     namespaces :pubdate => 'http://docbook.org/ns/docbook', :book => 'http://docbook.org/ns/docbook'
   end
 
+  class Play < ActiveDocument::Base
+    config 'config.yml'
+    root 'PLAY'
+  end
+
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
@@ -40,6 +45,7 @@ class BaseTest < Test::Unit::TestCase
 
     @discover_book = Book.new(IO.read("../data/discoverBook.xml"), "/books/discoverBook.xml")
     @discover_book.save
+
   end
 
   # Called after every test method runs. Can be used to tear
@@ -121,20 +127,25 @@ class BaseTest < Test::Unit::TestCase
   def test_find_by_attribute
     # test with no attribute namespace
     results = Book.find_by_attribute_Role("bibliomisc", "src-chapnum")
-    assert_not_nil results
     assert_equal(1, results.total)
     # test incorrect search with no attribute namespace
     results = Book.find_by_attribute_Role("bibliomisc", "garbagefdsfsdfds")
-    assert_not_nil results
     assert_equal(0, results.total)
-    # test with default attribute namespace
+    # test with explicit attribute namespace
     results = Book.find_by_attribute_sort("title", "Discoverers and Explorers", nil, nil, "http://docbook.org/ns/docbook")
-    assert_not_nil results
     assert_equal(1, results.total)
   end
 
   def test_find_by_element
-    fail "not yet implemented"
+    # test using default namespace
+    results = Book.find_by_title("Discoverers and Explorers")
+    assert_equal(1, results.total)
+    results = Book.find_by_title("Discoverers and Explorers", nil, "http://docbook.org/ns/docbook")
+    assert_equal(1, results.total)
+    # test with no namespaces
+    results = Play.find_by_PERSONA("MARK ANTONY")
+    assert_equal(1, results.total)
+
   end
 
   def test_realize
@@ -142,5 +153,6 @@ class BaseTest < Test::Unit::TestCase
     my_book = result.realize(Book)
     assert_instance_of(Book, my_book)
   end
+
 
 end

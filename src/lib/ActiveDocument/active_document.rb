@@ -62,7 +62,7 @@ module ActiveDocument
     include ClassLevelInheritableAttributes
     inheritable_attributes_list :my_namespaces, :my_default_namespace, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
     @my_namespaces = Hash.new
-    @my_default_namespace = String.new
+    @my_default_namespace = nil
     attr_reader :document, :uri, :my_namespaces, :my_default_namespace, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
 
 
@@ -101,7 +101,7 @@ module ActiveDocument
 
     def [](key)
       namespace = namespace_for_element(key)
-      if namespace.empty?
+      if namespace.nil? || namespace.empty?
         @document.root.xpath("@#{key}").to_s
       else
         @document.root.xpath("@ns:#{key}", {'ns' => namespace}).to_s
@@ -350,7 +350,7 @@ module ActiveDocument
 
     def set_attribute(attribute, value)
       namespace = namespace_for_element(attribute)
-      node = if namespace.empty?
+      node = if namespace.nil? || namespace.empty?
         @document.xpath("@#{attribute}")
       else
         @document.xpath("@ns:#{attribute}", {'ns' => namespace})
