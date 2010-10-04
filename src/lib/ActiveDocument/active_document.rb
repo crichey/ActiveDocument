@@ -187,6 +187,8 @@ module ActiveDocument
             root_namespace = namespace_for_element(root)
           end
           execute_finder(element, value, root, element_namespace, root_namespace)
+        else
+          super
         end
 
       end
