@@ -37,6 +37,11 @@ class BaseTest < Test::Unit::TestCase
     root 'PLAY'
   end
 
+  class BookNoNamespace < ActiveDocument::Base
+    config 'config.yml'
+    root 'book'
+  end
+
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
@@ -94,7 +99,7 @@ class BaseTest < Test::Unit::TestCase
 
     # now verify that same result is achieved when there is no default namespace and an element namespace is explicitly set in the call
     Book2.remove_namespace("pubdate")
-    results = Book2.find_by_pubdate("1900",nil, 'http://docbook.org/ns/docbook')
+    results = Book2.find_by_pubdate("1900", nil, 'http://docbook.org/ns/docbook')
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
 
@@ -108,7 +113,7 @@ class BaseTest < Test::Unit::TestCase
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(0, results.total)
 
-     # test with explicit root of book with default namespace
+    # test with explicit root of book with default namespace
     results = Book.find_by_pubdate("1900", "book")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
@@ -154,5 +159,25 @@ class BaseTest < Test::Unit::TestCase
     assert_instance_of(Book, my_book)
   end
 
+  def test_save_and_delete
+    book = BookNoNamespace.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>", "test.xml")
+    book.save
+    loaded_book = BookNoNamespace.load("test.xml")
+    assert_not_nil loaded_book
+    assert_equal "book", loaded_book.root
+    assert_equal "Tale of Two Penguins", loaded_book.title.text
+
+    # delete the loaded book
+    Book.delete(loaded_book.uri)
+
+    # confirm that it is deleted
+    begin
+      Book.delete(loaded_book.uri)
+    rescue Net::HTTPFatalError => e then
+      assert_match(/Document not found/, e.message)
+    else
+      fail "No exception raised"
+    end
+  end
 
 end

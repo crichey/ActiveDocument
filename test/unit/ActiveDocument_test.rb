@@ -93,26 +93,7 @@ class BaseTest < Test::Unit::TestCase
     assert_equal("1900", date)
   end
 
-  def test_save_and_delete
-    book = BookUnit.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>", "test.xml")
-    book.save
-    loaded_book = BookUnit.load("test.xml")
-    assert_not_nil loaded_book
-    assert_equal "book", loaded_book.root
-    assert_equal "Tale of Two Penguins", loaded_book.title.text
-
-    # delete the loaded book
-    BookUnit.delete(loaded_book.uri)
-
-    # confirm that it is deleted
-    begin
-      BookUnit.delete(loaded_book.uri)
-    rescue Net::HTTPFatalError => e then
-      assert_match(/Document not found/, e.message)
-    else
-      fail "No exception raised"
-    end
-  end
+  
 
   def test_modify_simple_element
     my_book = BookUnit.new("<book><title type='test'>Tale of Two Penguins</title><author>Savannah</author></book>")
