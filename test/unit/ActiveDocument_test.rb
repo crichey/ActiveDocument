@@ -94,7 +94,6 @@ class BaseTest < Test::Unit::TestCase
   end
 
   
-
   def test_modify_simple_element
     my_book = BookUnit.new("<book><title type='test'>Tale of Two Penguins</title><author>Savannah</author></book>")
     assert_equal "Tale of Two Penguins", my_book.title.text

@@ -2,7 +2,7 @@ require "test/unit"
 $:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require 'rubygems'
 require 'test/unit'
-require 'ActiveDocument/Finder'
+require 'ActiveDocument/finder'
 
 class FinderTests < Test::Unit::TestCase
 

@@ -55,23 +55,26 @@ module ActiveDocument
     def find_by_element(element, value, root, element_namespace, root_namespace, options = nil)
       xquery = <<-GENERATED
         import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
-        search:search("word:#{value}",
-        <options xmlns="http://marklogic.com/appservices/search">
+        search:search("find_by_element:#{value}",
       GENERATED
-      unless root.nil?
-        xquery << "<searchable-expression"
-        xquery << "  xmlns:a=\"#{root_namespace}\"" unless root_namespace.nil?
-        xquery << '>/'
-        xquery << "a:" unless root_namespace.nil?
-        xquery << "#{root}</searchable-expression>"
+      if options then
+        search_options = options
+      else
+        search_options = ActiveDocument::MarkLogicSearchOptions.new
       end
-      xquery << <<-CONSTRAINT
-        <constraint name="word">
-        <word>
-        <element ns="#{element_namespace unless element_namespace.nil?}" name="#{element}"/>
-        </word>
-        </constraint></options>)
-      CONSTRAINT
+      if (search_options.searchable_expression.empty?)
+        search_options.searchable_expression[root_namespace] = root unless root.nil?
+      end
+      search_options.word_constraints["find_by_element"] = {"namespace" => element_namespace, "element" => element}
+      xquery << search_options.to_s
+#      xquery << <<-CONSTRAINT
+#        <constraint name="word">
+#        <word>
+#        <element ns="#{element_namespace unless element_namespace.nil?}" name="#{element}"/>
+#        </word>
+#        </constraint></options>)
+#      CONSTRAINT
+      xquery << ')'
     end
 
     def find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)

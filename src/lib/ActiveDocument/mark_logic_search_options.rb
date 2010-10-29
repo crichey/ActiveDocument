@@ -54,9 +54,9 @@ module ActiveDocument
 
       @value_constraints.each do |key, value|
         constraints << <<-XML
-        <constraint name=" #{key.gsub(/\s/, '_')} ">
+        <constraint name="#{key.gsub(/\s/, '_')}">
           <value>
-            <element ns=" #{value["namespace"]} " name=" #{value["element"]} "/>
+            <element ns="#{value["namespace"]}" name=" #{value["element"]}"/>
           </value>
         </constraint>
         XML
@@ -64,9 +64,9 @@ module ActiveDocument
 
       @word_constraints.each do |key, value|
         constraints << <<-XML
-        <constraint name=" #{key.gsub(/\s/, '_')} ">
+        <constraint name="#{key.gsub(/\s/, '_')}">
           <word>
-            <element ns=" #{value["namespace"]} " name=" #{value["element"]} "/>
+            <element ns="#{value["namespace"]}" name=" #{value["element"]} "/>
           </word>
         </constraint>
         XML
@@ -83,7 +83,7 @@ module ActiveDocument
 
         constraints << <<-XML
             >
-            <element ns=" #{value["namespace"]} " name=" #{value["element"]} "/>
+            <element ns="#{value["namespace"]}" name=" #{value["element"]} "/>
         XML
 
         if value.has_key?("computed_buckets")
@@ -143,7 +143,7 @@ module ActiveDocument
 
       def to_s
         <<-XML
-          <computed-bucket name=" #{@name} " ge=" #{@ge} " lt=" #{@lt} " anchor=" #{@anchor} "> #{@title} </computed-bucket>
+          <computed-bucket name="#{@name}" ge="#{@ge}" lt="#{@lt}" anchor="#{@anchor}">#{@title}</computed-bucket>
         XML
       end
     end
