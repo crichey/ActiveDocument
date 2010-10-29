@@ -35,19 +35,12 @@ module ActiveDocument
     end
 
     # This method does a full text search
-    def find_by_word(word, root, namespace, options = nil)
+    def find_by_word(word, root, root_namespace, options = nil)
       xquery = <<-GENERATED
         import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
         search:search("#{word}",
       GENERATED
-      if options then
-        search_options = options
-      else
-        search_options = ActiveDocument::MarkLogicSearchOptions.new
-      end
-      if (search_options.searchable_expression.empty?)
-        search_options.searchable_expression[namespace] = root unless root.nil?
-      end
+     search_options = setup_options(options, root, root_namespace)
       xquery << search_options.to_s
       xquery << ')'
     end
@@ -57,32 +50,19 @@ module ActiveDocument
         import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
         search:search("find_by_element:#{value}",
       GENERATED
-      if options then
-        search_options = options
-      else
-        search_options = ActiveDocument::MarkLogicSearchOptions.new
-      end
-      if (search_options.searchable_expression.empty?)
-        search_options.searchable_expression[root_namespace] = root unless root.nil?
-      end
+      search_options = setup_options(options, root, root_namespace)
       search_options.word_constraints["find_by_element"] = {"namespace" => element_namespace, "element" => element}
       xquery << search_options.to_s
       xquery << ')'
     end
+
 
     def find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
       xquery = <<-GENERATED
         import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
         search:search("attribute:#{value}",
       GENERATED
-      if options then
-        search_options = options
-      else
-        search_options = ActiveDocument::MarkLogicSearchOptions.new
-      end
-      if (search_options.searchable_expression.empty?)
-        search_options.searchable_expression[root_namespace] = root unless root.nil?
-      end
+      search_options = setup_options(options, root, root_namespace)
       attribute_constraint = ActiveDocument::MarkLogicSearchOptions::AttributeConstraint.new(attribute_namespace, attribute, element_namespace, element)
       search_options.attribute_constraints["attribute"] = attribute_constraint
       xquery << search_options.to_s
@@ -112,6 +92,19 @@ module ActiveDocument
         return
           ($pair/cts:value[1]/text(),"|",$pair/cts:value[2]/text(),"|",cts:frequency($pair),"*")
       GENERATED
+    end
+    private
+    
+    def setup_options(options, root, root_namespace)
+      if options then
+        search_options = options
+      else
+        search_options = ActiveDocument::MarkLogicSearchOptions.new
+      end
+      if (search_options.searchable_expression.empty?)
+        search_options.searchable_expression[root_namespace] = root unless root.nil?
+      end
+      return search_options
     end
 
   end # end class
