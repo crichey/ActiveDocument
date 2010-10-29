@@ -34,17 +34,17 @@ module ActiveDocument
   #   namespace then nil or "" should be passed as the value. eg search_options_object.searchable_expression["element"] = "namespace" or
   #   search_options_object.searchable_expression["element"] = "" if there is no namespace for element
   class MarkLogicSearchOptions
-    attr_accessor :return_facets, :value_constraints, :word_constraints, :range_constraints, :directory_constraint, :directory_depth, :searchable_expression
+    attr_accessor :return_facets, :value_constraints, :word_constraints, :attribute_constraints, :range_constraints, :directory_constraint, :directory_depth, :searchable_expression
 
     def initialize
       @return_facets = true;
       @value_constraints = Hash.new
       @word_constraints = Hash.new
+      @attribute_constraints = Hash.new
       @range_constraints = Hash.new
       @searchable_expression = Hash.new
       @directory_depth = 1
     end
-
 
     # outputs the object in correctly formatted XML suitable for use in a search
     def to_s
@@ -56,7 +56,7 @@ module ActiveDocument
         constraints << <<-XML
         <constraint name="#{key.gsub(/\s/, '_')}">
           <value>
-            <element ns="#{value["namespace"]}" name=" #{value["element"]}"/>
+            <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
           </value>
         </constraint>
         XML
@@ -66,7 +66,18 @@ module ActiveDocument
         constraints << <<-XML
         <constraint name="#{key.gsub(/\s/, '_')}">
           <word>
-            <element ns="#{value["namespace"]}" name=" #{value["element"]} "/>
+            <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
+          </word>
+        </constraint>
+        XML
+      end
+
+      @attribute_constraints.each do |constraint_name, attribute_constraint|
+        constraints << <<-XML
+        <constraint name="#{constraint_name.gsub(/\s/, '_')}">
+          <word>
+            <attribute ns="#{attribute_constraint.attribute_namespace unless attribute_constraint.attribute_namespace.nil?}" name="#{attribute_constraint.attribute}"/>
+          <element ns="#{attribute_constraint.element_namespace unless attribute_constraint.element_namespace.nil?}" name="#{attribute_constraint.element}"/>
           </word>
         </constraint>
         XML
@@ -74,8 +85,8 @@ module ActiveDocument
 
       @range_constraints.each do |key, value|
         constraints << <<-XML
-        <constraint name=" #{key.gsub(/\s/, '_')} ">
-          <range type=" #{value["type"]} "
+        <constraint name="#{key.gsub(/\s/, '_')}">
+          <range type="#{value["type"]}"
         XML
         if value.has_key?("collation")
           constraints << "collation=\"#{value["collation"]}\""
@@ -83,7 +94,7 @@ module ActiveDocument
 
         constraints << <<-XML
             >
-            <element ns="#{value["namespace"]}" name=" #{value["element"]} "/>
+            <element ns="#{value["namespace"]}" name="#{value["element"]}"/>
         XML
 
         if value.has_key?("computed_buckets")
@@ -147,6 +158,18 @@ module ActiveDocument
         XML
       end
     end
+
+    class AttributeConstraint
+      attr_reader :attribute_namespace, :attribute, :element_namespace, :element
+
+      def initialize (attribute_namespace, attribute, element_namespace, element)
+        @attribute_namespace = attribute_namespace
+        @attribute = attribute
+        @element_namespace = element_namespace
+        @element = element
+      end
+    end
+
   end
 
 end

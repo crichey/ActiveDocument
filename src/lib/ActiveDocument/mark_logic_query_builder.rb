@@ -67,38 +67,26 @@ module ActiveDocument
       end
       search_options.word_constraints["find_by_element"] = {"namespace" => element_namespace, "element" => element}
       xquery << search_options.to_s
-#      xquery << <<-CONSTRAINT
-#        <constraint name="word">
-#        <word>
-#        <element ns="#{element_namespace unless element_namespace.nil?}" name="#{element}"/>
-#        </word>
-#        </constraint></options>)
-#      CONSTRAINT
       xquery << ')'
     end
 
     def find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
-      # todo should the searchable expression portion be refactored?
       xquery = <<-GENERATED
-        import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
-        search:search("word:  #{value}  ",
-        <options xmlns="http://marklogic.com/appservices/search">
+        import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
+        search:search("attribute:#{value}",
       GENERATED
-      unless root.nil?
-        xquery << "<searchable-expression"
-        xquery << "  xmlns:a=\"#{root_namespace}\"" unless root_namespace.nil?
-        xquery << '>/'
-        xquery << "a:" unless root_namespace.nil?
-        xquery << "#{root}</searchable-expression>"
+      if options then
+        search_options = options
+      else
+        search_options = ActiveDocument::MarkLogicSearchOptions.new
       end
-      xquery << <<-CONSTRAINT
-        <constraint name="word">
-        <word>
-          <attribute ns="  #{attribute_namespace unless attribute_namespace.nil?}  " name="  #{attribute}  "/>
-          <element ns="  #{element_namespace unless element_namespace.nil?}  " name="  #{element}  "/>
-        </word>
-        </constraint></options>)
-      CONSTRAINT
+      if (search_options.searchable_expression.empty?)
+        search_options.searchable_expression[root_namespace] = root unless root.nil?
+      end
+      attribute_constraint = ActiveDocument::MarkLogicSearchOptions::AttributeConstraint.new(attribute_namespace, attribute, element_namespace, element)
+      search_options.attribute_constraints["attribute"] = attribute_constraint
+      xquery << search_options.to_s
+      xquery << ')'
     end
 
     def search(search_text, start, page_length, options)
@@ -108,17 +96,17 @@ module ActiveDocument
         option = options.to_s
       end
       <<-GENERATED
-      import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
-      search:search('  #{search_text}  ',  #{option}  ,  #{start}  ,   #{page_length}  )
+      import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
+      search:search('#{search_text}', #{option}, #{start}, #{page_length})
       GENERATED
     end
 
     def co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
       <<-GENERATED
-        declare namespace one = "  #{element1_namespace}  ";
-        declare namespace two = "  #{element2_namespace}  ";
-        import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
-        let $pairs := cts:element-value-co-occurrences(xs:QName('one:  #{element1}  '), xs:QName('two:  #{element2}  '), ('frequency-order', 'fragment-frequency','ordered'), cts:query(search:parse('  #{query}  ')))
+        declare namespace one = "#{element1_namespace}";
+        declare namespace two = "#{element2_namespace}";
+        import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
+        let $pairs := cts:element-value-co-occurrences(xs:QName('one:#{element1}'), xs:QName('two:#{element2}'), ('frequency-order', 'fragment-frequency','ordered'), cts:query(search:parse('#{query}')))
         return
         for $pair in $pairs
         return
