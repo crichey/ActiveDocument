@@ -107,7 +107,7 @@ module ActiveDocument
 
       # serialize the additional query information
       if @directory_constraint
-        additional_query = "<additional-query>{cts:directory-query(\"#{directory_constraint}\"), \"#{directory_depth}\"}</additional-query>"
+        additional_query = "<additional-query>{cts:directory-query(\"#{directory_constraint}\", \"#{directory_depth}\")}</additional-query>"
       end
 
       # serialize the searchable_expression
@@ -123,12 +123,12 @@ module ActiveDocument
       unless additional_query.empty?
         value << additional_query
       end
-      value << "<return-facets>#{@return_facets}</return-facets>"
 
       # add in constraints
       unless constraints.empty?
         value << constraints
       end
+      value << "<return-facets>#{@return_facets}</return-facets>"
 
       # output the searchable expression
       unless searchable_path.empty?

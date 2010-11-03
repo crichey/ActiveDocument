@@ -57,8 +57,8 @@ class BaseTest < Test::Unit::TestCase
   # down fixture information.
 
   def teardown
-    Book.delete @a_and_c.uri
-    Book.delete @discover_book.uri
+#    Book.delete @a_and_c.uri
+#    Book.delete @discover_book.uri
   end
 
   # test ability to load by uri
@@ -178,6 +178,40 @@ class BaseTest < Test::Unit::TestCase
     else
       fail "No exception raised"
     end
+  end
+
+  def test_directory_constraint
+    # test using correct directory
+    options = ActiveDocument::MarkLogicSearchOptions.new
+    options.directory_constraint = "/books/" # depth stays at default of one
+    # test using default namespace
+    results = Book.find_by_title("Discoverers and Explorers", nil, nil, nil, options)
+    assert_equal(1, results.total)
+    options = ActiveDocument::MarkLogicSearchOptions.new
+    options.directory_constraint = "/books/" # depth stays at default of one
+    results = Book.find_by_title("Discoverers and Explorers", nil, "http://docbook.org/ns/docbook", nil, options)
+    assert_equal(1, results.total)
+    # test with no namespaces
+    options = ActiveDocument::MarkLogicSearchOptions.new
+    options.directory_constraint = "/books/" # depth stays at default of one
+    results = Play.find_by_PERSONA("MARK ANTONY", nil, nil, nil, options)
+    assert_equal(1, results.total)
+
+    # test using incorrect directory
+    options = ActiveDocument::MarkLogicSearchOptions.new
+    options.directory_constraint = "/error/" # depth stays at default of one
+    # test using default namespace
+    results = Book.find_by_title("Discoverers and Explorers", nil, nil, nil, options)
+    assert_equal(0, results.total)
+    options = ActiveDocument::MarkLogicSearchOptions.new
+    options.directory_constraint = "/error/" # depth stays at default of one
+    results = Book.find_by_title("Discoverers and Explorers", nil, "http://docbook.org/ns/docbook", nil, options)
+    assert_equal(0, results.total)
+    # test with no namespaces
+    options = ActiveDocument::MarkLogicSearchOptions.new
+    options.directory_constraint = "/error/" # depth stays at default of one
+    results = Play.find_by_PERSONA("MARK", nil, nil, nil, options)
+    assert_equal(0, results.total)
   end
 
 end

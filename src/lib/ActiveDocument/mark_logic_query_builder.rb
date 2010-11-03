@@ -48,7 +48,7 @@ module ActiveDocument
     def find_by_element(element, value, root, element_namespace, root_namespace, options = nil)
       xquery = <<-GENERATED
         import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
-        search:search("find_by_element:#{value}",
+        search:search('find_by_element:\"#{value}\"',
       GENERATED
       search_options = setup_options(options, root, root_namespace)
       search_options.word_constraints["find_by_element"] = {"namespace" => element_namespace, "element" => element}

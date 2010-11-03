@@ -221,7 +221,12 @@ module ActiveDocument
           else
             root_namespace = namespace_for_element(root)
           end
-          execute_attribute_finder(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace)
+          if arguments[6]
+            options = arguments[6]
+          else
+            options = nil
+          end
+          execute_attribute_finder(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
         elsif method =~ /find_by_(.*)$/ and arguments.length > 0 # identify element search methods
           value = arguments[0]
           element = $1.to_sym
@@ -240,7 +245,12 @@ module ActiveDocument
           else
             root_namespace = namespace_for_element(root)
           end
-          execute_finder(element, value, root, element_namespace, root_namespace)
+          if arguments[4]
+            options = arguments[4]
+          else
+            options = nil
+          end
+          execute_finder(element, value, root, element_namespace, root_namespace, options)
         else
           super
         end
