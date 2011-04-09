@@ -93,6 +93,13 @@ class BaseTest < Test::Unit::TestCase
     assert_equal("1900", date)
   end
 
+  def test_dynamic_attributes_with_hyphens
+    my_book = BookUnit.new("<book><book-title>Tale of Two Penguins</book-title><author>Savannah</author></book>")
+    title = my_book.bookHYPHENtitle
+    assert_equal "Tale of Two Penguins", title.text
+
+  end
+
   
   def test_modify_simple_element
     my_book = BookUnit.new("<book><title type='test'>Tale of Two Penguins</title><author>Savannah</author></book>")

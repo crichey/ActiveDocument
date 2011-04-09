@@ -54,6 +54,11 @@ module ActiveDocument
   # Attribute accessors always return instances of ActiveDocument::ActiveDocument::PartialResult. This class works just
   # like a regular ActiveDocument::ActiveDocument::Base object in that you access its members like regular properties.
   #
+  # NOTE: Ruby does NOT support hyphens in method names. Because of this if you have an element called, for example,
+  # version-number, you CAN'T do x.version-number to access the version-number element. To work around this problem
+  # substitute the word HYPHEN (all caps) for any - in your elements names. In the previous exmaple using
+  # x.versionHYPHENnumber will correctly resolve to the version-number element.
+  #
   # More complex dynamic accessors are also supported. Instead of just looking
   # for an element anywhere in the document, you can be more specific. For example, domain_object.chapter.paragraph
   # will find all paragraph elements that are children of chapter elements.
@@ -116,7 +121,8 @@ module ActiveDocument
     def method_missing(method_id, * arguments, & block)
       @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
       method = method_id.to_s
-      if method =~ /^(\w*)$/ # methods with no '.' in them and not ending in '='
+      method = method.sub("HYPHEN","-")
+      if method =~ /^(\w*-?\w*)$/ # methods with no '.' in them and not ending in '='
         if arguments.length > 0
           super
         end
