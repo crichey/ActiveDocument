@@ -121,7 +121,7 @@ module ActiveDocument
     def method_missing(method_id, * arguments, & block)
       @@log.debug("ActiveDocument::Base at line #{__LINE__}: method called is #{method_id} with arguments #{arguments}")
       method = method_id.to_s
-      method = method.sub("HYPHEN","-")
+      method = method.sub("HYPHEN", "-")
       if method =~ /^(\w*-?\w*)$/ # methods with no '.' in them and not ending in '='
         if arguments.length > 0
           super
@@ -288,11 +288,13 @@ module ActiveDocument
       def initialize(nodeset, parent)
         @document = nodeset
         @root =
-                if nodeset.instance_of? Nokogiri::XML::Element then
-                  nodeset.name
-                else
-                  nodeset[0].name
-                end
+            if nodeset.instance_of? Nokogiri::XML::Element then
+              nodeset.name
+            elsif nodeset.instance_of? Nokogiri::XML::NodeSet
+              nodeset.first.name
+            else
+              nodeset[0].name
+            end
         @my_namespaces = parent.class.my_namespaces
         @my_default_namespace = parent.class.my_default_namespace
       end
@@ -369,10 +371,10 @@ module ActiveDocument
     def set_attribute(attribute, value)
       namespace = namespace_for_element(attribute)
       node = if namespace.nil? || namespace.empty?
-        @document.xpath("@#{attribute}")
-      else
-        @document.xpath("@ns:#{attribute}", {'ns' => namespace})
-      end
+               @document.xpath("@#{attribute}")
+             else
+               @document.xpath("@ns:#{attribute}", {'ns' => namespace})
+             end
       node[0].child.content = value
 
     end
