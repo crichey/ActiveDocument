@@ -1,6 +1,8 @@
 class SearchController < ApplicationController
 
-  def initialize
+  before_filter :gather_options
+
+  def gather_options
     @search_options = ActiveDocument::MarkLogicSearchOptions.new
     @search_options.range_constraints["Region"] = {"namespace" => "http://wits.nctc.gov", "element" => "Region", "type" => "xs:string", "collation" => "http://marklogic.com/collation/"}
     @search_options.range_constraints["Facility Type"] = {"namespace" => "http://wits.nctc.gov", "element" => "FacilityType", "type" => "xs:string", "collation" => "http://marklogic.com/collation/"}
