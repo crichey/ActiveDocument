@@ -61,6 +61,10 @@ end
 module ActiveDocument
 
   class MarkLogicHTTP
+    GET = :get
+    POST = :post
+    PUT = :put
+    DELETE = :delete
 
     def initialize(uri, user_name, password)
       @url = URI.parse(uri)
@@ -68,13 +72,16 @@ module ActiveDocument
       @password = password
     end
 
-    def send_xquery(xquery)
-      if xquery.nil? or xquery.empty? then
-        return nil
-      end
-      req = authenticate()
-      req.set_form_data({'request'=>"#{xquery}"})
-      res = Net::HTTP.new(@url.host, @url.port).start {|http| http.request(req) }
+# @param uri [the uri endpoint for the request]
+# @param body [the optional body]
+# @param verb [The HTTP verb to be used]
+    def send(uri, verb=GET, body="")
+      return nil if uri.nil? or uri.empty?
+      target = @url + uri
+      req = authenticate(target, verb)
+      req.body = body if verb == PUT or verb == POST
+      #req.set_form_data({'request'=>"#{xquery}"})
+      res = Net::HTTP.new(@url.host, @url.port).start { |http| http.request(req) }
       case res
         when Net::HTTPSuccess, Net::HTTPRedirection
 #          puts res.body
@@ -85,8 +92,17 @@ module ActiveDocument
     end
 
     private
-    def authenticate
-      req = Net::HTTP::Post.new(@url.path)
+    def authenticate(path, verb)
+      case verb
+        when POST
+          req = Net::HTTP::Post.new(@url.path)
+        when PUT
+          req = Net::HTTP::Put.new(@url.path)
+        when GET
+          req = Net::HTTP::Get.new(@url.path)
+        when DELETE
+          req = Net::HTTP::Delete.new(@url.path)
+      end
       Net::HTTP.start(@url.host, @url.port) do |http|
         res = http.head(@url.request_uri)
         req.digest_auth(@user_name, @password, res)

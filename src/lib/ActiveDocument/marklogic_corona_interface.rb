@@ -14,7 +14,7 @@
 require 'ActiveDocument/mark_logic_search_options'
 module ActiveDocument
 # todo create new unit tests for this class - the old ones were no good
-  class MarkLogicQueryBuilder
+  class CoronaInterface
 
     def load(uri)
       "fn:doc('#{uri}')"
@@ -24,14 +24,12 @@ module ActiveDocument
       "xdmp:document-delete('#{uri}')"
     end
 
-    def save(document, uri)
-      xquery = <<-GENERATED
-         xdmp:document-insert(
-           "#{uri}",
-             #{document.to_s}  ,
-           xdmp:default-permissions(),
-           xdmp:default-collections())
-      GENERATED
+    def save(uri)
+      if uri.start_with?("/") then
+        "/xml/store/#{uri[1..uri.length]}" #strips out leading /
+      else
+        "/xml/store/#{uri}"
+      end
     end
 
     # This method does a full text search
@@ -40,7 +38,7 @@ module ActiveDocument
         import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
         search:search("#{word}",
       GENERATED
-     search_options = setup_options(options, root, root_namespace)
+      search_options = setup_options(options, root, root_namespace)
       xquery << search_options.to_s
       xquery << ')'
     end
@@ -93,8 +91,9 @@ module ActiveDocument
           ($pair/cts:value[1]/text(),"|",$pair/cts:value[2]/text(),"|",cts:frequency($pair),"*")
       GENERATED
     end
+
     private
-    
+
     def setup_options(options, root, root_namespace)
       if options then
         search_options = options

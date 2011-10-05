@@ -24,7 +24,7 @@ module ActiveDocument
   class Finder
 
 
-    @@xquery_builder = ActiveDocument::MarkLogicQueryBuilder.new
+    @@corona_generator = ActiveDocument::CoronaInterface.new
 
     def self.config(yaml_file)
       config = YAML.load_file(yaml_file)
@@ -50,13 +50,13 @@ module ActiveDocument
     end
 
     def self.execute_finder(element, value, root = nil, element_namespace = nil, root_namespace = nil, options = nil)
-      xquery = @@xquery_builder.find_by_element(element, value, root, element_namespace, root_namespace, options)
+      xquery = @@corona_generator.find_by_element(element, value, root, element_namespace, root_namespace, options)
       @@log.info("Finder.execute_finder at line #{__LINE__}: #{xquery}")
       SearchResults.new(@@ml_http.send_xquery(xquery))
     end
 
       def self.execute_attribute_finder(element, attribute, value, root = nil, element_namespace = nil, attribute_namespace = nil, root_namespace = nil, options = nil)
-      xquery = @@xquery_builder.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
+      xquery = @@corona_generator.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
       @@log.info("Finder.execute_attribute_finder at line #{__LINE__}: #{xquery}")
       SearchResults.new(@@ml_http.send_xquery(xquery))
     end
@@ -64,13 +64,13 @@ module ActiveDocument
     def self.search(search_string, start = 1, page_length = 10, options = nil)
       start ||= 1
       page_length ||= 10
-      search_text = @@xquery_builder.search(search_string, start, page_length, options)
+      search_text = @@corona_generator.search(search_string, start, page_length, options)
       SearchResults.new(@@ml_http.send_xquery(search_text))
     end
 
     # returns a hash where the key is the terms of the co-occurrence separated by a | and the value is the frequency count
     def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
-      pairs = @@ml_http.send_xquery(@@xquery_builder.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)).split("*")
+      pairs = @@ml_http.send_xquery(@@corona_generator.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)).split("*")
       pair_hash = Hash.new
       pairs.each do |p|
         temp = p.split("|")

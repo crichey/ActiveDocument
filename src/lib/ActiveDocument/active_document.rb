@@ -92,7 +92,7 @@ module ActiveDocument
     def save(uri = nil)
       doc_uri = (uri || @uri)
       if doc_uri then
-        @@ml_http.send_xquery(@@xquery_builder.save(self, doc_uri))
+        @@ml_http.send(@@corona_generator.save(doc_uri),ActiveDocument::MarkLogicHTTP::GET, self)
       else
         raise ArgumentError, "uri must not be nil", caller
       end
@@ -195,7 +195,7 @@ module ActiveDocument
       end
 
       def delete(uri)
-        @@ml_http.send_xquery(@@xquery_builder.delete(uri))
+        @@ml_http.send_xquery(@@corona_generator.delete(uri))
       end
 
       # enables the dynamic finders
@@ -266,7 +266,7 @@ module ActiveDocument
       # Returns an ActiveXML object representing the requested information. If no document exists at that uri then
       # a LoadException is thrown
       def load(uri)
-        document = @@ml_http.send_xquery(@@xquery_builder.load(uri))
+        document = @@ml_http.send_xquery(@@corona_generator.load(uri))
         if document.empty?
           raise LoadException, "File #{uri} not found", caller
         end
@@ -275,7 +275,7 @@ module ActiveDocument
 
       # Finds all documents of this type that contain the word anywhere in their structure
       def find_by_word(word, root=@root, namespace=@my_default_namespace)
-        xquery = @@xquery_builder.find_by_word(word, root, namespace)
+        xquery = @@corona_generator.find_by_word(word, root, namespace)
         @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{xquery}")
         SearchResults.new(@@ml_http.send_xquery(xquery))
       end

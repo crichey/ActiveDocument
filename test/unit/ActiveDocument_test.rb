@@ -98,6 +98,10 @@ class BaseTest < Test::Unit::TestCase
     title = my_book.bookHYPHENtitle
     assert_equal "Tale of Two Penguins", title.text
 
+    my_book = BookUnit.new("<book><chapter><first-paragraph>My First paragraph</first-paragraph></chapter></book>")
+    paragraph = my_book.chapter.firstHYPHENparagraph
+    assert_equal "My First paragraph", paragraph.text
+
   end
 
   
