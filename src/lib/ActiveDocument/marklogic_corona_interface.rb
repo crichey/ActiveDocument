@@ -21,7 +21,11 @@ module ActiveDocument
     end
 
     def delete(uri)
-      "xdmp:document-delete('#{uri}')"
+      if uri.start_with?("/") then
+        "/xml/store/#{uri[1..uri.length]}" #strips out leading /
+      else
+        "/xml/store/#{uri}"
+      end
     end
 
     def save(uri)

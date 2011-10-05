@@ -92,11 +92,10 @@ module ActiveDocument
     def save(uri = nil)
       doc_uri = (uri || @uri)
       if doc_uri then
-        @@ml_http.send(@@corona_generator.save(doc_uri),ActiveDocument::MarkLogicHTTP::PUT, self.document.to_s)
+        @@ml_http.send_corona_request(@@corona_generator.save(doc_uri), ActiveDocument::MarkLogicHTTP::PUT, self.document.to_s)
       else
         raise ArgumentError, "uri must not be nil", caller
       end
-
     end
 
     # Returns the root element for this object
@@ -195,7 +194,12 @@ module ActiveDocument
       end
 
       def delete(uri)
-        @@ml_http.send_xquery(@@corona_generator.delete(uri))
+        doc_uri = (uri || @uri)
+        if doc_uri then
+          @@ml_http.send_corona_request(@@corona_generator.delete(doc_uri), ActiveDocument::MarkLogicHTTP::DELETE)
+        else
+          raise ArgumentError, "uri must not be nil", caller
+        end
       end
 
       # enables the dynamic finders
@@ -394,7 +398,7 @@ module ActiveDocument
 
   end
 
-  # end class
+# end class
 
   class ActiveDocumentException < Exception
 

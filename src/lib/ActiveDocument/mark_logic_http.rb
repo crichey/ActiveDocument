@@ -75,7 +75,7 @@ module ActiveDocument
 # @param uri [the uri endpoint for the request]
 # @param body [the optional body]
 # @param verb [The HTTP verb to be used]
-    def send(uri, verb=GET, body="")
+    def send_corona_request(uri, verb=GET, body="")
       return nil if uri.nil? or uri.empty?
       targetUrl = @url + uri
       #targetUrl = URI.parse(target)
