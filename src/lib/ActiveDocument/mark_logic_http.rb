@@ -77,11 +77,12 @@ module ActiveDocument
 # @param verb [The HTTP verb to be used]
     def send(uri, verb=GET, body="")
       return nil if uri.nil? or uri.empty?
-      target = @url + uri
-      req = authenticate(target, verb)
+      targetUrl = @url + uri
+      #targetUrl = URI.parse(target)
+      req = authenticate(targetUrl, verb)
       req.body = body if verb == PUT or verb == POST
       #req.set_form_data({'request'=>"#{xquery}"})
-      res = Net::HTTP.new(@url.host, @url.port).start { |http| http.request(req) }
+      res = Net::HTTP.new(targetUrl.host, targetUrl.port).start { |http| http.request(req) }
       case res
         when Net::HTTPSuccess, Net::HTTPRedirection
 #          puts res.body
@@ -92,19 +93,19 @@ module ActiveDocument
     end
 
     private
-    def authenticate(path, verb)
+    def authenticate(targetUrl, verb)
       case verb
         when POST
-          req = Net::HTTP::Post.new(@url.path)
+          req = Net::HTTP::Post.new(targetUrl.path)
         when PUT
-          req = Net::HTTP::Put.new(@url.path)
+          req = Net::HTTP::Put.new(targetUrl.path)
         when GET
-          req = Net::HTTP::Get.new(@url.path)
+          req = Net::HTTP::Get.new(targetUrl.path)
         when DELETE
-          req = Net::HTTP::Delete.new(@url.path)
+          req = Net::HTTP::Delete.new(targetUrl.path)
       end
-      Net::HTTP.start(@url.host, @url.port) do |http|
-        res = http.head(@url.request_uri)
+      Net::HTTP.start(targetUrl.host, targetUrl.port) do |http|
+        res = http.head(targetUrl.request_uri)
         req.digest_auth(@user_name, @password, res)
       end
       return req

@@ -17,7 +17,7 @@ require 'rubygems'
 require 'nokogiri'
 require 'yaml'
 require 'ActiveDocument/mark_logic_http'
-require 'ActiveDocument/mark_logic_query_builder'
+require 'ActiveDocument/marklogic_corona_interface'
 require 'ActiveDocument/search_results'
 require 'ActiveDocument/finder'
 require "ActiveDocument/inheritable"
@@ -92,7 +92,7 @@ module ActiveDocument
     def save(uri = nil)
       doc_uri = (uri || @uri)
       if doc_uri then
-        @@ml_http.send(@@corona_generator.save(doc_uri),ActiveDocument::MarkLogicHTTP::GET, self)
+        @@ml_http.send(@@corona_generator.save(doc_uri),ActiveDocument::MarkLogicHTTP::PUT, self.document.to_s)
       else
         raise ArgumentError, "uri must not be nil", caller
       end

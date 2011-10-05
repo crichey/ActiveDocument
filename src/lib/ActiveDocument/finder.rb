@@ -14,7 +14,6 @@
 
 require 'rubygems'
 require 'nokogiri'
-require 'ActiveDocument/mark_logic_query_builder'
 require 'ActiveDocument/mark_logic_http'
 require 'ActiveDocument/search_results'
 require 'logger'
@@ -22,7 +21,6 @@ require 'logger'
 module ActiveDocument
 
   class Finder
-
 
     @@corona_generator = ActiveDocument::CoronaInterface.new
 

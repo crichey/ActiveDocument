@@ -61,6 +61,10 @@ class BaseTest < Test::Unit::TestCase
     Book.delete @discover_book.uri
   end
 
+  def test_pass
+    
+  end
+
   # test ability to load by uri
   def test_find_by_uri
     # test exception raised when document doesn't exist
