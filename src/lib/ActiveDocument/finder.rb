@@ -15,6 +15,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'ActiveDocument/mark_logic_http'
+require 'ActiveDocument/marklogic_corona_interface'
 require 'ActiveDocument/search_results'
 require 'logger'
 
@@ -63,7 +64,8 @@ module ActiveDocument
       start ||= 1
       page_length ||= 10
       search_text = @@corona_generator.search(search_string, start, page_length, options)
-      SearchResults.new(@@ml_http.send_xquery(search_text))
+      #@@ml_http.send_corona_request(@@corona_generator.delete(doc_uri), ActiveDocument::MarkLogicHTTP::DELETE)
+      SearchResults.new(@@ml_http.send_corona_request(search_text))
     end
 
     # returns a hash where the key is the terms of the co-occurrence separated by a | and the value is the frequency count

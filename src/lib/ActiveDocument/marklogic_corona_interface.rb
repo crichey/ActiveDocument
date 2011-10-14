@@ -72,15 +72,7 @@ module ActiveDocument
     end
 
     def search(search_text, start, page_length, options)
-      if options.nil?
-        option = '()'
-      else
-        option = options.to_s
-      end
-      <<-GENERATED
-      import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
-      search:search('#{search_text}', #{option}, #{start}, #{page_length})
-      GENERATED
+      "/xml/query?q=#{search_text}&start=#{start}&end=#{start + page_length -1}"
     end
 
     def co_occurrence(element1, element1_namespace, element2, element2_namespace, query)

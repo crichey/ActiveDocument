@@ -3,6 +3,7 @@ $:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require 'rubygems'
 require 'test/unit'
 require 'ActiveDocument/finder'
+require 'ActiveDocument/active_document'
 
 class FinderTests < Test::Unit::TestCase
 

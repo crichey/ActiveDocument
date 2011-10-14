@@ -6887,3 +6887,426 @@ Processing SearchController#edit (for 127.0.0.1 at 2010-06-10 20:39:34) [GET]
 Rendering template within layouts/application
 Rendering search/edit
 Completed in 49ms (View: 31, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits63923.xml]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:10:54) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 3879ms (View: 106, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-07-19 12:11:07) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits30028.xml", "query"=>""}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 109ms (View: 20, DB: 0) | 200 OK [http://localhost/search/show_results?query=&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits30028.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-07-19 12:11:10) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits30028.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 345ms (View: 336, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits30028.xml]
+
+
+Processing SearchController#update (for 127.0.0.1 at 2010-07-19 12:11:17) [PUT]
+  Parameters: {"commit"=>"Submit", "authenticity_token"=>"6UEjky44IaAxsb5NFy4qzlsEcGTovQSsOi7OH/tyxN0=", "incident"=>{"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits30028.xml", "Subject"=>"Clark"}}
+Redirected to http://localhost:3000/search
+Completed in 35ms (DB: 0) | 302 Found [http://localhost/search/update]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:11:17) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 227ms (View: 114, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:11:21) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"clark"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 127ms (View: 4, DB: 0) | 200 OK [http://localhost/search?query=clark&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-07-19 12:11:25) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits30028.xml", "query"=>"clark"}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 13ms (View: 3, DB: 0) | 200 OK [http://localhost/search/show_results?query=clark&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits30028.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-07-19 12:11:27) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits30028.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 13ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits30028.xml]
+
+
+Processing SearchController#update (for 127.0.0.1 at 2010-07-19 12:11:31) [PUT]
+  Parameters: {"commit"=>"Submit", "authenticity_token"=>"6UEjky44IaAxsb5NFy4qzlsEcGTovQSsOi7OH/tyxN0=", "incident"=>{"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits30028.xml", "Subject"=>"Several civilians kidnapped in Baghdad, Iraq"}}
+Redirected to http://localhost:3000/search
+Completed in 31ms (DB: 0) | 302 Found [http://localhost/search/update]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:11:31) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 140ms (View: 23, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:11:33) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"clark"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 64ms (View: 3, DB: 0) | 200 OK [http://localhost/search?query=clark&commit=Search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:11:36) [GET]
+  Parameters: {"commit"=>"Search", "query"=>""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 99ms (View: 14, DB: 0) | 200 OK [http://localhost/search?query=&commit=Search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:13:02) [GET]
+  Parameters: {"commit"=>"Search", "query"=>""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 181ms (View: 16, DB: 0) | 200 OK [http://localhost/search?query=&commit=Search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:13:08) [GET]
+  Parameters: {"query"=>" Region:\"Middle East and Persian Gulf\""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 476ms (View: 63, DB: 0) | 200 OK [http://localhost/search?query=+Region%3A%22Middle+East+and+Persian+Gulf%22]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:13:13) [GET]
+  Parameters: {"start"=>"11", "query"=>" Region:\"Middle East and Persian Gulf\""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 604ms (View: 11, DB: 0) | 200 OK [http://localhost/search?query=+Region%3A%22Middle+East+and+Persian+Gulf%22&start=11]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:13:18) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"bomb"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 582ms (View: 12, DB: 0) | 200 OK [http://localhost/search?query=bomb&commit=Search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-19 12:13:21) [GET]
+  Parameters: {"query"=>"bomb Facility_Type:\"Business\""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 465ms (View: 61, DB: 0) | 200 OK [http://localhost/search?query=bomb+Facility_Type%3A%22Business%22]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-07-19 12:13:29) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits30091.xml", "query"=>"bomb Facility_Type:\"Business\""}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 26ms (View: 2, DB: 0) | 200 OK [http://localhost/search/show_results?query=bomb+Facility_Type%3A%22Business%22&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits30091.xml]
+
+
+Processing SearchController#show_raw (for 127.0.0.1 at 2010-07-19 12:13:34) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits30091.xml", "query"=>"bomb Facility_Type:\"Business\""}
+Rendering search/show_raw
+Completed in 52ms (View: 33, DB: 0) | 200 OK [http://localhost/search/show_raw?query=bomb+Facility_Type%3A%22Business%22&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits30091.xml]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 13:38:04) [GET]
+
+NoMethodError (undefined method `co_occurrence' for ActiveDocument::Finder:Class):
+  activedocument (0.4.1) lib/ActiveDocument/finder.rb:44:in `method_missing'
+  app/controllers/search_controller.rb:18:in `index'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:1:in `load'
+  -e:1
+
+Rendered rescues/_trace (28.9ms)
+Rendered rescues/_request_and_response (1.2ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 13:45:27) [GET]
+
+NoMethodError (undefined method `co_occurrence' for #<ActiveDocument::MarkLogicQueryBuilder:0x102318ff0>):
+  activedocument (0.4.1) lib/ActiveDocument/finder.rb:63:in `co_occurrence'
+  app/controllers/search_controller.rb:18:in `index'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:1:in `load'
+  -e:1
+
+Rendered rescues/_trace (33.3ms)
+Rendered rescues/_request_and_response (1.7ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 13:49:44) [GET]
+
+Net::HTTPFatalError (500 "Invalid cast"):
+  /opt/local/lib/ruby/1.8/net/http.rb:2097:in `error!'
+  activedocument (0.4.1) lib/ActiveDocument/mark_logic_http.rb:83:in `send_xquery'
+  activedocument (0.4.1) lib/ActiveDocument/finder.rb:63:in `co_occurrence'
+  app/controllers/search_controller.rb:18:in `index'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:1:in `load'
+  -e:1
+
+Rendered rescues/_trace (29.8ms)
+Rendered rescues/_request_and_response (1.2ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 13:55:18) [GET]
+
+Net::HTTPFatalError (500 "No element range index"):
+  /opt/local/lib/ruby/1.8/net/http.rb:2097:in `error!'
+  activedocument (0.4.1) lib/ActiveDocument/mark_logic_http.rb:83:in `send_xquery'
+  activedocument (0.4.1) lib/ActiveDocument/finder.rb:63:in `co_occurrence'
+  app/controllers/search_controller.rb:18:in `index'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:1:in `load'
+  -e:1
+
+Rendered rescues/_trace (34.4ms)
+Rendered rescues/_request_and_response (1.3ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 13:56:42) [GET]
+Rendering template within layouts/application
+Rendering search/index
+
+ActionView::TemplateError (invalid value for Integer: "\nPeacekeeping\n") on line #12 of app/views/search/index.html.erb:
+9:     <% end -%>
+10:     <% if @pairs -%>
+11:         <h2>Region | Facility</h2>
+12:         <% @pairs.sort {|a, b| Integer(a[1])<=>Integer(b[1])}.reverse.first(10).each do |key, value| -%>
+13:             <p><%= key.gsub('|', ' | ')%> (<%=value%>)</p>
+14:         <% end %>
+15:     <% end %>
+
+    app/views/search/index.html.erb:12:in `Integer'
+    app/views/search/index.html.erb:12
+    app/views/search/index.html.erb:12:in `sort'
+    app/views/search/index.html.erb:12
+    app/views/search/index.html.erb:1
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    -e:1:in `load'
+    -e:1
+
+Rendered rescues/_trace (41.5ms)
+Rendered rescues/_request_and_response (0.3ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 13:59:01) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 346ms (View: 46, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 14:53:32) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 1901ms (View: 84, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 19:39:50) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"\"car bomb\""}
+
+Net::HTTPFatalError (500 "Unexpected token"):
+  /opt/local/lib/ruby/1.8/net/http.rb:2097:in `error!'
+  activedocument (0.4.1) lib/ActiveDocument/mark_logic_http.rb:83:in `send_xquery'
+  activedocument (0.4.1) lib/ActiveDocument/finder.rb:63:in `co_occurrence'
+  app/controllers/search_controller.rb:18:in `index'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+  /opt/local/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:95:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `each'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:92:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:23:in `start'
+  /opt/local/lib/ruby/1.8/webrick/server.rb:82:in `start'
+  -e:1:in `load'
+  -e:1
+
+Rendered rescues/_trace (30.6ms)
+Rendered rescues/_request_and_response (15.9ms)
+Rendering rescues/layout (internal_server_error)
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 19:43:55) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"\"car bomb\""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 326ms (View: 67, DB: 0) | 200 OK [http://localhost/search?query=%22car+bomb%22&commit=Search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 19:44:00) [GET]
+  Parameters: {"commit"=>"Search", "query"=>""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 320ms (View: 13, DB: 0) | 200 OK [http://localhost/search?query=&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-07-20 21:05:27) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits63923.xml", "query"=>""}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 174ms (View: 35, DB: 0) | 200 OK [http://localhost/search/show_results?query=&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits63923.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-07-20 21:05:31) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits63923.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 56ms (View: 51, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits63923.xml]
+
+
+Processing SearchController#update (for 127.0.0.1 at 2010-07-20 21:05:40) [PUT]
+  Parameters: {"commit"=>"Submit", "authenticity_token"=>"6UEjky44IaAxsb5NFy4qzlsEcGTovQSsOi7OH/tyxN0=", "incident"=>{"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits63923.xml", "Subject"=>"Demo jam rock with fire"}}
+Redirected to http://localhost:3000/search
+Completed in 425ms (DB: 0) | 302 Found [http://localhost/search/update]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 21:05:40) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 467ms (View: 14, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-07-20 21:05:52) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"\"demo jam\""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 153ms (View: 4, DB: 0) | 200 OK [http://localhost/search?query=%22demo+jam%22&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-07-20 21:05:53) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits63923.xml", "query"=>"\"demo jam\""}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 8ms (View: 2, DB: 0) | 200 OK [http://localhost/search/show_results?query=%22demo+jam%22&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits63923.xml]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-08-05 11:21:18) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 1901ms (View: 22, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-08-05 11:21:57) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"\"car bomb\""}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 760ms (View: 12, DB: 0) | 200 OK [http://localhost/search?query=%22car+bomb%22&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-08-05 11:22:49) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits1889.xml", "query"=>"\"car bomb\""}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 95ms (View: 5, DB: 0) | 200 OK [http://localhost/search/show_results?query=%22car+bomb%22&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits1889.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-08-05 11:23:00) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits1889.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 112ms (View: 97, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits1889.xml]
+
+
+Processing SearchController#update (for 127.0.0.1 at 2010-08-05 11:23:18) [PUT]
+  Parameters: {"commit"=>"Submit", "authenticity_token"=>"vLwKRq46CxxU4lswcM2XrF8NkS0VpuXlrRqpqHnGzqk=", "incident"=>{"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits1889.xml", "Subject"=>"Cengage"}}
+Redirected to http://localhost:3000/search
+Completed in 464ms (DB: 0) | 302 Found [http://localhost/search/update]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-08-05 11:23:19) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 220ms (View: 21, DB: 0) | 200 OK [http://localhost/search]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-08-05 11:23:24) [GET]
+  Parameters: {"commit"=>"Search", "query"=>"Cengage"}
+Rendering template within layouts/application
+Rendering search/index
+Completed in 313ms (View: 5, DB: 0) | 200 OK [http://localhost/search?query=Cengage&commit=Search]
+
+
+Processing SearchController#show_results (for 127.0.0.1 at 2010-08-05 11:23:30) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits1889.xml", "query"=>"Cengage"}
+Rendering template within layouts/application
+Rendering search/show_results
+Completed in 9ms (View: 2, DB: 0) | 200 OK [http://localhost/search/show_results?query=Cengage&uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits1889.xml]
+
+
+Processing SearchController#edit (for 127.0.0.1 at 2010-08-05 11:23:35) [GET]
+  Parameters: {"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits1889.xml"}
+Rendering template within layouts/application
+Rendering search/edit
+Completed in 10ms (View: 3, DB: 0) | 200 OK [http://localhost/search/edit?uri=%2FUsers%2Fclarkrichey%2FProjects%2FActiveDocument%2FWitsParser%2Fwits%2Fwits1889.xml]
+
+
+Processing SearchController#update (for 127.0.0.1 at 2010-08-05 11:23:39) [PUT]
+  Parameters: {"commit"=>"Submit", "authenticity_token"=>"vLwKRq46CxxU4lswcM2XrF8NkS0VpuXlrRqpqHnGzqk=", "incident"=>{"uri"=>"/Users/clarkrichey/Projects/ActiveDocument/WitsParser/wits/wits1889.xml", "Subject"=>"10 civilians killed, 182 others wounded in car bombing by JI in Jakarta, Jakarta Raya, Indonesia"}}
+Redirected to http://localhost:3000/search
+Completed in 67ms (DB: 0) | 302 Found [http://localhost/search/update]
+
+
+Processing SearchController#index (for 127.0.0.1 at 2010-08-05 11:23:39) [GET]
+Rendering template within layouts/application
+Rendering search/index
+Completed in 318ms (View: 13, DB: 0) | 200 OK [http://localhost/search]

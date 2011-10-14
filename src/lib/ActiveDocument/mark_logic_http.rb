@@ -77,38 +77,31 @@ module ActiveDocument
 # @param verb [The HTTP verb to be used]
     def send_corona_request(uri, verb=GET, body="")
       return nil if uri.nil? or uri.empty?
-      targetUrl = @url + uri
-      #targetUrl = URI.parse(target)
-      req = authenticate(targetUrl, verb)
+      target_Url = @url + URI.escape(uri)
+      http = Net::HTTP.new(target_Url.host, target_Url.port)
+      case verb
+        when POST
+          req = Net::HTTP::Post.new(target_Url.path)
+        when PUT
+          req = Net::HTTP::Put.new(target_Url.path)
+        when GET
+          req = Net::HTTP::Get.new(target_Url.path + "?" + target_Url.query)
+        when DELETE
+          req = Net::HTTP::Delete.new(target_Url.path)
+      end
       req.body = body if verb == PUT or verb == POST
-      #req.set_form_data({'request'=>"#{xquery}"})
-      res = Net::HTTP.new(targetUrl.host, targetUrl.port).start { |http| http.request(req) }
+      res = http.head(target_Url.request_uri)
+      req.digest_auth(@user_name, @password, res)
+      res = http.request(req)
       case res
         when Net::HTTPSuccess, Net::HTTPRedirection
 #          puts res.body
           res.body
         else
+          puts req.path
           res.error!
       end
     end
 
-    private
-    def authenticate(targetUrl, verb)
-      case verb
-        when POST
-          req = Net::HTTP::Post.new(targetUrl.path)
-        when PUT
-          req = Net::HTTP::Put.new(targetUrl.path)
-        when GET
-          req = Net::HTTP::Get.new(targetUrl.path)
-        when DELETE
-          req = Net::HTTP::Delete.new(targetUrl.path)
-      end
-      Net::HTTP.start(targetUrl.host, targetUrl.port) do |http|
-        res = http.head(targetUrl.request_uri)
-        req.digest_auth(@user_name, @password, res)
-      end
-      return req
-    end
   end
 end

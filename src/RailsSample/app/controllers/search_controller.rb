@@ -14,7 +14,7 @@ class SearchController < ApplicationController
       start = 1
     end
     @query = params[:query]
-    if @query.nil? : @query = "" end
+    @query = "" if @query.nil?
     @results = ActiveDocument::Finder.search(@query, start, 10, @search_options)
     @facets = @results.facets
     @pairs = ActiveDocument::Finder.co_occurrence("Region", "http://wits.nctc.gov", "FacilityType", "http://wits.nctc.gov", @query)

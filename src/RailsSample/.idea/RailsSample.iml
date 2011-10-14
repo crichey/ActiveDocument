@@ -9,35 +9,28 @@
       </configuration>
     </facet>
   </component>
-  <component name="GemRequirementsHolder" version="2">
+  <component name="GemRequirementsHolder" version="3">
     <requirement>
       <requirement>
-        <dependency name="ActiveDocument" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="activedocument" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
-      <source from="app/models/person.rb" />
-    </requirement>
-    <requirement>
-      <requirement>
-        <dependency name="activedocument" version="0" bound="GREATER_OR_EQUAL" />
-      </requirement>
-      <source manual="true" />
       <source from="config/environment.rb" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="nokogiri" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="rails" version="2.3.2" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
-      <source manual="true" />
+      <source from="config/environment.rb" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rails" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="rails" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="config/boot.rb" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="sqlite3-ruby" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="sqlite3-ruby" version="0" bound="GREATER_OR_EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="config/database.yml" />
     </requirement>
@@ -50,20 +43,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] sqlite3-ruby (v1.2.4, /Users/clarkrichey/.gem/ruby/1.8/gems/sqlite3-ruby-1.2.4)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] actionpack (v1.13.3, /Users/clarkrichey/.gem/ruby/1.8/gems/actionpack-1.13.3)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] actionwebservice (v1.2.3, /Users/clarkrichey/.gem/ruby/1.8/gems/actionwebservice-1.2.3)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] rake (v0.8.7, /opt/local/lib/ruby/gems/1.8/gems/rake-0.8.7)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v2.3.2, /Users/clarkrichey/.gem/ruby/1.8/gems/activesupport-2.3.2)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] actionpack (v2.3.2, /Users/clarkrichey/.gem/ruby/1.8/gems/actionpack-2.3.2)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] rails (v2.3.2, /Users/clarkrichey/.gem/ruby/1.8/gems/rails-2.3.2)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] actionmailer (v2.3.2, /Users/clarkrichey/.gem/ruby/1.8/gems/actionmailer-2.3.2)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activeresource (v2.3.2, /Users/clarkrichey/.gem/ruby/1.8/gems/activeresource-2.3.2)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] nokogiri (v1.4.1, /opt/local/lib/ruby/gems/1.8/gems/nokogiri-1.4.1)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord (v2.3.2, /Users/clarkrichey/.gem/ruby/1.8/gems/activerecord-2.3.2)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v1.4.2, /Users/clarkrichey/.gem/ruby/1.8/gems/activesupport-1.4.2)" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord (v1.15.3, /Users/clarkrichey/.gem/ruby/1.8/gems/activerecord-1.15.3)" level="application" />
-    <orderEntry type="library" name="[gem] activedocument (v0.1, null)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activerecord (v2.3.2, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@rails2-3-2/gems/activerecord-2.3.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] actionpack (v2.3.2, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@rails2-3-2/gems/actionpack-2.3.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activeresource (v2.3.2, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@rails2-3-2/gems/activeresource-2.3.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activesupport (v2.3.2, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@rails2-3-2/gems/activesupport-2.3.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rails (v2.3.2, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@rails2-3-2/gems/rails-2.3.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] actionmailer (v2.3.2, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@rails2-3-2/gems/actionmailer-2.3.2)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] rake (v0.8.7, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@global/gems/rake-0.8.7)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] activedocument (v0.6, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@rails2-3-2/gems/activedocument-0.6)" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="[gem] nokogiri (v1.4.4, /Users/clarkrichey/.rvm/gems/ruby-1.9.2-p180@rails2-3-2/gems/nokogiri-1.4.4)" level="application" />
   </component>
 </module>
 
