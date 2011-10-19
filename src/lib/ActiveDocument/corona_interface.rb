@@ -16,38 +16,45 @@ module ActiveDocument
 # todo create new unit tests for this class - the old ones were no good
   class CoronaInterface
 
-    def load(uri)
+    def self.load(uri)
       "fn:doc('#{uri}')"
     end
 
-    def delete(uri)
+    def self.delete(uri)
       if uri.start_with?("/") then
-        "/xml/store/#{uri[1..uri.length]}" #strips out leading /
+        ["/xml/store/#{uri[1..uri.length]}",:delete] #strips out leading /
       else
-        "/xml/store/#{uri}"
+        ["/xml/store/#{uri}",:delete]
       end
     end
 
-    def save(uri)
+    def self.save(uri)
       if uri.start_with?("/") then
-        "/xml/store/#{uri[1..uri.length]}" #strips out leading /
+        ["/xml/store/#{uri[1..uri.length]}",:put] #strips out leading /
       else
-        "/xml/store/#{uri}"
+        ["/xml/store/#{uri}",:put]
       end
     end
 
     # This method does a full text search
-    def find_by_word(word, root, root_namespace, options = nil)
-      xquery = <<-GENERATED
-        import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
-        search:search("#{word}",
-      GENERATED
-      search_options = setup_options(options, root, root_namespace)
-      xquery << search_options.to_s
-      xquery << ')'
+    def self.find_by_word(word, root, root_namespace, options = nil)
+      options = self.setup_options(options, root, root_namespace)
+      unless root.nil?
+        if root_namespace.nil?
+          root_expression = "/" + root
+        else
+          root_expression = "/" + options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
+        end
+      end
+      if root_expression then
+        ["/xml/query?q=#{word}&extractPath=#{root_expression}", :put]
+      else
+        ["/xml/query?q=#{word}",:put]
+      end
     end
 
-    def find_by_element(element, value, root, element_namespace, root_namespace, options = nil)
+
+    def self.find_by_element(element, value, root, element_namespace, root_namespace, options = nil)
       xquery = <<-GENERATED
         import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
         search:search('find_by_element:\"#{value}\"',
@@ -59,23 +66,23 @@ module ActiveDocument
     end
 
 
-    def find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
+    def self.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
       xquery = <<-GENERATED
         import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
         search:search("attribute:#{value}",
       GENERATED
-      search_options = setup_options(options, root, root_namespace)
+      search_options = self.setup_options(options, root, root_namespace)
       attribute_constraint = ActiveDocument::MarkLogicSearchOptions::AttributeConstraint.new(attribute_namespace, attribute, element_namespace, element)
       search_options.attribute_constraints["attribute"] = attribute_constraint
       xquery << search_options.to_s
       xquery << ')'
     end
 
-    def search(search_text, start, page_length, options)
-      "/xml/query?q=#{search_text}&start=#{start}&end=#{start + page_length -1}"
+    def self.search(search_text, start, page_length, options)
+      ["/xml/query?q=#{search_text}&start=#{start}&end=#{start + page_length -1}",:get]
     end
 
-    def co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
+    def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
       <<-GENERATED
         declare namespace one = "#{element1_namespace}";
         declare namespace two = "#{element2_namespace}";
@@ -88,9 +95,13 @@ module ActiveDocument
       GENERATED
     end
 
+    def self.declare_namespace(prefix, uri)
+      ["/manage/namespace/#{prefix}?uri=#{uri}",:post]
+    end
+
     private
 
-    def setup_options(options, root, root_namespace)
+    def self.setup_options(options, root, root_namespace)
       if options then
         search_options = options
       else

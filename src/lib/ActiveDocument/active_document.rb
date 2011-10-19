@@ -17,7 +17,7 @@ require 'rubygems'
 require 'nokogiri'
 require 'yaml'
 require 'ActiveDocument/mark_logic_http'
-require 'ActiveDocument/marklogic_corona_interface'
+require 'ActiveDocument/corona_interface'
 require 'ActiveDocument/search_results'
 require 'ActiveDocument/finder'
 require "ActiveDocument/inheritable"
@@ -92,7 +92,8 @@ module ActiveDocument
     def save(uri = nil)
       doc_uri = (uri || @uri)
       if doc_uri then
-        @@ml_http.send_corona_request(@@corona_generator.save(doc_uri), ActiveDocument::MarkLogicHTTP::PUT, self.document.to_s)
+        corona_array = ActiveDocument::CoronaInterface.save(doc_uri)
+        @@ml_http.send_corona_request(corona_array[0], corona_array[1], self.document.to_s)
       else
         raise ArgumentError, "uri must not be nil", caller
       end
@@ -196,7 +197,8 @@ module ActiveDocument
       def delete(uri)
         doc_uri = (uri || @uri)
         if doc_uri then
-          @@ml_http.send_corona_request(@@corona_generator.delete(doc_uri), ActiveDocument::MarkLogicHTTP::DELETE)
+          corona_array = ActiveDocument::CoronaInterface.delete(doc_uri)
+          @@ml_http.send_corona_request(corona_array[0],corona_array[1])
         else
           raise ArgumentError, "uri must not be nil", caller
         end
@@ -270,7 +272,7 @@ module ActiveDocument
       # Returns an ActiveXML object representing the requested information. If no document exists at that uri then
       # a LoadException is thrown
       def load(uri)
-        document = @@ml_http.send_xquery(@@corona_generator.load(uri))
+        document = @@ml_http.send_xquery(ActiveDocument::CoronaInterface.load(uri))
         if document.empty?
           raise LoadException, "File #{uri} not found", caller
         end
@@ -279,9 +281,9 @@ module ActiveDocument
 
       # Finds all documents of this type that contain the word anywhere in their structure
       def find_by_word(word, root=@root, namespace=@my_default_namespace)
-        xquery = @@corona_generator.find_by_word(word, root, namespace)
-        @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{xquery}")
-        SearchResults.new(@@ml_http.send_xquery(xquery))
+        corona_array = ActiveDocument::CoronaInterface.find_by_word(word, root, namespace)
+        @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{corona_array}")
+        SearchResults.new(@@ml_http.send_corona_request(corona_array[0],corona_array[1]))
       end
 
     end # end inner class
