@@ -128,7 +128,7 @@ module ActiveDocument
         end
         access_element $1
       elsif method =~ /^(\w*)=$/ && arguments.length == 1 # methods with no '.' in them and ending in '='
-        set_element($1, arguments)
+        set_element($1, arguments[0])
       else
         super
       end
@@ -262,7 +262,7 @@ module ActiveDocument
           else
             options = nil
           end
-          execute_finder(element, value, root, element_namespace, root_namespace, options)
+          execute_fidnder(element, value, root, element_namespace, root_namespace, options)
         else
           super
         end

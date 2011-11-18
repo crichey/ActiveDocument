@@ -77,11 +77,19 @@ module ActiveDocument
       http = Net::HTTP.new(target_url.host, target_url.port)
       case verb
         when :post
-          req = Net::HTTP::Post.new(target_url.path)
+          if target_url.query
+            req = Net::HTTP::Post.new(target_url.path + "?" + target_url.query)
+          else
+            req = Net::HTTP::Post.new(target_url.path)
+          end
         when :put
           req = Net::HTTP::Put.new(target_url.path)
         when :get
-          req = Net::HTTP::Get.new(target_url.path + "?" + target_url.query)
+          if target_url.query
+            req = Net::HTTP::Get.new(target_url.path + "?" + target_url.query)
+          else
+            req = Net::HTTP::Get.new(target_url.path)
+          end
         when :delete
           req = Net::HTTP::Delete.new(target_url.path)
       end
@@ -94,8 +102,8 @@ module ActiveDocument
 #          puts res.body
           res.body
         else
-          puts req.path
-          res.error!
+          #puts req.path
+          raise res.error!
       end
     end
 

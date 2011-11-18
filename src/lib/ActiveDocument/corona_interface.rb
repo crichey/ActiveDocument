@@ -99,6 +99,12 @@ module ActiveDocument
       ["/manage/namespace/#{prefix}?uri=#{uri}",:post]
     end
 
+    # @param uri [The uri for which the matching, if any, prefix should be found]
+    # @return [An array where the first item is the string uri for the request and the second item is the http verb]
+    def self.lookup_namespace(uri)
+      ["/manage/namespace/#{uri}",:get]
+    end
+
     private
 
     def self.setup_options(options, root, root_namespace)
