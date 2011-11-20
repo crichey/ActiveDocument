@@ -92,9 +92,15 @@ module ActiveDocument
           req = Net::HTTP::Get.new(endpoint)
         when :delete
           req = Net::HTTP::Delete.new(endpoint)
+        else
+          req = Net::HTTP::Get.new(endpoint) # safe default
       end
-
-      req.body << body if (verb == :put or verb == :post) and ! body.nil?
+      if ((! body.nil?) and (verb == :put or verb == :post) ) then
+        if (req.body.nil?) then req.body = body
+        else
+          req.body << body
+        end
+      end
       res = http.head(target_url.request_uri)
       #puts req.body
       req.digest_auth(@user_name, @password, res)

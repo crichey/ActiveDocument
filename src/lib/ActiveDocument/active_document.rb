@@ -92,8 +92,9 @@ module ActiveDocument
     def save(uri = nil)
       doc_uri = (uri || @uri)
       if doc_uri then
-        corona_array = ActiveDocument::CoronaInterface.save(doc_uri)
-        @@ml_http.send_corona_request(corona_array[0], corona_array[1], self.document.to_s)
+        response_array = ActiveDocument::CoronaInterface.save(doc_uri)
+        uri_array = response_array[:uri]
+        @@ml_http.send_corona_request(uri_array[0], uri_array[1], self.document.to_s)
       else
         raise ArgumentError, "uri must not be nil", caller
       end
@@ -197,8 +198,9 @@ module ActiveDocument
       def delete(uri)
         doc_uri = (uri || @uri)
         if doc_uri then
-          corona_array = ActiveDocument::CoronaInterface.delete(doc_uri)
-          @@ml_http.send_corona_request(corona_array[0],corona_array[1])
+          response_array = ActiveDocument::CoronaInterface.delete(doc_uri)
+          uri_array = response_array[:uri]
+          @@ml_http.send_corona_request(uri_array[0],uri_array[1])
         else
           raise ArgumentError, "uri must not be nil", caller
         end
