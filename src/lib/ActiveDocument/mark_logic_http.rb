@@ -71,30 +71,32 @@ module ActiveDocument
 # @param uri [the uri endpoint for the request]
 # @param body [the optional body]
 # @param verb [The HTTP verb to be used]
-    def send_corona_request(uri, verb=:get, body="")
+# @param post_fields [a hash of post fields. They key should be the field name and the value is the field value]
+# @return [nil if there if no uri or it is an empty string. Otherwise, returns the http response]
+    def send_corona_request(uri, verb=:get, body="", post_fields=nil)
       return nil if uri.nil? or uri.empty?
       target_url = @url + URI.escape(uri)
       http = Net::HTTP.new(target_url.host, target_url.port)
+      if target_url.query
+        endpoint = target_url.path + "?" + target_url.query
+      else
+        endpoint = target_url.path
+      end
       case verb
         when :post
-          if target_url.query
-            req = Net::HTTP::Post.new(target_url.path + "?" + target_url.query)
-          else
-            req = Net::HTTP::Post.new(target_url.path)
-          end
+          req = Net::HTTP::Post.new(endpoint)
+          req.set_form_data(post_fields)
         when :put
-          req = Net::HTTP::Put.new(target_url.path)
+          req = Net::HTTP::Put.new(endpoint)
         when :get
-          if target_url.query
-            req = Net::HTTP::Get.new(target_url.path + "?" + target_url.query)
-          else
-            req = Net::HTTP::Get.new(target_url.path)
-          end
+          req = Net::HTTP::Get.new(endpoint)
         when :delete
-          req = Net::HTTP::Delete.new(target_url.path)
+          req = Net::HTTP::Delete.new(endpoint)
       end
-      req.body = body if verb == :put or verb == :post
+
+      req.body << body if (verb == :put or verb == :post) and ! body.nil?
       res = http.head(target_url.request_uri)
+      #puts req.body
       req.digest_auth(@user_name, @password, res)
       res = http.request(req)
       case res

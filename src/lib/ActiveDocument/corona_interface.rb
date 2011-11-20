@@ -13,31 +13,40 @@
 #   limitations under the License.
 require 'ActiveDocument/mark_logic_search_options'
 module ActiveDocument
-# todo create new unit tests for this class - the old ones were no good
+
+  # CoronaInterface methods always return a hash. This hash will always contain at least a uri key with associated
+  # value
   class CoronaInterface
 
     def self.load(uri)
       "fn:doc('#{uri}')"
     end
 
+    # @param uri the uri of the record to be deleted
+    # @return A hash containing the necessary return values. This hash contains:
+    # uri: an array where the first element is the uri to be used for the REST call and the second element is the
+    # http verb
     def self.delete(uri)
-      if uri.start_with?("/") then
-        ["/xml/store/#{uri[1..uri.length]}",:delete] #strips out leading /
-      else
-        ["/xml/store/#{uri}",:delete]
-      end
+      {:uri => ["/store?uri=#{uri}", :delete]}
     end
 
+    # @param uri the uri of the record to be saved
+    # @return A hash containing the necessary return values. This hash contains:
+    # uri: an array where the first element is the uri to be used for the REST call and the second element is the
+    # http verb
     def self.save(uri)
-      if uri.start_with?("/") then
-        ["/xml/store/#{uri[1..uri.length]}",:put] #strips out leading /
-      else
-        ["/xml/store/#{uri}",:put]
-      end
+      {:uri => ["/store?uri=#{uri}", :put]}
     end
 
     # This method does a full text search
+    # @return A hash containing the necessary return values. This hash contains:
+    # uri: an array where the first element is the uri to be used for the REST call and the second element is the
+    # http verb
+    # post_parameters: a hash of all post parameters to be submitted
     def self.find_by_word(word, root, root_namespace, options = nil)
+      #todo deal with paging
+      response = Hash.new
+      post_parameters = Hash.new
       options = self.setup_options(options, root, root_namespace)
       unless root.nil?
         if root_namespace.nil?
@@ -45,12 +54,12 @@ module ActiveDocument
         else
           root_expression = "/" + options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
         end
+        post_parameters[:extractPath] = root_expression if root_expression
       end
-      if root_expression then
-        ["/xml/query?q=#{word}&extractPath=#{root_expression}", :put]
-      else
-        ["/xml/query?q=#{word}",:put]
-      end
+      response[:uri] = ["/search", :post]
+      post_parameters[:stringQuery] = word
+      response[:post_parameters] = post_parameters
+      response
     end
 
 
@@ -79,7 +88,7 @@ module ActiveDocument
     end
 
     def self.search(search_text, start, page_length, options)
-      ["/xml/query?q=#{search_text}&start=#{start}&end=#{start + page_length -1}",:get]
+      ["/query?q=#{search_text}&start=#{start}&end=#{start + page_length -1}", :get]
     end
 
     def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
@@ -96,13 +105,13 @@ module ActiveDocument
     end
 
     def self.declare_namespace(prefix, uri)
-      ["/manage/namespace/#{prefix}?uri=#{uri}",:post]
+      ["/manage/namespace/#{prefix}?uri=#{uri}", :post]
     end
 
     # @param uri [The uri for which the matching, if any, prefix should be found]
     # @return [An array where the first item is the string uri for the request and the second item is the http verb]
     def self.lookup_namespace(uri)
-      ["/manage/namespace/#{uri}",:get]
+      ["/manage/namespace/#{uri}", :get]
     end
 
     private
