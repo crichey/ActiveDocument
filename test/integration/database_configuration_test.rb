@@ -1,6 +1,7 @@
 require "test/unit"
 $:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require "ActiveDocument/database_configuration"
+require "json"
 class NamespacesTest < Test::Unit::TestCase
 
   # Called before every test method runs. Can be used
@@ -19,11 +20,12 @@ class NamespacesTest < Test::Unit::TestCase
   # Fake test
   def test_fail
     namespace = ActiveDocument::DatabaseConfiguration.lookup_namespace("book")
-    assert_nil namespace
+    #assert_nil namespace
     namespaces = Hash.new
-    namespaces["book"] = "http://docbook.org"
+    namespaces["book"] = "http://docbook.org/ns/docbook"
     ActiveDocument::DatabaseConfiguration.define_namespaces(namespaces)
     namespace = ActiveDocument::DatabaseConfiguration.lookup_namespace("book")
-    assert_equal namespace, "http://docbook.org", "Expected http://docbook.org but received #{namespace}"
+    namespace_hash = JSON.parse namespace
+    assert_equal namespace_hash['uri'], "http://docbook.org/ns/docbook", "Expected #{namespaces["book"]} but received #{namespace}"
   end
 end

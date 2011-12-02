@@ -50,16 +50,19 @@ module ActiveDocument
       options = self.setup_options(options, root, root_namespace)
       unless root.nil?
         if root_namespace.nil?
-          root_expression = "/" + root
+          root_expression = root
         else
-          root_expression = "/" + options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
+          root_expression = options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
         end
-        post_parameters[:extractPath] = root_expression if root_expression
       end
+      structured_query = "{\"underElement\":\"#{root_expression}\",\"query\":{\"wordAnywhere\":\"#{word}\"}}"
       response[:uri] = ["/search", :post]
-      post_parameters[:stringQuery] = word
+      post_parameters[:structuredQuery] = structured_query
+      post_parameters[:outputFormat] = "xml"
       response[:post_parameters] = post_parameters
       response
+
+
     end
 
 

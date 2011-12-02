@@ -57,8 +57,8 @@ class BaseTest < Test::Unit::TestCase
   # down fixture information.
 
   def teardown
-    Book.delete @a_and_c.uri
-    Book.delete @discover_book.uri
+    #Book.delete @a_and_c.uri
+    #Book.delete @discover_book.uri
   end
 
   def test_pass

@@ -85,7 +85,8 @@ module ActiveDocument
       case verb
         when :post
           req = Net::HTTP::Post.new(endpoint)
-          req.set_form_data(post_fields)
+          req.set_form_data(post_fields) unless post_fields.nil?
+          #puts URI.decode_www_form(req.body)
         when :put
           req = Net::HTTP::Put.new(endpoint)
         when :get
