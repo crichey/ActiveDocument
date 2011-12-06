@@ -19,8 +19,10 @@ class NamespacesTest < Test::Unit::TestCase
 
   # Fake test
   def test_fail
+    ActiveDocument::DatabaseConfiguration.delete_all_namespaces
+
     namespace = ActiveDocument::DatabaseConfiguration.lookup_namespace("book")
-    #assert_nil namespace
+    assert_nil namespace
     namespaces = Hash.new
     namespaces["book"] = "http://docbook.org/ns/docbook"
     ActiveDocument::DatabaseConfiguration.define_namespaces(namespaces)

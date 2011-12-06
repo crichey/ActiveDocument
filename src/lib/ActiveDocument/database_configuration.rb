@@ -49,5 +49,19 @@ module ActiveDocument
         end
       end
     end
+
+    def self.delete_all_namespaces
+      corona_array = ActiveDocument::CoronaInterface.delete_all_namespaces
+      begin
+        @@ml_http.send_corona_request(corona_array[0], corona_array[1])
+      rescue Exception => exception
+        if exception.response.code == "404"
+          nil
+        else
+          raise exception
+        end
+      end
+    end
+
   end
 end

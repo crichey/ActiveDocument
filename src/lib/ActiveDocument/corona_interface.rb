@@ -117,6 +117,10 @@ module ActiveDocument
       ["/manage/namespace/#{uri}", :get]
     end
 
+    def self.delete_all_namespaces
+      ["/manage/namespace/", :delete]
+    end
+
     private
 
     def self.setup_options(options, root, root_namespace)
