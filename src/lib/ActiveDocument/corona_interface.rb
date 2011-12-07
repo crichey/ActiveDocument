@@ -19,7 +19,7 @@ module ActiveDocument
   class CoronaInterface
 
     def self.load(uri)
-      "fn:doc('#{uri}')"
+      {:uri => ["/store?uri=#{uri}", :get]}
     end
 
     # @param uri the uri of the record to be deleted

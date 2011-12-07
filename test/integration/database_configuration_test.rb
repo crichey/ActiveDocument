@@ -18,7 +18,7 @@ class NamespacesTest < Test::Unit::TestCase
   end
 
   # Fake test
-  def test_fail
+  def test_namespaces
     ActiveDocument::DatabaseConfiguration.delete_all_namespaces
 
     namespace = ActiveDocument::DatabaseConfiguration.lookup_namespace("book")

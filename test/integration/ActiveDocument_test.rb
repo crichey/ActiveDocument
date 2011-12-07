@@ -57,8 +57,8 @@ class BaseTest < Test::Unit::TestCase
   # down fixture information.
 
   def teardown
-    #Book.delete @a_and_c.uri
-    #Book.delete @discover_book.uri
+    Book.delete @a_and_c.uri
+    Book.delete @discover_book.uri
   end
 
   def test_pass
@@ -177,8 +177,8 @@ class BaseTest < Test::Unit::TestCase
     # confirm that it is deleted
     begin
       Book.delete(loaded_book.uri)
-    rescue Net::HTTPFatalError => e then
-      assert_match(/Document not found/, e.message)
+    rescue Net::HTTPServerException => e then
+      assert_match(/There is no document to delete/, e.message)
     else
       fail "No exception raised"
     end

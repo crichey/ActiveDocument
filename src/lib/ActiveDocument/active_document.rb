@@ -274,7 +274,9 @@ module ActiveDocument
       # Returns an ActiveXML object representing the requested information. If no document exists at that uri then
       # a LoadException is thrown
       def load(uri)
-        document = @@ml_http.send_xquery(ActiveDocument::CoronaInterface.load(uri))
+        response_array = ActiveDocument::CoronaInterface.load(uri)
+        uri_array = response_array[:uri]
+        document = @@ml_http.send_corona_request(uri_array[0],uri_array[1])
         if document.empty?
           raise LoadException, "File #{uri} not found", caller
         end
