@@ -23,6 +23,7 @@ module ActiveDocument
 
   class Finder
 
+
     def self.config(yaml_file)
       config = YAML.load_file(yaml_file)
       @@ml_http = ActiveDocument::MarkLogicHTTP.new(config['uri'], config['user_name'], config['password'])
@@ -47,14 +48,12 @@ module ActiveDocument
     end
 
     def self.execute_finder(element, value, root = nil, element_namespace = nil, root_namespace = nil, options = nil)
-      xquery = ActiveDocument::CoronaInterface.find_by_element(element, value, root, element_namespace, root_namespace, options)
-      @@log.info("Finder.execute_finder at line #{__LINE__}: #{xquery}")
-      SearchResults.new(@@ml_http.send_xquery(xquery))
+      corona_array = ActiveDocument::CoronaInterface.find_by_element(element, value, root, element_namespace, root_namespace, options)
+      SearchResults.new(@@ml_http.send_corona_request(corona_array[0], corona_array[1]))
     end
 
       def self.execute_attribute_finder(element, attribute, value, root = nil, element_namespace = nil, attribute_namespace = nil, root_namespace = nil, options = nil)
       xquery = ActiveDocument::CoronaInterface.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
-      @@log.info("Finder.execute_attribute_finder at line #{__LINE__}: #{xquery}")
       SearchResults.new(@@ml_http.send_xquery(xquery))
     end
 

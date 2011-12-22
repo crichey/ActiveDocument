@@ -103,7 +103,7 @@ module ActiveDocument
         end
       end
       res = http.head(target_url.request_uri)
-      #puts req.body
+      puts "body::::: #{req.body}" unless verb == :put
       req.digest_auth(@user_name, @password, res)
       res = http.request(req)
       case res

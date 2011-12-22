@@ -68,7 +68,7 @@ module ActiveDocument
     inheritable_attributes_list :my_namespaces, :my_default_namespace, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
     @my_namespaces = Hash.new
     @my_default_namespace = nil
-    attr_reader :document, :uri, :my_namespaces, :my_default_namespace, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
+    attr_reader :document, :uri, :my_default_namespace, :my_namespaces, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
 
 
     # create a new instance with an optional xml string to use for constructing the model
@@ -76,14 +76,20 @@ module ActiveDocument
       @document = Nokogiri::XML(xml_string) do |config|
         config.noblanks
       end
-      if !xml_string.empty? then
+      if !xml_string.empty? and self.class.my_root.nil? then
         @root = @document.root.name
+      else
+        @root = self.class.my_root
       end
       @uri = uri
     end
 
     def to_s
-      @document.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
+      if @document
+        @document.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
+      else
+        super.to_s
+      end
     end
 
     # saves this document to the repository. If _uri_ is provided then that will be the value used for the uri.
@@ -159,48 +165,99 @@ module ActiveDocument
         namespace
       end
 
+
+      # Sets the hash of elements to namespace prefixes. All prefixes should have already been registered with
+      # the framework via the ActiveDocument::DataBaseConfiguration class. Otherwise, errors will likely occur at runtime
+      # @param namespace_hash [A hash where they keys are element names as strings and the values are namespace
+      # prefixes as strings]
+      # @return [the resultant hash]
       def namespaces(namespace_hash)
         @my_namespaces = namespace_hash
+        @my_namespaces
       end
 
+      # Sets the hash of attributes to namespace prefixes. All prefixes should have already been registered with
+      # the framework via the ActiveDocument::DataBaseConfiguration class. Otherwise, errors will likely occur at runtime
+      # @param namespace_hash [A hash where they keys are element names as strings and the values are namespace
+      # prefixes as strings]
+      # @return [the resultant hash]
       def attribute_namespaces(namespace_hash)
         @my_attribute_namespaces = namespace_hash
+        @my_attribute_namespaces
       end
 
-      def add_namespace(element, uri)
-        @my_namespaces[element.to_s] == uri
+      # Adds an element / namespace prefix pair to the existing hash. All prefixes should have already been registered with
+      # the framework via the ActiveDocument::DataBaseConfiguration class. Otherwise, errors will likely occur at runtime
+      # @param element [The element]
+      # @param prefix [the namespace prefix to be associated with the element]
+      # @return [the resultant updated hash of elements to namespace prefixes]
+      def add_namespace(element, prefix)
+        @my_namespaces[element.to_s] = prefix
+        @my_namespaces
       end
 
-      def add_attribute_namespace(attribute, uri)
-        @my_attribute_namespaces[attribute.to_s] == uri
+      # Adds an attribute / namespace prefix pair to the existing hash. All prefixes should have already been registered with
+      # the framework via the ActiveDocument::DataBaseConfiguration class. Otherwise, errors will likely occur at runtime
+      # @param attribute [The attribute]
+      # @param prefix [the namespace prefix to be associated with the attribute]
+      # @return [the resultant updated hash of attributes to namespace prefixes]
+      def add_attribute_namespace(attribute, prefix)
+        @my_attribute_namespaces[attribute.to_s] = prefix
+        @my_attribute_namespaces
       end
 
+      # Removes an element / namespace prefix pair from the existing hash. #todo what about the corona config?
+      # @param element [the element to be removed)]
+      # @return [the resultant updated hash of elements to namespace prefixes]
       def remove_namespace(element)
-        @my_namespaces.delete element
+        @my_namespaces.delete element.to_s
+        @my_namespaces
       end
 
+      # Removes an attribute / namespace prefix pair from the existing hash. #todo what about the corona config?
+      # @param attribute [the attribute to be removed)]
+      # @return [the resultant updated hash of attributes to namespace prefixes]
       def remove_attribute_namespace(attribute)
-        @my_attribute_namespaces.delete attribute
+        @my_attribute_namespaces.delete attribute.to_s
+        @my_attribute_namespaces
       end
 
-      def default_namespace(namespace)
-        @my_default_namespace = namespace # todo should this just be an entry in namespaces?
+      # defines the default namespace prefix to be used for all otherwise unspecified elements. The prefix should have
+      # already been registered with the framework via the ActiveDocument::DataBaseConfiguration class. Otherwise,
+      # errors will likely occur at runtime
+      # @param prefix [the registered namespace prefix for all otherwise unspecified elements]
+      # @return [the default element namespace prefix]
+      def default_namespace(prefix)
+        @my_default_namespace = prefix
+        @my_default_namespace
       end
 
+      # defines the default namespace prefix to be used for all otherwise unspecified attributes. The prefix should have
+      # already been registered with the framework via the ActiveDocument::DataBaseConfiguration class. Otherwise,
+      # errors will likely occur at runtime
+      # @param prefix [the registered namespace prefix for all otherwise unspecified attributes]
+      # @return [the default attribute namespace prefix]
+      def default_attribute_namespace(prefix)
+        @my_default_attribute_namespace = prefix
+        @my_default_attribute_namespace
+      end
+
+      # sets the root element of the document. If not set it will default to the classname
       def root(root)
         @root = root
       end
 
-      def default_attribute_namespace(namespace)
-        @my_default_attribute_namespace = namespace # todo should this just be an entry in namespaces?
+      def my_root
+        @root
       end
+
 
       def delete(uri)
         doc_uri = (uri || @uri)
         if doc_uri then
           response_array = ActiveDocument::CoronaInterface.delete(doc_uri)
           uri_array = response_array[:uri]
-          @@ml_http.send_corona_request(uri_array[0],uri_array[1])
+          @@ml_http.send_corona_request(uri_array[0], uri_array[1])
         else
           raise ArgumentError, "uri must not be nil", caller
         end
@@ -243,7 +300,7 @@ module ActiveDocument
           execute_attribute_finder(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
         elsif method =~ /find_by_(.*)$/ and arguments.length > 0 # identify element search methods
           value = arguments[0]
-          element = $1.to_sym
+          element = $1 # todo: this used to be converted to a symbol. Make sure that keeping it as a string doesn't break something
           if arguments[1]
             root = arguments[1]
           else
@@ -264,7 +321,7 @@ module ActiveDocument
           else
             options = nil
           end
-          execute_fidnder(element, value, root, element_namespace, root_namespace, options)
+          execute_finder(element, value, root, element_namespace, root_namespace, options)
         else
           super
         end
@@ -276,7 +333,7 @@ module ActiveDocument
       def load(uri)
         response_array = ActiveDocument::CoronaInterface.load(uri)
         uri_array = response_array[:uri]
-        document = @@ml_http.send_corona_request(uri_array[0],uri_array[1])
+        document = @@ml_http.send_corona_request(uri_array[0], uri_array[1])
         if document.empty?
           raise LoadException, "File #{uri} not found", caller
         end
@@ -288,7 +345,7 @@ module ActiveDocument
         response_array = ActiveDocument::CoronaInterface.find_by_word(word, root, namespace)
         uri_array = response_array[:uri]
         @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{response_array}")
-        SearchResults.new(@@ml_http.send_corona_request(uri_array[0],uri_array[1],nil,response_array[:post_parameters]))
+        SearchResults.new(@@ml_http.send_corona_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
       end
 
     end # end inner class

@@ -61,22 +61,30 @@ module ActiveDocument
       post_parameters[:outputFormat] = "xml"
       response[:post_parameters] = post_parameters
       response
-
-
     end
-
 
     def self.find_by_element(element, value, root, element_namespace, root_namespace, options = nil)
-      xquery = <<-GENERATED
-        import module namespace search = "http://marklogic.com/appservices/search"at "/MarkLogic/appservices/search/search.xqy";
-        search:search('find_by_element:\"#{value}\"',
-      GENERATED
-      search_options = setup_options(options, root, root_namespace)
-      search_options.word_constraints["find_by_element"] = {"namespace" => element_namespace, "element" => element}
-      xquery << search_options.to_s
-      xquery << ')'
-    end
+      response = Hash.new
+      post_parameters = Hash.new
+      options = self.setup_options(options, root, root_namespace)
+      unless root.nil?
+        if root_namespace.nil?
+          root_expression = root
+        else
+          root_expression = options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
+        end
+      end
+      element_qname = element
+      element_qname.insert(0, element_namespace + ":") unless element_namespace.nil?
+      # todo this query is the more permissive contains. Deal with more restrictive equals as well
+      structured_query = "{\"element\":\"#{element_qname}\", \"contains\":\"#{value}\""
+      response[:uri] = ["/search", :post]
+      post_parameters[:structuredQuery] = structured_query
+      post_parameters[:outputFormat] = "xml"
+      response[:post_parameters] = post_parameters
 
+      response
+    end
 
     def self.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
       xquery = <<-GENERATED

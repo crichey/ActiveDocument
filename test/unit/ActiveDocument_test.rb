@@ -24,6 +24,11 @@ class BookUnit < ActiveDocument::Base
   config 'config.yml'
 end
 
+class BookWithRoot < ActiveDocument::Base
+  config 'config.yml'
+  root "book"
+end
+
 class DocBook < ActiveDocument::Base
   config 'config.yml'
   default_namespace "http://docbook.org/ns/docbook"
@@ -40,6 +45,7 @@ class BaseTest < Test::Unit::TestCase
   # to set up fixture information.
   def setup
     @book = BookUnit.new(IO.read("../data/a_and_c.xml"))
+    @bookWithRoot = BookWithRoot.new(IO.read("../data/a_and_c.xml"))
     @book_namespaces = DocBook.new(IO.read("../data/discoverBook.xml"))
   end
 
@@ -48,6 +54,13 @@ class BaseTest < Test::Unit::TestCase
 
   def teardown
     # Do nothing
+  end
+
+  def test_document_root
+    # test the default root determination
+    assert_equal "PLAY", @book.root
+    # test the overriden root value
+    assert_equal "book", @bookWithRoot.root
   end
 
   def test_dynamic_attributes

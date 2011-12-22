@@ -2,6 +2,7 @@ require "test/unit"
 $:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require "ActiveDocument/database_configuration"
 require "json"
+
 class NamespacesTest < Test::Unit::TestCase
 
   # Called before every test method runs. Can be used

@@ -16,6 +16,7 @@ require "test/unit"
 $:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require 'ActiveDocument/active_document'
 require 'ActiveDocument/search_results'
+require 'ActiveDocument/database_configuration'
 require 'rubygems'
 require 'test/unit'
 
@@ -45,6 +46,17 @@ class BaseTest < Test::Unit::TestCase
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
+    # initialize DatabaseConfiguration class
+    ActiveDocument::DatabaseConfiguration.initialize('config.yml')
+    #configure namespaces
+    # delete all existing configurations
+    ActiveDocument::DatabaseConfiguration.delete_all_namespaces
+    # set new configurations
+    namespaces = Hash.new
+    namespaces["book"] = "http://docbook.org/ns/docbook"
+    namespaces["pubdate"] = 'http://docbook.org/ns/docbook'
+    ActiveDocument::DatabaseConfiguration.define_namespaces(namespaces)
+
     @a_and_c = Book.new(IO.read("../data/a_and_c.xml"), "/books/a_and_c.xml")
     @a_and_c.save
 
@@ -62,7 +74,7 @@ class BaseTest < Test::Unit::TestCase
   end
 
   def test_pass
-    
+
   end
 
   # test ability to load by uri
@@ -188,14 +200,14 @@ class BaseTest < Test::Unit::TestCase
     # test using correct directory
     options = ActiveDocument::MarkLogicSearchOptions.new
     options.directory_constraint = "/books/" # depth stays at default of one
-    # test using default namespace
+                                             # test using default namespace
     results = Book.find_by_title("Discoverers and Explorers", nil, nil, nil, options)
     assert_equal(1, results.total)
     options = ActiveDocument::MarkLogicSearchOptions.new
     options.directory_constraint = "/books/" # depth stays at default of one
     results = Book.find_by_title("Discoverers and Explorers", nil, "http://docbook.org/ns/docbook", nil, options)
     assert_equal(1, results.total)
-    # test with no namespaces
+                                             # test with no namespaces
     options = ActiveDocument::MarkLogicSearchOptions.new
     options.directory_constraint = "/books/" # depth stays at default of one
     results = Play.find_by_PERSONA("MARK ANTONY", nil, nil, nil, options)

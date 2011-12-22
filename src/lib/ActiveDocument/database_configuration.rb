@@ -14,11 +14,14 @@
 require "yaml"
 require 'ActiveDocument/mark_logic_http'
 require 'ActiveDocument/corona_interface'
+require "ActiveDocument/finder"
 module ActiveDocument
 
   # This class is used to manage the configuration of MarkLogic. It can create, list and change / delete a variety of
   # configuration options including indexes namespaces and fields
   class DatabaseConfiguration
+
+    attr_reader :namespaces
 
     # @param yaml_file [The yaml file containing the configuration information for the server connection]
     def self.initialize(yaml_file)
@@ -26,6 +29,7 @@ module ActiveDocument
       @@ml_http = ActiveDocument::MarkLogicHTTP.new(config['uri'], config['user_name'], config['password'])
       @@namespaces = Hash.new
     end
+
 
     # @param namespaces [a Hash of namespaces prefixes to namespaces]
     def self.define_namespaces(namespaces)
@@ -55,7 +59,7 @@ module ActiveDocument
       begin
         @@ml_http.send_corona_request(corona_array[0], corona_array[1])
       rescue Exception => exception
-        if exception.response.code == "404"
+        if exception.response && exception.response.code == "404"
           nil
         else
           raise exception
