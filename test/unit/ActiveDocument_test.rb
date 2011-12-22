@@ -97,9 +97,9 @@ class BaseTest < Test::Unit::TestCase
   def test_nested_dynamic_attributes
     title = @book.PERSONAE.TITLE
     assert_equal "Dramatis Personae", title.text
-    @book.TITLE.each do |title|
-      puts title.text
-    end
+    #@book.TITLE.each do |title|
+    #  puts title.text
+    #end
 
     # test with namespace
     date = @book_namespaces.bookinfo.pubdate.text

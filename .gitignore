@@ -1,3 +1,15 @@
 *.iml
 *.log
 workspace.xml
+.idea/*
+src/RailsSample/.idea/compiler.xml
+
+src/RailsSample/.idea/ant.xml
+
+src/RailsSample/.idea/copyright/profiles_settings.xml
+
+src/RailsSample/.idea/uiDesigner.xml
+
+Gemfile.lock
+
+.gitignore
