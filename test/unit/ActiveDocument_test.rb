@@ -114,7 +114,6 @@ class BaseTest < Test::Unit::TestCase
     my_book = BookUnit.new("<book><chapter><first-paragraph>My First paragraph</first-paragraph></chapter></book>")
     paragraph = my_book.chapter.firstHYPHENparagraph
     assert_equal "My First paragraph", paragraph.text
-
   end
 
   

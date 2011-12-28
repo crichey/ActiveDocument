@@ -14,6 +14,8 @@
 require 'ActiveDocument/mark_logic_search_options'
 module ActiveDocument
 
+  #todo create a configuration class for logging info and such
+
   # CoronaInterface methods always return a hash. This hash will always contain at least a uri key with associated
   # value
   class CoronaInterface
@@ -77,12 +79,11 @@ module ActiveDocument
       element_qname = element
       element_qname.insert(0, element_namespace + ":") unless element_namespace.nil?
       # todo this query is the more permissive contains. Deal with more restrictive equals as well
-      structured_query = "{\"element\":\"#{element_qname}\", \"contains\":\"#{value}\""
+      structured_query = "{\"element\":\"#{element_qname}\", \"contains\":\"#{value}\"}"
       response[:uri] = ["/search", :post]
       post_parameters[:structuredQuery] = structured_query
       post_parameters[:outputFormat] = "xml"
       response[:post_parameters] = post_parameters
-
       response
     end
 

@@ -23,14 +23,14 @@ require 'test/unit'
 class BaseTest < Test::Unit::TestCase
 
   class Book < ActiveDocument::Base
-    default_namespace "http://docbook.org/ns/docbook"
+    default_namespace "book"
     root "book"
     config 'config.yml'
   end
 
   class Book2 < ActiveDocument::Base
     config 'config.yml'
-    namespaces :pubdate => 'http://docbook.org/ns/docbook', :book => 'http://docbook.org/ns/docbook'
+    namespaces :pubdate => 'book', :book => 'book'
   end
 
   class Play < ActiveDocument::Base
@@ -69,8 +69,8 @@ class BaseTest < Test::Unit::TestCase
   # down fixture information.
 
   def teardown
-    Book.delete @a_and_c.uri
-    Book.delete @discover_book.uri
+    #Book.delete @a_and_c.uri
+    #Book.delete @discover_book.uri
   end
 
   def test_pass
@@ -161,7 +161,7 @@ class BaseTest < Test::Unit::TestCase
     # test using default namespace
     results = Book.find_by_title("Discoverers and Explorers")
     assert_equal(1, results.total)
-    results = Book.find_by_title("Discoverers and Explorers", nil, "http://docbook.org/ns/docbook")
+    results = Book.find_by_title("Discoverers and Explorers", nil, "book")
     assert_equal(1, results.total)
     # test with no namespaces
     results = Play.find_by_PERSONA("MARK ANTONY")

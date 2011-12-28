@@ -108,7 +108,7 @@ module ActiveDocument
       res = http.request(req)
       case res
         when Net::HTTPSuccess, Net::HTTPRedirection
-#          puts res.body
+          #puts res.body
           res.body
         else
           #puts req.path

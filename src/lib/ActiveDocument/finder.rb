@@ -48,8 +48,10 @@ module ActiveDocument
     end
 
     def self.execute_finder(element, value, root = nil, element_namespace = nil, root_namespace = nil, options = nil)
-      corona_array = ActiveDocument::CoronaInterface.find_by_element(element, value, root, element_namespace, root_namespace, options)
-      SearchResults.new(@@ml_http.send_corona_request(corona_array[0], corona_array[1]))
+      response_array = ActiveDocument::CoronaInterface.find_by_element(element, value, root, element_namespace, root_namespace, options)
+        uri_array = response_array[:uri]
+        @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{response_array}")
+        SearchResults.new(@@ml_http.send_corona_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
     end
 
       def self.execute_attribute_finder(element, attribute, value, root = nil, element_namespace = nil, attribute_namespace = nil, root_namespace = nil, options = nil)
