@@ -88,15 +88,27 @@ module ActiveDocument
     end
 
     def self.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
-      xquery = <<-GENERATED
-        import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
-        search:search("attribute:#{value}",
-      GENERATED
-      search_options = self.setup_options(options, root, root_namespace)
-      attribute_constraint = ActiveDocument::MarkLogicSearchOptions::AttributeConstraint.new(attribute_namespace, attribute, element_namespace, element)
-      search_options.attribute_constraints["attribute"] = attribute_constraint
-      xquery << search_options.to_s
-      xquery << ')'
+      response = Hash.new
+      post_parameters = Hash.new
+      options = self.setup_options(options, root, root_namespace)
+      unless root.nil?
+        if root_namespace.nil?
+          root_expression = root
+        else
+          root_expression = options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
+        end
+      end
+      element_qname = element
+      element_qname.insert(0, element_namespace + ":") unless element_namespace.nil?
+      attribute_qname = attribute.to_s
+      attribute_qname.insert(0, attribute_namespace + ":") unless attribute_namespace.nil?
+      # todo this query is the more permissive contains. Deal with more restrictive equals as well
+      structured_query = "{\"element\":\"#{element_qname}\",\"attribute\":\"#{attribute_qname}\", \"contains\":\"#{value}\"}"
+      response[:uri] = ["/search", :post]
+      post_parameters[:structuredQuery] = structured_query
+      post_parameters[:outputFormat] = "xml"
+      response[:post_parameters] = post_parameters
+      response
     end
 
     def self.search(search_text, start, page_length, options)

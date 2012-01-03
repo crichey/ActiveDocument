@@ -49,14 +49,16 @@ module ActiveDocument
 
     def self.execute_finder(element, value, root = nil, element_namespace = nil, root_namespace = nil, options = nil)
       response_array = ActiveDocument::CoronaInterface.find_by_element(element, value, root, element_namespace, root_namespace, options)
-        uri_array = response_array[:uri]
-        @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{response_array}")
-        SearchResults.new(@@ml_http.send_corona_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
+      uri_array = response_array[:uri]
+      @@log.info("ActiveDocument.execute_element_finder at line #{__LINE__}: #{response_array}")
+      SearchResults.new(@@ml_http.send_corona_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
     end
 
-      def self.execute_attribute_finder(element, attribute, value, root = nil, element_namespace = nil, attribute_namespace = nil, root_namespace = nil, options = nil)
-      xquery = ActiveDocument::CoronaInterface.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
-      SearchResults.new(@@ml_http.send_xquery(xquery))
+    def self.execute_attribute_finder(element, attribute, value, root = nil, element_namespace = nil, attribute_namespace = nil, root_namespace = nil, options = nil)
+      response_array = ActiveDocument::CoronaInterface.find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
+      uri_array = response_array[:uri]
+      @@log.info("ActiveDocument.execute_attribute_find_by_word at line #{__LINE__}: #{response_array}")
+      SearchResults.new(@@ml_http.send_corona_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
     end
 
     def self.search(search_string, start = 1, page_length = 10, options = nil)
@@ -83,30 +85,30 @@ module ActiveDocument
 
       begin
         log_location = if config['logger']['file']
-          config['logger']['file']
-        else
-          STDERR
-        end
+                         config['logger']['file']
+                       else
+                         STDERR
+                       end
         log_level = case config['logger']['level']
-          when "debug" then
-            Logger::DEBUG
-          when "info" then
-            Logger::INFO
-          when "warn" then
-            Logger::WARN
-          when "error" then
-            Logger::ERROR
-          when "fatal" then
-            Logger::FATAL
-          else
-            Logger::WARN
-        end
+                      when "debug" then
+                        Logger::DEBUG
+                      when "info" then
+                        Logger::INFO
+                      when "warn" then
+                        Logger::WARN
+                      when "error" then
+                        Logger::ERROR
+                      when "fatal" then
+                        Logger::FATAL
+                      else
+                        Logger::WARN
+                    end
 
-        rotation  = if config['logger']['rotation']
-          config['logger']['rotation']
-        else
-          "daily"
-        end
+        rotation = if config['logger']['rotation']
+                     config['logger']['rotation']
+                   else
+                     "daily"
+                   end
         file = open(log_location, File::WRONLY | File::APPEND | File::CREAT)
         @@log = Logger.new(file, rotation)
         @@log.level = log_level
