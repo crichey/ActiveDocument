@@ -130,7 +130,7 @@ module ActiveDocument
     end
 
     def self.delete_all_namespaces
-      ["/manage/namespace/", :delete]
+      ["/manage/namespaces/", :delete]
     end
 
     private
