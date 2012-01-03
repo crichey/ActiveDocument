@@ -76,7 +76,7 @@ module ActiveDocument
           root_expression = options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
         end
       end
-      element_qname = element
+      element_qname = element.to_s
       element_qname.insert(0, element_namespace + ":") unless element_namespace.nil?
       # todo this query is the more permissive contains. Deal with more restrictive equals as well
       structured_query = "{\"element\":\"#{element_qname}\", \"contains\":\"#{value}\"}"
@@ -112,7 +112,7 @@ module ActiveDocument
     end
 
     def self.search(search_text, start, page_length, options)
-      ["/query?q=#{search_text}&start=#{start}&end=#{start + page_length -1}", :get]
+      ["/search?stringQuery=#{search_text}&start=#{start}&end=#{start + page_length -1}&outputFormat=xml", :get]
     end
 
     def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)

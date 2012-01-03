@@ -33,7 +33,7 @@ class FinderTests < Test::Unit::TestCase
   # Tests dynamic finders for element word searches
   def test_element_word_searches
     # test for find by title element in namespace http://docbook.org/ns/docbook
-    results = ActiveDocument::Finder.find_by_title("Explorers", "http://docbook.org/ns/docbook")
+    results = ActiveDocument::Finder.find_by_title("Explorers", "book")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
 
