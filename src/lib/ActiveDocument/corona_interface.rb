@@ -116,16 +116,7 @@ module ActiveDocument
     end
 
     def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
-      <<-GENERATED
-        declare namespace one = "#{element1_namespace}";
-        declare namespace two = "#{element2_namespace}";
-        import module namespace search = "http://marklogic.com/appservices/search" at "/MarkLogic/appservices/search/search.xqy";
-        let $pairs := cts:element-value-co-occurrences(xs:QName('one:#{element1}'), xs:QName('two:#{element2}'), ('frequency-order', 'fragment-frequency','ordered'), cts:query(search:parse('#{query}')))
-        return
-        for $pair in $pairs
-        return
-          ($pair/cts:value[1]/text(),"|",$pair/cts:value[2]/text(),"|",cts:frequency($pair),"*")
-      GENERATED
+    #  Not supported by Corona at this time
     end
 
     def self.declare_namespace(prefix, uri)
