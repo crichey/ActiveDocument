@@ -115,7 +115,7 @@ class BaseTest < Test::Unit::TestCase
 
     # now verify that same result is achieved when there is no default namespace and an element namespace is explicitly set in the call
     Book2.remove_namespace("pubdate")
-    results = Book2.find_by_pubdate("1900", nil, 'http://docbook.org/ns/docbook')
+    results = Book2.find_by_pubdate("1900", nil, 'book')
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
 
@@ -125,9 +125,7 @@ class BaseTest < Test::Unit::TestCase
     assert_equal(1, results.total)
 
     # test with invalid explicit element namespace to act as baseline
-    results = Book.find_by_pubdate("1900", nil, "bad")
-    assert_instance_of(ActiveDocument::SearchResults, results)
-    assert_equal(0, results.total)
+    assert_raise(Net::HTTPFatalError) {Book.find_by_pubdate("1900", nil, "bad")}
 
     # test with explicit root of book with default namespace
     results = Book.find_by_pubdate("1900", "book")
@@ -135,7 +133,7 @@ class BaseTest < Test::Unit::TestCase
     assert_equal(1, results.total)
 
     # test with explicit root of book with default element namespace and explicit root namespace
-    results = Book.find_by_pubdate("1900", "book", nil, 'http://docbook.org/ns/docbook')
+    results = Book.find_by_pubdate("1900", "book", nil, 'book')
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
 
@@ -205,7 +203,7 @@ class BaseTest < Test::Unit::TestCase
     assert_equal(1, results.total)
     options = ActiveDocument::MarkLogicSearchOptions.new
     options.directory_constraint = "/books/" # depth stays at default of one
-    results = Book.find_by_title("Discoverers and Explorers", nil, "http://docbook.org/ns/docbook", nil, options)
+    results = Book.find_by_title("Discoverers and Explorers", nil, "book", nil, options)
     assert_equal(1, results.total)
                                              # test with no namespaces
     options = ActiveDocument::MarkLogicSearchOptions.new

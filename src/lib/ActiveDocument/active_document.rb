@@ -147,8 +147,8 @@ module ActiveDocument
 
       def namespace_for_element(element)
         namespace = nil
-        if !@my_namespaces.nil? && @my_namespaces[element]
-          namespace = @my_namespaces[element]
+        if !@my_namespaces.nil? && @my_namespaces[element.to_sym]
+          namespace = @my_namespaces[element.to_sym]
         else
           namespace = @my_default_namespace unless @my_default_namespace.nil?
         end
@@ -157,8 +157,8 @@ module ActiveDocument
 
       def namespace_for_attribute(attribute)
         namespace = nil
-        if !@my_attribute_namespaces.nil? && @my_attribute_namespaces[attribute]
-          namespace = @my_attribute_namespaces[attribute]
+        if !@my_attribute_namespaces.nil? && @my_attribute_namespaces[attribute.to_sym]
+          namespace = @my_attribute_namespaces[attribute.to_sym]
         else
           namespace = @my_default_attribute_namespace unless @my_default_attribute_namespace.nil?
         end
@@ -314,7 +314,7 @@ module ActiveDocument
           if arguments[3]
             root_namespace = arguments[3]
           else
-            root_namespace = namespace_for_element(root)
+            root_namespace = namespace_for_element(root) unless root.nil?
           end
           if arguments[4]
             options = arguments[4]
