@@ -24,29 +24,29 @@ module ActiveDocument
       @node = node
     end
 
-    def index
-      Integer(@node.xpath("./@index").to_s)
-    end
+    #def index
+    #  Integer(@node.xpath("./@index").to_s)
+    #end
 
     def uri
        @node.xpath("./corona:uri").text.to_s
     end
 
-    def path
-      @node.xpath("./@path").to_s
-    end
+    #def path
+    #  @node.xpath("./@path").to_s
+    #end
 
-    def score
-      Float(@node.xpath("./@score").to_s)
-    end
+    #def score
+    #  Float(@node.xpath("./@score").to_s)
+    #end
 
     def confidence
-      Float(@node.xpath("./@confidence").to_s)
+      Float(@node.xpath("./corona:confidence").to_s)
     end
 
-    def fitness
-      Float(@node.xpath("./@fitness").to_s)
-    end
+    #def fitness
+    #  Float(@node.xpath("./@fitness").to_s)
+    #end
 
     def each(&block)
       nodeset = @node.xpath("./search:snippet/search:match")

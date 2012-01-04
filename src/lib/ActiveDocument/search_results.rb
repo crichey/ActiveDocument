@@ -29,6 +29,10 @@ module ActiveDocument
       Integer(@results_document.xpath("/corona:response/corona:meta/corona:total/text()").to_s)
     end
 
+    def execution_time
+      Integer(@results_document.xpath("/corona:response/corona:meta/corona:executionTime/text()").to_s)
+    end
+
     def start
       Integer(@results_document.xpath("/corona:response/corona:meta/corona:start/text()").to_s)
     end

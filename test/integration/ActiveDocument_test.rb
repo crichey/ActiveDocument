@@ -69,8 +69,8 @@ class BaseTest < Test::Unit::TestCase
   # down fixture information.
 
   def teardown
-    Book.delete @a_and_c.uri
-    Book.delete @discover_book.uri
+    #Book.delete @a_and_c.uri
+    #Book.delete @discover_book.uri
   end
 
   def test_pass
@@ -219,7 +219,7 @@ class BaseTest < Test::Unit::TestCase
     assert_equal(0, results.total)
     options = ActiveDocument::MarkLogicSearchOptions.new
     options.directory_constraint = "/error/" # depth stays at default of one
-    results = Book.find_by_title("Discoverers and Explorers", nil, "http://docbook.org/ns/docbook", nil, options)
+    results = Book.find_by_title("Discoverers and Explorers", nil, "book", nil, options)
     assert_equal(0, results.total)
     # test with no namespaces
     options = ActiveDocument::MarkLogicSearchOptions.new

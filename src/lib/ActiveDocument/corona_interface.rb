@@ -62,6 +62,14 @@ module ActiveDocument
       post_parameters[:structuredQuery] = structured_query
       post_parameters[:outputFormat] = "xml"
       post_parameters[:include] = "snippet"
+      post_parameters[:include] = "confidence"
+      if options.directory_constraint
+        if options.directory_depth == 1
+          post_parameters[:inDirectory] = options.directory_constraint
+        else
+          post_parameters[:underDirectory] = options.directory_constraint
+        end
+      end
       response[:post_parameters] = post_parameters
       response
     end
@@ -85,6 +93,14 @@ module ActiveDocument
       post_parameters[:structuredQuery] = structured_query
       post_parameters[:outputFormat] = "xml"
       post_parameters[:include] = "snippet"
+      post_parameters[:include] = "confidence"
+      if options.directory_constraint
+        if options.directory_depth == 1
+          post_parameters[:inDirectory] = options.directory_constraint
+        else
+          post_parameters[:underDirectory] = options.directory_constraint
+        end
+      end
       response[:post_parameters] = post_parameters
       response
     end
@@ -110,16 +126,32 @@ module ActiveDocument
       post_parameters[:structuredQuery] = structured_query
       post_parameters[:outputFormat] = "xml"
       post_parameters[:include] = "snippet"
+      post_parameters[:include] = "confidence"
+      if options.directory_constraint
+        if options.directory_depth == 1
+          post_parameters[:inDirectory] = options.directory_constraint
+        else
+          post_parameters[:underDirectory] = options.directory_constraint
+        end
+      end
       response[:post_parameters] = post_parameters
       response
     end
 
     def self.search(search_text, start, page_length, options)
-      ["/search?stringQuery=#{search_text}&start=#{start}&end=#{start + page_length -1}&outputFormat=xml&include=snippet", :get]
+      if options && options.directory_constraint
+        directory_string = nil
+        if options.directory_depth == 1
+          directory_string = "&inDirectory=" + options.directory_constraint
+        else
+          directory_string = "&underDirectory=" +options.directory_constraint
+        end
+      end
+      ["/search?stringQuery=#{search_text}&start=#{start}&end=#{start + page_length -1}&outputFormat=xml&include=snippet&include=confidence#{directory_string}", :get]
     end
 
     def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
-    #  Not supported by Corona at this time
+      #  Not supported by Corona at this time
     end
 
     def self.declare_namespace(prefix, uri)
