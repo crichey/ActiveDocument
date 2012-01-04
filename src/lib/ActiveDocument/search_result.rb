@@ -29,7 +29,7 @@ module ActiveDocument
     #end
 
     def uri
-       @node.xpath("./corona:uri").text.to_s
+      @node.xpath("./corona:result/corona:uri").text.to_s
     end
 
     #def path
@@ -41,7 +41,7 @@ module ActiveDocument
     #end
 
     def confidence
-      Float(@node.xpath("./corona:confidence").to_s)
+      Float(@node.xpath("./corona:result/corona:confidence").text.to_s)
     end
 
     #def fitness
@@ -49,27 +49,28 @@ module ActiveDocument
     #end
 
     def each(&block)
-      nodeset = @node.xpath("./search:snippet/search:match")
+      nodeset = @node.xpath("./corona:result/corona:snippet/span")
       if nodeset.length == 1
         yield SearchMatch.new(nodeset[0])
       else
-        @node.xpath("./search:snippet/search:match").each {|node| yield SearchMatch.new(node)}
+        @node.xpath("./corona:result/corona:snippet/span").each { |node| yield SearchMatch.new(node) }
       end
     end
 
     def root_type
-      full_path = @node.xpath("./search:snippet/search:match")[0].xpath("./@path").to_s
-      root = full_path.match(/:[[:alpha:]]+\/|:[[:alpha:]]+$/) # find the first :something/ which should indicate the root
+      full_path = @node.xpath("./corona:result/corona:snippet/span").xpath("./@path").to_s
+      root = full_path.match(/^\/[[:alpha:]]*((:)[[:alpha:]]*)?/) # find the first :something/ which should indicate the root
       root.to_s.delete(":/") # remove the : and / to get the root element name
     end
 
     def [](index)
-      SearchMatch.new(@node.xpath("./search:snippet/search:match")[index])
+      SearchMatch.new(@node.xpath("./corona:result/corona:snippet/span")[index])
     end
 
     def length
-      @node.xpath("./search:snippet/search:match").length
+      @node.xpath("./corona:result/corona:snippet/span").length
     end
+
     def realize(klass)
       klass.load(uri)
     end

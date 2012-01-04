@@ -39,7 +39,7 @@ class TestBook < ActiveDocument::Base
   default_namespace "test"
 end
 
-class BaseTest < Test::Unit::TestCase
+class ActiveDocument_unit_test < Test::Unit::TestCase
 
   # Called before every test method runs. Can be used
   # to set up fixture information.
@@ -116,7 +116,7 @@ class BaseTest < Test::Unit::TestCase
     assert_equal "My First paragraph", paragraph.text
   end
 
-  
+
   def test_modify_simple_element
     my_book = BookUnit.new("<book><title type='test'>Tale of Two Penguins</title><author>Savannah</author></book>")
     assert_equal "Tale of Two Penguins", my_book.title.text

@@ -20,7 +20,7 @@ require 'ActiveDocument/database_configuration'
 require 'rubygems'
 require 'test/unit'
 
-class BaseTest < Test::Unit::TestCase
+class ActiveDocument_unit_test < Test::Unit::TestCase
 
   class Book < ActiveDocument::Base
     default_namespace "book"
@@ -125,7 +125,7 @@ class BaseTest < Test::Unit::TestCase
     assert_equal(1, results.total)
 
     # test with invalid explicit element namespace to act as baseline
-    assert_raise(Net::HTTPFatalError) {Book.find_by_pubdate("1900", nil, "bad")}
+    assert_raise(Net::HTTPFatalError) { Book.find_by_pubdate("1900", nil, "bad") }
 
     # test with explicit root of book with default namespace
     results = Book.find_by_pubdate("1900", "book")
