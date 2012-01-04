@@ -61,6 +61,7 @@ module ActiveDocument
       response[:uri] = ["/search", :post]
       post_parameters[:structuredQuery] = structured_query
       post_parameters[:outputFormat] = "xml"
+      post_parameters[:include] = "snippet"
       response[:post_parameters] = post_parameters
       response
     end
@@ -83,6 +84,7 @@ module ActiveDocument
       response[:uri] = ["/search", :post]
       post_parameters[:structuredQuery] = structured_query
       post_parameters[:outputFormat] = "xml"
+      post_parameters[:include] = "snippet"
       response[:post_parameters] = post_parameters
       response
     end
@@ -107,12 +109,13 @@ module ActiveDocument
       response[:uri] = ["/search", :post]
       post_parameters[:structuredQuery] = structured_query
       post_parameters[:outputFormat] = "xml"
+      post_parameters[:include] = "snippet"
       response[:post_parameters] = post_parameters
       response
     end
 
     def self.search(search_text, start, page_length, options)
-      ["/search?stringQuery=#{search_text}&start=#{start}&end=#{start + page_length -1}&outputFormat=xml", :get]
+      ["/search?stringQuery=#{search_text}&start=#{start}&end=#{start + page_length -1}&outputFormat=xml&include=snippet", :get]
     end
 
     def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)

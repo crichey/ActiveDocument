@@ -333,7 +333,11 @@ module ActiveDocument
       def load(uri)
         response_array = ActiveDocument::CoronaInterface.load(uri)
         uri_array = response_array[:uri]
-        document = @@ml_http.send_corona_request(uri_array[0], uri_array[1])
+        begin
+          document = @@ml_http.send_corona_request(uri_array[0], uri_array[1])
+        rescue Net::HTTPServerException => exception
+          raise LoadException, "File #{uri} not found", caller
+        end
         if document.empty?
           raise LoadException, "File #{uri} not found", caller
         end

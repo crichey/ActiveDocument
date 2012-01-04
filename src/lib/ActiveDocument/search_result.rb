@@ -29,7 +29,7 @@ module ActiveDocument
     end
 
     def uri
-      @node.xpath("./@uri").to_s
+       @node.xpath("./corona:uri").text.to_s
     end
 
     def path
