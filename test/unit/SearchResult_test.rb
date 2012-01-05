@@ -2,7 +2,6 @@ require "test/unit"
 $:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require 'ActiveDocument/search_result'
 require 'rubygems'
-require 'nokogiri'
 class SearchResult_test < Test::Unit::TestCase
 
   # Called before every test method runs. Can be used

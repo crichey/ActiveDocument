@@ -30,8 +30,8 @@ module ActiveDocument
     def to_s
       value = @node.xpath("./node()").to_s
       begin
-        value[/<search:highlight>/] = ""
-        value[/<\/search:highlight>/] = ""
+        value[/<span class="hit">/] = ""
+        value[/<\/span>/] = ""
       rescue IndexError
       end
       return value
@@ -41,8 +41,8 @@ module ActiveDocument
       value = @node.xpath("./node()").to_s
       unless highlight_tag.nil?
         begin
-          value[/<search:highlight>/] = "<#{highlight_tag}>"
-          value[/<\/search:highlight>/] = "</#{highlight_tag}>"
+          value[/<span class="hit">/] = "<#{highlight_tag}>"
+          value[/<\/span>/] = "</#{highlight_tag}>"
         rescue IndexError
           value
         end
