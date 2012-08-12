@@ -17,13 +17,12 @@ require 'rubygems'
 require 'nokogiri'
 require 'yaml'
 require 'ActiveDocument/mark_logic_http'
-require 'ActiveDocument/corona_interface'
 require 'ActiveDocument/search_results'
 require 'ActiveDocument/finder'
 require "ActiveDocument/inheritable"
 
-# The ActiveXML module is used as a namespace for all classes relating to the ActiveXML functionality.
-# ActiveXML::Base is the class that should be extended in order to make use of this functionality in your own
+# The ActiveDocument module is used as a namespace for all classes relating to the ActiveDocument functionality.
+# ActiveDocument::Base is the class that should be extended in order to make use of this functionality in your own
 # domain objects.
 #
 module ActiveDocument
@@ -70,7 +69,6 @@ module ActiveDocument
     @my_default_namespace = nil
     attr_reader :document, :uri, :my_default_namespace, :my_namespaces, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
 
-
     # create a new instance with an optional xml string to use for constructing the model
     def initialize(xml_string = "", uri = "nil")
       @document = Nokogiri::XML(xml_string) do |config|
@@ -98,7 +96,7 @@ module ActiveDocument
     def save(uri = nil)
       doc_uri = (uri || @uri)
       if doc_uri then
-        response_array = ActiveDocument::CoronaInterface.save(doc_uri)
+        response_array = save(doc_uri)
         uri_array = response_array[:uri]
         @@ml_http.send_corona_request(uri_array[0], uri_array[1], self.document.to_s)
       else
@@ -255,7 +253,7 @@ module ActiveDocument
       def delete(uri)
         doc_uri = (uri || @uri)
         if doc_uri then
-          response_array = ActiveDocument::CoronaInterface.delete(doc_uri)
+          response_array = delete(doc_uri)
           uri_array = response_array[:uri]
           @@ml_http.send_corona_request(uri_array[0], uri_array[1])
         else
@@ -331,7 +329,7 @@ module ActiveDocument
       # Returns an ActiveXML object representing the requested information. If no document exists at that uri then
       # a LoadException is thrown
       def load(uri)
-        response_array = ActiveDocument::CoronaInterface.load(uri)
+        response_array = load(uri)
         uri_array = response_array[:uri]
         begin
           document = @@ml_http.send_corona_request(uri_array[0], uri_array[1])
@@ -346,7 +344,7 @@ module ActiveDocument
 
       # Finds all documents of this type that contain the word anywhere in their structure
       def find_by_word(word, root=@root, namespace=@my_default_namespace)
-        response_array = ActiveDocument::CoronaInterface.find_by_word(word, root, namespace)
+        response_array = find_by_word(word, root, namespace)
         uri_array = response_array[:uri]
         @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{response_array}")
         SearchResults.new(@@ml_http.send_corona_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
