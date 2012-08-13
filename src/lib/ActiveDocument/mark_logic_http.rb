@@ -73,7 +73,7 @@ module ActiveDocument
 # @param verb [The HTTP verb to be used]
 # @param post_fields [a hash of post fields. They key should be the field name and the value is the field value]
 # @return [nil if there if no uri or it is an empty string. Otherwise, returns the http response]
-    def send_corona_request(uri, verb=:get, body="", post_fields=nil)
+    def send_request(uri, verb=:get, body="", post_fields=nil)
       return nil if uri.nil? or uri.empty?
       target_url = @url + URI.escape(uri)
       http = Net::HTTP.new(target_url.host, target_url.port)
@@ -86,7 +86,7 @@ module ActiveDocument
         when :post
           req = Net::HTTP::Post.new(endpoint)
           req.set_form_data(post_fields) unless post_fields.nil?
-          #puts URI.decode_www_form(req.body)
+        #puts URI.decode_www_form(req.body)
         when :put
           req = Net::HTTP::Put.new(endpoint)
         when :get
@@ -96,8 +96,9 @@ module ActiveDocument
         else
           req = Net::HTTP::Get.new(endpoint) # safe default
       end
-      if ((! body.nil?) and (verb == :put or verb == :post) ) then
-        if (req.body.nil?) then req.body = body
+      if ((!body.nil?) and (verb == :put or verb == :post)) then
+        if (req.body.nil?) then
+          req.body = body
         else
           req.body << body
         end

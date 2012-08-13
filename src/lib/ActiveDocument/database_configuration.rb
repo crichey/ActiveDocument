@@ -13,13 +13,15 @@
 #   limitations under the License.
 require "yaml"
 require 'ActiveDocument/mark_logic_http'
-require 'ActiveDocument/corona_interface'
+#require 'ActiveDocument/corona_interface'
+require 'ActiveDocument/rest_protocol'
 require "ActiveDocument/finder"
 module ActiveDocument
 
   # This class is used to manage the configuration of MarkLogic. It can create, list and change / delete a variety of
   # configuration options including indexes namespaces and fields
   class DatabaseConfiguration
+    include ActiveDocument::RestProtocol
 
     attr_reader :namespaces
 
@@ -34,17 +36,17 @@ module ActiveDocument
     # @param namespaces [a Hash of namespaces prefixes to namespaces]
     def self.define_namespaces(namespaces)
       namespaces.keys.each do |key|
-        corona_array = ActiveDocument::CoronaInterface.declare_namespace(key, namespaces[key])
-        @@ml_http.send_corona_request(corona_array[0], corona_array[1])
+        corona_array = declare_namespace(key, namespaces[key])
+        @@ml_http.send_request(corona_array[0], corona_array[1])
       end
     end
 
     # @param prefix [The prefix for which you wish to find a matching namespace]
     # @return The matching namespace as a string or nil if there is no matching namespace for the prefix
     def self.lookup_namespace(prefix)
-      corona_array = ActiveDocument::CoronaInterface.lookup_namespace(prefix)
+      corona_array = lookup_namespace(prefix)
       begin
-        @@ml_http.send_corona_request(corona_array[0], corona_array[1])
+        @@ml_http.send_request(corona_array[0], corona_array[1])
       rescue Exception => exception
         if exception.response.code == "404"
           nil #return nil when no namespace is found
@@ -55,9 +57,9 @@ module ActiveDocument
     end
 
     def self.delete_all_namespaces
-      corona_array = ActiveDocument::CoronaInterface.delete_all_namespaces
+      corona_array = delete_all_namespaces
       begin
-        @@ml_http.send_corona_request(corona_array[0], corona_array[1])
+        @@ml_http.send_request(corona_array[0], corona_array[1])
       rescue Exception => exception
         if exception.response && exception.response.code == "404"
           nil

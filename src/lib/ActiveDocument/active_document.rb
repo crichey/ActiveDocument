@@ -98,7 +98,7 @@ module ActiveDocument
       if doc_uri then
         response_array = save(doc_uri)
         uri_array = response_array[:uri]
-        @@ml_http.send_corona_request(uri_array[0], uri_array[1], self.document.to_s)
+        @@ml_http.send_request(uri_array[0], uri_array[1], self.document.to_s)
       else
         raise ArgumentError, "uri must not be nil", caller
       end
@@ -255,7 +255,7 @@ module ActiveDocument
         if doc_uri then
           response_array = delete(doc_uri)
           uri_array = response_array[:uri]
-          @@ml_http.send_corona_request(uri_array[0], uri_array[1])
+          @@ml_http.send_request(uri_array[0], uri_array[1])
         else
           raise ArgumentError, "uri must not be nil", caller
         end
@@ -332,7 +332,7 @@ module ActiveDocument
         response_array = load(uri)
         uri_array = response_array[:uri]
         begin
-          document = @@ml_http.send_corona_request(uri_array[0], uri_array[1])
+          document = @@ml_http.send_request(uri_array[0], uri_array[1])
         rescue Net::HTTPServerException => exception
           raise LoadException, "File #{uri} not found", caller
         end
@@ -347,7 +347,7 @@ module ActiveDocument
         response_array = find_by_word(word, root, namespace)
         uri_array = response_array[:uri]
         @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{response_array}")
-        SearchResults.new(@@ml_http.send_corona_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
+        SearchResults.new(@@ml_http.send_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
       end
 
     end # end inner class
