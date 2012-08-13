@@ -158,7 +158,7 @@ module ActiveDocument
     end
 
     def self.load_setup(uri)
-      {:uri => ["/store?uri=#{uri}", :get]}
+      {:uri => ["/v1/documents?uri=#{uri}", :get]}
     end
   end
 end

@@ -176,22 +176,22 @@ class ActiveDocument_unit_test < Test::Unit::TestCase
   def test_save_and_delete
     book = BookNoNamespace.new("<book><title>Tale of Two Penguins</title><author>Savannah</author></book>", "test.xml")
     book.save
-    ##loaded_book = BookNoNamespace.load("test.xml")
-    #assert_not_nil loaded_book
-    #assert_equal "book", loaded_book.root
-    #assert_equal "Tale of Two Penguins", loaded_book.title.text
-    #
-    ## delete the loaded book
-    #Book.delete(loaded_book.uri)
-    #
-    ## confirm that it is deleted
-    #begin
-    #  Book.delete(loaded_book.uri)
-    #rescue Net::HTTPServerException => e then
-    #  assert_match(/There is no document to delete/, e.message)
-    #else
-    #  fail "No exception raised"
-    #end
+    loaded_book = BookNoNamespace.load("test.xml")
+    assert_not_nil loaded_book
+    assert_equal "book", loaded_book.root
+    assert_equal "Tale of Two Penguins", loaded_book.title.text
+
+    # delete the loaded book
+    Book.delete(loaded_book.uri)
+
+    # confirm that it is deleted
+    assert_raise ActiveDocument::LoadException do
+      loaded_book = BookNoNamespace.load("test.xml")
+    end
+
+    # a second delete should be idempotent and not throw an error
+    Book.delete(loaded_book.uri)
+
   end
 
   def test_directory_constraint
