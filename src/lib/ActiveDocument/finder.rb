@@ -16,9 +16,10 @@ require 'rubygems'
 require 'nokogiri'
 require 'ActiveDocument/mark_logic_http'
 require 'ActiveDocument/search_results'
-require 'ActiveDocument/rest_protocol'
+require 'ActiveDocument/RestProtocol/rest_protocol'
 #require 'ActiveDocument/corona_protocol'
 require 'logger'
+
 
 module ActiveDocument
 
@@ -35,6 +36,7 @@ module ActiveDocument
     #include ActiveDocument::CoronaProtocol
 
     def self.config(yaml_file)
+
       config = YAML.load_file(yaml_file)
       @@ml_http = ActiveDocument::MarkLogicHTTP.new(config['uri'], config['user_name'], config['password'])
       configure_logger(config)
@@ -127,6 +129,7 @@ module ActiveDocument
         @@log.level = Logger::WARN
       end
     end
+
   end
 
 end

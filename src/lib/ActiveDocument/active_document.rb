@@ -64,6 +64,7 @@ module ActiveDocument
   # -------------------
   class Base < Finder
     include ClassLevelInheritableAttributes
+
     inheritable_attributes_list :my_namespaces, :my_default_namespace, :root, :my_attribute_namespaces, :my_default_attribute_namespaces
     @my_namespaces = Hash.new
     @my_default_namespace = nil
@@ -94,11 +95,11 @@ module ActiveDocument
     # If no uri was passed in then the existing value or the uri is used, unless uri is nil in which case an exception
     # will be thrown
     def save(uri = nil)
+      foobar
       doc_uri = (uri || @uri)
       if doc_uri then
-        response_array = save(doc_uri)
-        uri_array = response_array[:uri]
-        @@ml_http.send_request(uri_array[0], uri_array[1], self.document.to_s)
+        setup_array = save_setup(doc_uri)[:uri]
+        @@ml_http.send_request(setup_array[0], setup_array[1], self.document.to_s)
       else
         raise ArgumentError, "uri must not be nil", caller
       end

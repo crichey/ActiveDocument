@@ -1,6 +1,6 @@
 module ActiveDocument
-  module CoronaProtocol
-    def setup_options_setup(options, root, root_namespace)
+  class CoronaProtocol
+    def self.setup_options_setup(options, root, root_namespace)
       if options then
         search_options = options
       else
@@ -18,19 +18,19 @@ module ActiveDocument
 
 # @param uri [The uri for which the matching, if any, prefix should be found]
 # @return [An array where the first item is the string uri for the request and the second item is the http verb]
-    def lookup_namespace_setup(uri)
+    def self.lookup_namespace_setup(uri)
       ["/manage/namespace/#{uri}", :get]
     end
 
-    def declare_namespace_setup(prefix, uri)
+    def self.declare_namespace_setup(prefix, uri)
       ["/manage/namespace/#{prefix}?uri=#{uri}", :post]
     end
 
-    def co_occurrence_setup(element1, element1_namespace, element2, element2_namespace, query)
+    def self.co_occurrence_setup(element1, element1_namespace, element2, element2_namespace, query)
       #  Not supported by Corona at this time
     end
 
-    def search_setup(search_text, start, page_length, options)
+    def self.search_setup(search_text, start, page_length, options)
       if options && options.directory_constraint
         directory_string = nil
         if options.directory_depth == 1
@@ -42,7 +42,7 @@ module ActiveDocument
       ["/search?stringQuery=#{search_text}&start=#{start}&end=#{start + page_length -1}&outputFormat=xml&include=snippet&include=confidence#{directory_string}", :get]
     end
 
-    def find_by_attribute_setup(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
+    def self.find_by_attribute_setup(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
       response = Hash.new
       post_parameters = Hash.new
       options = self.setup_options(options, root, root_namespace)
@@ -75,7 +75,7 @@ module ActiveDocument
       response
     end
 
-    def find_by_element_setup(element, value, root, element_namespace, root_namespace, options = nil)
+    def self.find_by_element_setup(element, value, root, element_namespace, root_namespace, options = nil)
       response = Hash.new
       post_parameters = Hash.new
       options = self.setup_options(options, root, root_namespace)
@@ -111,7 +111,7 @@ module ActiveDocument
 # uri: an array where the first element is the uri to be used for the REST call and the second element is the
 # http verb
 # post_parameters: a hash of all post parameters to be submitted
-    def find_by_word_setup(word, root, root_namespace, options = nil)
+    def self.find_by_word_setup(word, root, root_namespace, options = nil)
       #todo deal with paging
       response = Hash.new
       post_parameters = Hash.new
@@ -144,7 +144,7 @@ module ActiveDocument
 # @return A hash containing the necessary return values. This hash contains:
 # uri: an array where the first element is the uri to be used for the REST call and the second element is the
 # http verb
-    def save_setup(uri)
+    def self.save_setup(uri)
       {:uri => ["/store?uri=#{uri}", :put]}
     end
 
@@ -152,11 +152,11 @@ module ActiveDocument
 # @return A hash containing the necessary return values. This hash contains:
 # uri: an array where the first element is the uri to be used for the REST call and the second element is the
 # http verb
-    def delete_setup(uri)
+    def self.delete_setup(uri)
       {:uri => ["/store?uri=#{uri}", :delete]}
     end
 
-    def load_setup(uri)
+    def self.load_setup(uri)
       {:uri => ["/v1/documents?uri=#{uri}", :put]}
     end
   end
