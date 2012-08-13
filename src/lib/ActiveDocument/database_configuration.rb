@@ -36,7 +36,7 @@ module ActiveDocument
     # @param namespaces [a Hash of namespaces prefixes to namespaces]
     def self.define_namespaces(namespaces)
       namespaces.keys.each do |key|
-        corona_array = declare_namespace(key, namespaces[key])
+        corona_array = declare_namespace_uri(key, namespaces[key])
         @@ml_http.send_request(corona_array[0], corona_array[1])
       end
     end
@@ -44,7 +44,7 @@ module ActiveDocument
     # @param prefix [The prefix for which you wish to find a matching namespace]
     # @return The matching namespace as a string or nil if there is no matching namespace for the prefix
     def self.lookup_namespace(prefix)
-      corona_array = lookup_namespace(prefix)
+      corona_array = lookup_namespace_uri(prefix)
       begin
         @@ml_http.send_request(corona_array[0], corona_array[1])
       rescue Exception => exception
