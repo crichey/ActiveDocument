@@ -95,10 +95,9 @@ module ActiveDocument
     # If no uri was passed in then the existing value or the uri is used, unless uri is nil in which case an exception
     # will be thrown
     def save(uri = nil)
-      foobar
       doc_uri = (uri || @uri)
       if doc_uri then
-        setup_array = save_setup(doc_uri)[:uri]
+        setup_array = RestProtocol.save_setup(doc_uri)[:uri]
         @@ml_http.send_request(setup_array[0], setup_array[1], self.document.to_s)
       else
         raise ArgumentError, "uri must not be nil", caller
@@ -254,7 +253,7 @@ module ActiveDocument
       def delete(uri)
         doc_uri = (uri || @uri)
         if doc_uri then
-          response_array = delete(doc_uri)
+          response_array = RestProtocol.delete_setup(doc_uri)
           uri_array = response_array[:uri]
           @@ml_http.send_request(uri_array[0], uri_array[1])
         else
@@ -330,7 +329,7 @@ module ActiveDocument
       # Returns an ActiveXML object representing the requested information. If no document exists at that uri then
       # a LoadException is thrown
       def load(uri)
-        response_array = load(uri)
+        response_array = RestProtocol.load_setup(uri)
         uri_array = response_array[:uri]
         begin
           document = @@ml_http.send_request(uri_array[0], uri_array[1])

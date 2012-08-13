@@ -16,7 +16,7 @@ require 'rubygems'
 require 'nokogiri'
 require 'ActiveDocument/mark_logic_http'
 require 'ActiveDocument/search_results'
-require 'ActiveDocument/RestProtocol/rest_protocol'
+require 'ActiveDocument/rest_protocol'
 #require 'ActiveDocument/corona_protocol'
 require 'logger'
 
@@ -24,17 +24,8 @@ require 'logger'
 module ActiveDocument
 
   # This is the base class that provides searching across heterogeneous domain classes
-  # -------------------
-  #  = Configuration
-  # -------------------
-  # == Changing protocol
-  # Ships configured to use the v1 REST Protocol. This can be change to use the Corona protocol to talk to the MarkLogic
-  # server by commenting out the require and include statements for the RestProtocol and uncommenting the include
-  # and require statement for the CoronaProtocol
-  class Finder
-    include ActiveDocument::RestProtocol
-    #include ActiveDocument::CoronaProtocol
 
+  class Finder
     def self.config(yaml_file)
 
       config = YAML.load_file(yaml_file)

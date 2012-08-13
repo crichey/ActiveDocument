@@ -19,13 +19,13 @@ module ActiveDocument
 
 # @param uri [The uri for which the matching, if any, prefix should be found]
 # @return [An array where the first item is the string uri for the request and the second item is the http verb]
-    def self.lookup_namespace_setup(uri)
-      ["/manage/namespace/#{uri}", :get]
-    end
-
-    def self.declare_namespace_setup(prefix, uri)
-      ["/manage/namespace/#{prefix}?uri=#{uri}", :post]
-    end
+#    def self.lookup_namespace_setup(uri)
+#      ["/manage/namespace/#{uri}", :get]
+#    end
+#
+#    def self.declare_namespace_setup(prefix, uri)
+#      ["/manage/namespace/#{prefix}?uri=#{uri}", :post]
+#    end
 
     def self.co_occurrence_setup(element1, element1_namespace, element2, element2_namespace, query)
       #  Not supported by Corona at this time
@@ -154,7 +154,7 @@ module ActiveDocument
 # uri: an array where the first element is the uri to be used for the REST call and the second element is the
 # http verb
     def self.delete_setup(uri)
-      {:uri => ["/store?uri=#{uri}", :delete]}
+      {:uri => ["/v1/documents?uri=#{uri}", :delete]}
     end
 
     def self.load_setup(uri)
