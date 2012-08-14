@@ -16,7 +16,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'yaml'
-require 'ActiveDocument/mark_logic_http'
+require 'ActiveDocument/marklogic_http'
 require 'ActiveDocument/search_results'
 require 'ActiveDocument/finder'
 require "ActiveDocument/inheritable"
@@ -344,7 +344,7 @@ module ActiveDocument
 
       # Finds all documents of this type that contain the word anywhere in their structure
       def find_by_word(word, root=@root, namespace=@my_default_namespace)
-        response_array = find_by_word(word, root, namespace)
+        response_array = RestProtocol.find_by_word_setup(word, root, namespace)
         uri_array = response_array[:uri]
         @@log.info("ActiveDocument.execute_find_by_word at line #{__LINE__}: #{response_array}")
         SearchResults.new(@@ml_http.send_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))

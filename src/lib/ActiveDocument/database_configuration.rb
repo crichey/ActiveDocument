@@ -12,7 +12,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 require "yaml"
-require 'ActiveDocument/mark_logic_http'
+require 'ActiveDocument/marklogic_http'
 #require 'ActiveDocument/corona_interface'
 require 'ActiveDocument/rest_protocol'
 require "ActiveDocument/finder"

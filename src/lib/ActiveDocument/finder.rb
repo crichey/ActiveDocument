@@ -14,7 +14,7 @@
 
 require 'rubygems'
 require 'nokogiri'
-require 'ActiveDocument/mark_logic_http'
+require 'ActiveDocument/marklogic_http'
 require 'ActiveDocument/search_results'
 require 'ActiveDocument/rest_protocol'
 #require 'ActiveDocument/corona_protocol'
@@ -51,14 +51,14 @@ module ActiveDocument
     end
 
     def self.execute_finder(element, value, root = nil, element_namespace = nil, root_namespace = nil, options = nil)
-      response_array = find_by_element(element, value, root, element_namespace, root_namespace, options)
+      response_array = RestProtocol.find_by_element_setup(element, value, root, element_namespace, root_namespace, options)
       uri_array = response_array[:uri]
-      @@log.info("ActiveDocument.execute_element_finder at line #{__LINE__}: #{response_array}")
+      @@log.info("ActiveDocument.execute_finder at line #{__LINE__}: #{response_array}")
       SearchResults.new(@@ml_http.send_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
     end
 
     def self.execute_attribute_finder(element, attribute, value, root = nil, element_namespace = nil, attribute_namespace = nil, root_namespace = nil, options = nil)
-      response_array = find_by_attribute(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
+      response_array = RestProtocol.find_by_attribute_setup(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options)
       uri_array = response_array[:uri]
       @@log.info("ActiveDocument.execute_attribute_find_by_word at line #{__LINE__}: #{response_array}")
       SearchResults.new(@@ml_http.send_request(uri_array[0], uri_array[1], nil, response_array[:post_parameters]))
@@ -67,13 +67,13 @@ module ActiveDocument
     def self.search(search_string, start = 1, page_length = 10, options = nil)
       start ||= 1
       page_length ||= 10
-      corona_array = search(search_string, start, page_length, options)
-      SearchResults.new(@@ml_http.send_request(corona_array[0], corona_array[1]))
+      response_array = RestProtocol.search_setup(search_string, start, page_length, options)
+      SearchResults.new(@@ml_http.send_request(response_array[0], response_array[1]))
     end
 
     # returns a hash where the key is the terms of the co-occurrence separated by a | and the value is the frequency count
     def self.co_occurrence(element1, element1_namespace, element2, element2_namespace, query)
-      pairs = @@ml_http.send_request(co_occurrence(element1, element1_namespace, element2, element2_namespace, query)).split("*")
+      pairs = @@ml_http.send_request(RestProtocol.co_occurrence_setup(element1, element1_namespace, element2, element2_namespace, query)).split("*")
       pair_hash = Hash.new
       pairs.each do |p|
         temp = p.split("|")

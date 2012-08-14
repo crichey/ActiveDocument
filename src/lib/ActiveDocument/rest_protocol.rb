@@ -1,7 +1,9 @@
+require 'ActiveDocument/marklogic_search_options'
+
 module ActiveDocument
   class RestProtocol
 
-    def self.setup_options_setup(options, root, root_namespace)
+    def self.setup_options(options, root, root_namespace)
       if options then
         search_options = options
       else
@@ -17,16 +19,6 @@ module ActiveDocument
       ["/manage/namespaces/", :delete]
     end
 
-# @param uri [The uri for which the matching, if any, prefix should be found]
-# @return [An array where the first item is the string uri for the request and the second item is the http verb]
-#    def self.lookup_namespace_setup(uri)
-#      ["/manage/namespace/#{uri}", :get]
-#    end
-#
-#    def self.declare_namespace_setup(prefix, uri)
-#      ["/manage/namespace/#{prefix}?uri=#{uri}", :post]
-#    end
-
     def self.co_occurrence_setup(element1, element1_namespace, element2, element2_namespace, query)
       #  Not supported by Corona at this time
     end
@@ -40,7 +32,7 @@ module ActiveDocument
           directory_string = "&underDirectory=" +options.directory_constraint
         end
       end
-      ["/search?stringQuery=#{search_text}&start=#{start}&end=#{start + page_length -1}&outputFormat=xml&include=snippet&include=confidence#{directory_string}", :get]
+      ["/v1/search?q=#{search_text}", :get]
     end
 
     def self.find_by_attribute_setup(element, attribute, value, root, element_namespace, attribute_namespace, root_namespace, options = nil)
@@ -112,17 +104,20 @@ module ActiveDocument
 # uri: an array where the first element is the uri to be used for the REST call and the second element is the
 # http verb
 # post_parameters: a hash of all post parameters to be submitted
+# @param [Object] word
+# @param [Object] root
+# @param [Object] root_namespace
+# @param [Object] options
     def self.find_by_word_setup(word, root, root_namespace, options = nil)
       #todo deal with paging
       response = Hash.new
       post_parameters = Hash.new
       options = self.setup_options(options, root, root_namespace)
-      unless root.nil?
-        if root_namespace.nil?
-          root_expression = root
-        else
-          root_expression = options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
-        end
+
+      if root_namespace.nil?
+        root_expression = root
+      else
+        root_expression = options.searchable_expression[root_namespace] + ":" + root unless root_namespace.nil?
       end
       structured_query = "{\"underElement\":\"#{root_expression}\",\"query\":{\"wordAnywhere\":\"#{word}\"}}"
       response[:uri] = ["/search", :post]

@@ -15,6 +15,7 @@
 require "test/unit"
 $:.unshift File.join(File.dirname(__FILE__), "../../src", "lib")
 require 'ActiveDocument/active_document'
+require 'ActiveDocument/finder'
 require 'ActiveDocument/search_results'
 require 'ActiveDocument/database_configuration'
 require 'rubygems'
@@ -48,10 +49,7 @@ class ActiveDocument_unit_test < Test::Unit::TestCase
   def setup
     # initialize DatabaseConfiguration class
     ActiveDocument::DatabaseConfiguration.initialize('config.yml')
-    #configure namespaces
-    # delete all existing configurations
-    #ActiveDocument::DatabaseConfiguration.delete_all_namespaces
-    # set new configurations
+
     namespaces = Hash.new
     namespaces["book"] = "http://docbook.org/ns/docbook"
     namespaces["pubdate"] = 'http://docbook.org/ns/docbook'
@@ -71,10 +69,6 @@ class ActiveDocument_unit_test < Test::Unit::TestCase
   def teardown
     Book.delete @a_and_c.uri
     Book.delete @discover_book.uri
-  end
-
-  def test_pass
-
   end
 
   # test ability to load by uri
@@ -98,6 +92,10 @@ class ActiveDocument_unit_test < Test::Unit::TestCase
     assert_equal(1, results.total)
     # test wtih default root
     results = Book.find_by_word("beliefs")
+    assert_instance_of(ActiveDocument::SearchResults, results)
+    assert_equal(1, results.total)
+
+    results = ActiveDocument::Finder.find_by_word("beliefs")
     assert_instance_of(ActiveDocument::SearchResults, results)
     assert_equal(1, results.total)
   end

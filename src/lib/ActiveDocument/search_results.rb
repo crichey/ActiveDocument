@@ -23,41 +23,67 @@ module ActiveDocument
 
     def initialize(results)
       @results_document = Nokogiri::XML(results)
+      @facets = Hash.new
+      @results_document.xpath("/search:response/search:facet").each do |facet|
+        name = facet.xpath("./@name").to_s
+        detail = Hash.new
+        @facets[name] = detail
+        facet.xpath("search:facet-value").each do |facet_value|
+          detail[facet_value.xpath("./@name").to_s] = facet_value.xpath("./@count").to_s
+        end
+      end
     end
 
     def total
-      Integer(@results_document.xpath("/corona:response/corona:meta/corona:total/text()").to_s)
-    end
-
-    def execution_time
-      Integer(@results_document.xpath("/corona:response/corona:meta/corona:executionTime/text()").to_s)
+      Integer(@results_document.xpath("/search:response/@total").to_s)
     end
 
     def start
-      Integer(@results_document.xpath("/corona:response/corona:meta/corona:start/text()").to_s)
+      Integer(@results_document.xpath("/search:response/@start").to_s)
     end
 
     def page_length
-      total - start + 1
+      Integer(@results_document.xpath("/search:response/@page-length").to_s)
+    end
+
+    def search_text
+      @results_document.xpath("/search:response/search:qtext/text()").to_s
+    end
+
+    def query_resolution_time
+      @results_document.xpath("/search:response/search:metrics/search:query-resolution-time/text()").to_s
+    end
+
+    def snippet_resolution_time
+      @results_document.xpath("/search:response/search:metrics/search:snippet-resolution-time/text()").to_s
+    end
+
+    def facet_resolution_time
+      @results_document.xpath("/search:response/search:metrics/search:facet-resolution-time/text()").to_s
+    end
+
+    def total_time
+      @results_document.xpath("/search:response/search:metrics/search:total-time/text()").to_s
     end
 
     def each(&block)
-      nodeset = @results_document.xpath("/corona:response/corona:results/corona:result")
+      nodeset = @results_document.xpath("/search:response/search:result")
       if nodeset.length == 1
         yield SearchResult.new(nodeset[0])
       else
-        @results_document.xpath("/corona:response/corona:results/corona:result").each {|node| yield SearchResult.new(node)}
+        @results_document.xpath("/search:response/search:result").each { |node| yield SearchResult.new(node) }
       end
     end
 
     def [](index)
-      SearchResult.new(@results_document.xpath("/corona:response/corona:results/corona:result")[index])
+      SearchResult.new(@results_document.xpath("/search:response/search:result")[index])
     end
 
     def length
-      @results_document.xpath("/corona:response/corona:results/corona:result").length
+      @results_document.xpath("/search:response/search:result").length
     end
 
   end
 
 end
+
